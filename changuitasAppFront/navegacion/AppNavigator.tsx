@@ -12,12 +12,20 @@ import Verificacion1Mail from '../Pantallas/Verificacion/Verificacion1Mail';
 import Verificacion2Registro from '../Pantallas/Verificacion/Verificacion2Registro';
 //----------------------------------------
 
+import RecuperarContrasena1 from '../Pantallas/RecuperarAcceso/RecuperarContrasena1';
+import RecuperarContrasena2 from '../Pantallas/RecuperarAcceso/RecuperarContrasena2';
+import RecuperarContrasena3 from '../Pantallas/RecuperarAcceso/RecuperarContrasena3';
+import RecuperarNombreUsuario from '../Pantallas/RecuperarAcceso/RecuperarNombreUsuario';
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
   Registro: undefined;
   Verificacion1Mail: { datosUsuario: any };
   Verificacion2Registro: {datosUsuario:any};
+  RecuperarContrasena1: undefined;
+  RecuperarContrasena2: { email: string }; 
+  RecuperarContrasena3: { id: any[] };
+  RecuperarNombreUsuario: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -55,7 +63,26 @@ export default function AppNavigator() {
             component={Verificacion2Registro} 
             options={{ headerShown: false }}  
           />
-          
+             <Stack.Screen 
+            name="RecuperarContrasena1" 
+            component={RecuperarContrasena1} 
+            options={{ headerShown: false }}  
+          />
+                 <Stack.Screen 
+            name="RecuperarContrasena2" 
+            component={RecuperarContrasena2} 
+            options={{ headerShown: false }}  
+          />
+                  <Stack.Screen 
+            name="RecuperarContrasena3" 
+            component={RecuperarContrasena3} 
+            options={{ headerShown: false }}  
+          />
+                   <Stack.Screen 
+            name="RecuperarNombreUsuario" 
+            component={RecuperarNombreUsuario} 
+            options={{ headerShown: false }}  
+          />
           
      
     </Stack.Navigator>

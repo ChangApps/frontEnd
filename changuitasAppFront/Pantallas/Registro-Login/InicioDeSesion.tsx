@@ -126,11 +126,11 @@ const InicioDeSesion = () => {
         </TouchableOpacity>
 
     {/* Botón de recuperar nombre de usuario */}
-        <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('RecuperarNombreUsuario')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi nombre de usuario</Text>
         </TouchableOpacity>
    {/* Botón de recuperar contraseña */}
-        <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('RecuperarContrasena1')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi contraseña</Text>
         </TouchableOpacity>
 
