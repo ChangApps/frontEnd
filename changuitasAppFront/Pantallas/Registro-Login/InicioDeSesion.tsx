@@ -119,7 +119,7 @@ const InicioDeSesion = () => {
         </TouchableOpacity>
 
       {/* Botón de registrarse */}
-        <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>
             ¿No tienes una cuenta? Regístrate
           </Text>
@@ -134,13 +134,6 @@ const InicioDeSesion = () => {
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi contraseña</Text>
         </TouchableOpacity>
 
-            {/* Texto de pie de página */}
-{/*
-        <Text style={EstilosInicioDeSesion.textoPie}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-        </Text>
-*/
-}
  </View>
     </SafeAreaView>
   );
