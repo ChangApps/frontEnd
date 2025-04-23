@@ -105,11 +105,11 @@ const Verificacion1Mail = () => {
           keyboardType="number-pad"
         />
 
-        {/* Botón para validar el código */}
+        {/* Botón para validar el código  onPress=validarCodigo */}
         <TouchableOpacity
           style={EstilosVerificacion1Mail.botonSiguiente}
-          onPress={validarCodigo}
-        >
+          onPress={() => navigation.navigate('Verificacion2Registro', { datosUsuario: route.params.datosUsuario })}  
+          >
           <Text style={EstilosVerificacion1Mail.textoBoton}>Siguiente</Text>
           <Ionicons name="arrow-forward" size={20} color="#197278" />
         </TouchableOpacity>

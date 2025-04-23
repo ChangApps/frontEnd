@@ -2,7 +2,6 @@ import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Mod
 import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -10,6 +9,7 @@ import API_URL from "../../auxiliares/API_URL";
 //import { AuthContext } from '../../autenticacion/auth';
 import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
+import {mostrarOpcionesSelectorImagen} from '../../auxiliares/seleccionImagen';
 
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -23,77 +23,7 @@ const Verificacion2Registro = () => {
    // Estado para almacenar los datos del usuario
    const [usuario, setUsuario] = useState(route.params?.datosUsuario || {});
   // const [state, setState] = useContext(AuthContext);
-   const [idUsuarioCreado,setIdUsuarioCreado]=useState(null);
 
-
-   // Funciones para manejar la selección de imagen
-   const manejarRespuestaSelectorImagen = (resultado: ImagePicker.ImagePickerResult) => {
-    if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
-      setImageUri(resultado.assets[0].uri);
-    }
-  };
-
-  const manejarCambioArchivoWeb = (event: Event) => {
-    const target = event.target as HTMLInputElement; 
-    const file = target.files ? target.files[0] : null;
-  
-    if (file) {
-      console.log("Imagen seleccionada:", file);
-      setImageFile(file); // Actualiza el estado con el archivo seleccionado
-      const imageUrl = URL.createObjectURL(file); // Genera una URL para mostrar la imagen seleccionada
-      setImageUri(imageUrl);
-    }
-  };
-
-  const mostrarOpcionesSelectorImagen = () => {
-    if (Platform.OS === 'web') {
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.onchange = manejarCambioArchivoWeb;
-      fileInput.click();
-    } else {
-      Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
-        { text: "Cancelar", style: "cancel" },
-        { text: "Tomar una foto", onPress: abrirCamara },
-        { text: "Elegir desde la galería", onPress: abrirSelectorImagen },
-      ]);
-    }
-  };
-
-  const abrirSelectorImagen = async () => {
-    const resultadoPermiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (resultadoPermiso.granted === false) {
-      alert("Has rechazado el acceso a la galería de imágenes.");
-      return;
-    }
-
-    const resultado = await ImagePicker.launchImageLibraryAsync({
-    allowsEditing: true, // Activa el recorte
-    aspect: [1, 1], // Define la relación de aspecto del recorte (cuadrado)
-    quality: 0.8, // Calidad de la imagen (0.1 a 1.0)
-    });
-
-    manejarRespuestaSelectorImagen(resultado);
-  };
-
-  const abrirCamara = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync(); // Solicita permisos
-  
-    if (status !== "granted") {
-      alert("Se requieren permisos para acceder a la cámara.");
-      return;
-    }
-  
-    const resultado = await ImagePicker.launchCameraAsync({
-      allowsEditing: true, // Activa el recorte
-      aspect: [1, 1], // Relación de aspecto cuadrada
-      quality: 0.8, // Calidad de la imagen
-    });
-  
-    manejarRespuestaSelectorImagen(resultado);
-  };
 
    const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -235,7 +165,7 @@ const Verificacion2Registro = () => {
   </TouchableOpacity>
 </View>
 
-        <TouchableOpacity onPress={mostrarOpcionesSelectorImagen}>
+        <TouchableOpacity onPress={() => mostrarOpcionesSelectorImagen(setImageUri, setImageFile)}>
           <Text style={EstilosVerificacion2.textoOpcion}>+ Seleccionar Imagen</Text>
         </TouchableOpacity>
 
