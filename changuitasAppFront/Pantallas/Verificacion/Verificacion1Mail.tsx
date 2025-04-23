@@ -2,10 +2,11 @@ import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "re
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
-//import { Snackbar } from "react-native-paper";
+import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../auxiliares/API_URL";
 import EstilosVerificacion1Mail  from "./estilos/EstilosVerificacion1Mail";
+
 
 
 const Verificacion1Mail = () => {
@@ -116,7 +117,7 @@ const Verificacion1Mail = () => {
       </View>
 
 
-      {/* Snackbar para mostrar mensajes 
+  
       <Snackbar
         visible={visible}
         onDismiss={() => setVisible(false)}
@@ -125,7 +126,6 @@ const Verificacion1Mail = () => {
       >
         {message}
       </Snackbar>
-*/}
     </SafeAreaView>
   );
 };

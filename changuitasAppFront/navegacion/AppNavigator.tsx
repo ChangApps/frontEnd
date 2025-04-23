@@ -16,6 +16,9 @@ import RecuperarContrasena1 from '../Pantallas/RecuperarAcceso/RecuperarContrase
 import RecuperarContrasena2 from '../Pantallas/RecuperarAcceso/RecuperarContrasena2';
 import RecuperarContrasena3 from '../Pantallas/RecuperarAcceso/RecuperarContrasena3';
 import RecuperarNombreUsuario from '../Pantallas/RecuperarAcceso/RecuperarNombreUsuario';
+
+import Home from '../Pantallas/Home/Home';
+
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -26,6 +29,7 @@ export type RootStackParamList = {
   RecuperarContrasena2: { email: string }; 
   RecuperarContrasena3: { id: any[] };
   RecuperarNombreUsuario: undefined;
+  Home:undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -83,7 +87,11 @@ export default function AppNavigator() {
             component={RecuperarNombreUsuario} 
             options={{ headerShown: false }}  
           />
-          
+                <Stack.Screen 
+            name="Home" 
+            component={Home} 
+            options={{ headerShown: false }}  
+          />
      
     </Stack.Navigator>
     </NavigationContainer>

@@ -3,8 +3,11 @@ import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosInicioDeSesion from './estilos/EstilosInicioDeSesion';
+import API_URL from "../../auxiliares/API_URL";
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -16,7 +19,7 @@ const InicioDeSesion = () => {
   const { width } = useWindowDimensions();
 
 
- /*
+ 
   const login = async () => {
 
     if (!username.trim() || !password.trim()) {
@@ -33,9 +36,7 @@ const InicioDeSesion = () => {
         alert(data.error);
         throw new Error(data.error); // Lanza un error con el mensaje del servidor
     }
-        setState({
-          token: data.access,
-      });
+      //  setState({token: data.access, });
       await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
       
       console.log("Token guardado: ", data.access);
@@ -49,14 +50,14 @@ const InicioDeSesion = () => {
      setusername(''); 
      setPassword('');
 
-      navigation.navigate('PantallaHome');
+      navigation.navigate('Home');
      
-    } catch (error) {
+    }catch (error: any) {
       setErrorMessage(error.message);
     }
    
   };
-  */
+  
 
   return (
     <SafeAreaView style={EstilosInicioDeSesion.areaSegura}>
@@ -107,7 +108,7 @@ const InicioDeSesion = () => {
 
 
         {/* Botón de ingresar */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={login}>
           <LinearGradient
             colors={["#197278", "#9BCDC8"]}
             start={{ x: 0, y: 0 }}
