@@ -12,7 +12,7 @@ const BarraPestanasPerfil = () => {
       <TouchableOpacity style={EstilosPerfilUsuario.pestanaActiva} onPress={() => navigation.navigate('Home')}>
         <Text style={EstilosPerfilUsuario.textoPestanaActiva}>Perfil</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={EstilosPerfilUsuario.pestanaInactiva} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={EstilosPerfilUsuario.pestanaInactiva} onPress={() => navigation.navigate('EditarPerfil')}>
         <Text style={EstilosPerfilUsuario.textoPestanaInactiva}>Editar</Text>
       </TouchableOpacity>
       <TouchableOpacity style={EstilosPerfilUsuario.pestanaInactiva} onPress={() => navigation.navigate('MisServicios')}>

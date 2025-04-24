@@ -23,6 +23,7 @@ import PerfilUsuario from '../Pantallas/Usuario/PerfilUsuario';
 import Resenias from '../Pantallas/Usuario/Resenias';
 import UsuariosBloqueados from '../Pantallas/Usuario/UsuariosBloqueados';
 import MisServicios from '../Pantallas/Usuario/MisServicios';
+import EditarPerfil from '../Pantallas/Usuario/EditarPerfil';
 
 import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
 //import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
@@ -41,6 +42,7 @@ export type RootStackParamList = {
   Resenias:{idUsuario: any };
   UsuariosBloqueados:undefined;
   MisServicios:undefined;
+  EditarPerfil:undefined;
   BuscarServicio1:undefined;
  // BuscarServicio2: { selectedService: string[] };
 };
@@ -123,6 +125,11 @@ export default function AppNavigator() {
             <Stack.Screen 
           name="MisServicios" 
           component={MisServicios} 
+          options={{ headerShown: false }}  
+        /> 
+         <Stack.Screen 
+          name="EditarPerfil" 
+          component={EditarPerfil} 
           options={{ headerShown: false }}  
         /> 
          <Stack.Screen 
