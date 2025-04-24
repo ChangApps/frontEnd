@@ -14,7 +14,7 @@ const BarraNavegacionInferior = () => {
         <Text style={EstilosPerfilUsuario.textoNavegacion}>Inicio</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="search-outline" size={24} color="gray" />
         <Text style={EstilosPerfilUsuario.textoNavegacion}>Buscar</Text>
       </TouchableOpacity>

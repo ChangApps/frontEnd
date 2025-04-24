@@ -24,6 +24,8 @@ import Resenias from '../Pantallas/Usuario/Resenias';
 import UsuariosBloqueados from '../Pantallas/Usuario/UsuariosBloqueados';
 import MisServicios from '../Pantallas/Usuario/MisServicios';
 
+import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
+//import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -39,6 +41,8 @@ export type RootStackParamList = {
   Resenias:{idUsuario: any };
   UsuariosBloqueados:undefined;
   MisServicios:undefined;
+  BuscarServicio1:undefined;
+ // BuscarServicio2: { selectedService: string[] };
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -120,8 +124,12 @@ export default function AppNavigator() {
           name="MisServicios" 
           component={MisServicios} 
           options={{ headerShown: false }}  
-        />
-     
+        /> 
+         <Stack.Screen 
+        name="BuscarServicio1" 
+        component={BuscarServicio1} 
+        options={{ headerShown: false }}  
+      />     
     </Stack.Navigator>
     </NavigationContainer>
 
