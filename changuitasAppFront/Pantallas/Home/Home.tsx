@@ -91,26 +91,19 @@ const PantallaHome = () => {
 
   const logout = async () => {
     try {
-    
   //    setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
-    
         console.log('Error en el cierre de sesión:', error.message);
         Alert.alert("Error", error.message);
     } finally {
-
-      // Navegar a la pantalla de bienvenida
-    //  navigation.navigate("PantallaBienvenida");
     console.log("Intentando ir al iniciar sesion ");
     navigation.reset({
       index: 0,
       routes: [{ name: "InicioDeSesion" }],
     });
-
     }
-
   };
 
   return (

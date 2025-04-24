@@ -15,50 +15,56 @@ const InicioDeSesion = () => {
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const { width } = useWindowDimensions();
 
-
- 
   const login = async () => {
-
+    // Verifica si los campos están vacíos o contienen solo espacios
     if (!username.trim() || !password.trim()) {
-      // Verifica si los campos están vacíos o contienen solo espacios
       setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.');
       return;
     }
   
     try {
-      const {data} = await axios.post(`${API_URL}/login/`,{username,password,
-      });
-
+      // Realiza la solicitud POST a la api
+      const { data } = await axios.post(`${API_URL}/login/`, { username, password });
+  
+      // Verifica si la respuesta contiene un error relacionado con las credenciales
       if (data.error) {
-        alert(data.error);
-        throw new Error(data.error); // Lanza un error con el mensaje del servidor
-    }
-      //  setState({token: data.access, });
-      await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
-      
-      console.log("Token guardado: ", data.access);
-
-      // Almacena tokens y userId
+        // Si la API devuelve un error, muestra el mensaje adecuado
+        if (data.error.includes('invalid')) {
+          setErrorMessage('Nombre de usuario o contraseña incorrectos.');
+        } else {
+          setErrorMessage(data.error);  // Muestra cualquier otro error que pueda venir
+        }
+        return;  // Sale si hay un error en los datos recibidos
+      }
+  
+      // Almacena el token en AsyncStorage
+      await AsyncStorage.setItem('@auth', JSON.stringify({ token: data.access }));
+      console.log('Token guardado:', data.access);
+  
+      // Almacena los tokens y el userId en AsyncStorage
       await AsyncStorage.setItem('accessToken', data.access);
       await AsyncStorage.setItem('refreshToken', data.refresh);
       await AsyncStorage.setItem('userId', data.id.toString());
-     
-     // Limpiar los campos de username y password después del login exitoso
-     setusername(''); 
-     setPassword('');
-
+  
+      // Limpia los campos de username y password después del login exitoso
+      setusername('');
+      setPassword('');
+  
+      // Navega a la pantalla principal (Home)
       navigation.navigate('Home');
-     
-    }catch (error: any) {
-      setErrorMessage(error.message);
+  
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        setErrorMessage('Solicitud incorrecta. Verifica tu nombre de usuario y contraseña.');
+      } else {
+        // Si ocurre un error inesperado o de red
+        setErrorMessage(error.message || 'Error de red o servidor.');
+      }
     }
-   
   };
   
-
   return (
     <SafeAreaView style={EstilosInicioDeSesion.areaSegura}>
       <View style={[EstilosInicioDeSesion.contenedor, width > 600 && EstilosInicioDeSesion.contenedorWeb]}>

@@ -19,6 +19,11 @@ import RecuperarNombreUsuario from '../Pantallas/RecuperarAcceso/RecuperarNombre
 
 import Home from '../Pantallas/Home/Home';
 
+import PerfilUsuario from '../Pantallas/Usuario/PerfilUsuario';
+import Resenias from '../Pantallas/Usuario/Resenias';
+import UsuariosBloqueados from '../Pantallas/Usuario/UsuariosBloqueados';
+import MisServicios from '../Pantallas/Usuario/MisServicios';
+
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -30,6 +35,10 @@ export type RootStackParamList = {
   RecuperarContrasena3: { id: any[] };
   RecuperarNombreUsuario: undefined;
   Home:undefined;
+  PerfilUsuario:undefined;
+  Resenias:{idUsuario: any };
+  UsuariosBloqueados:undefined;
+  MisServicios:undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -91,7 +100,27 @@ export default function AppNavigator() {
             name="Home" 
             component={Home} 
             options={{ headerShown: false }}  
-          />
+          />       
+          <Stack.Screen 
+          name="PerfilUsuario" 
+          component={PerfilUsuario} 
+          options={{ headerShown: false }}  
+        />
+           <Stack.Screen 
+          name="Resenias" 
+          component={Resenias} 
+          options={{ headerShown: false }}  
+        />
+          <Stack.Screen 
+          name="UsuariosBloqueados" 
+          component={UsuariosBloqueados} 
+          options={{ headerShown: false }}  
+        />
+            <Stack.Screen 
+          name="MisServicios" 
+          component={MisServicios} 
+          options={{ headerShown: false }}  
+        />
      
     </Stack.Navigator>
     </NavigationContainer>

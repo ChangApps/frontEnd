@@ -3,31 +3,30 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navegacion/AppNavigator';
-import EstilosHome from '../Pantallas/Home/estilos/EstilosHome';
-
+import EstilosPerfilUsuario from '../Pantallas/Usuario/estilos/EstilosPerfilUsuario';
 const BarraNavegacionInferior = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <View style={EstilosHome.barraNavegacion}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosHome.iconoNavegacion}>
+    <View style={EstilosPerfilUsuario.barraNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="home-outline" size={24} color="gray" />
-        <Text style={EstilosHome.textoNavegacion}>Inicio</Text>
+        <Text style={EstilosPerfilUsuario.textoNavegacion}>Inicio</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosHome.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="search-outline" size={24} color="gray" />
-        <Text style={EstilosHome.textoNavegacion}>Buscar</Text>
+        <Text style={EstilosPerfilUsuario.textoNavegacion}>Buscar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosHome.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="grid-outline" size={24} color="gray" />
-        <Text style={EstilosHome.textoNavegacion}>Historial</Text>
+        <Text style={EstilosPerfilUsuario.textoNavegacion}>Historial</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosHome.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="person-outline" size={24} color="gray" />
-        <Text style={EstilosHome.textoNavegacion}>Perfil</Text>
+        <Text style={EstilosPerfilUsuario.textoNavegacion}>Perfil</Text>
       </TouchableOpacity>
     </View>
   );
