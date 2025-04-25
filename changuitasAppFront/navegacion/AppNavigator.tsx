@@ -26,7 +26,10 @@ import MisServicios from '../Pantallas/Usuario/MisServicios';
 import EditarPerfil from '../Pantallas/Usuario/EditarPerfil';
 
 import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
-//import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
+import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
+import ResultadosBusqueda from '../Pantallas/Buscar/ResultadosBusqueda';
+import PerfilProveedor from '../Pantallas/Buscar/PerfilProveedor';
+
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -44,7 +47,12 @@ export type RootStackParamList = {
   MisServicios:undefined;
   EditarPerfil:undefined;
   BuscarServicio1:undefined;
- // BuscarServicio2: { selectedService: string[] };
+  BuscarServicio2: { selectedService: string[] };
+  ResultadosBusqueda: { 
+    proveedores: any[]; 
+    error?: string; // Para el mensaje de error
+  };
+  PerfilProveedor: { id: any[] };
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -136,7 +144,22 @@ export default function AppNavigator() {
         name="BuscarServicio1" 
         component={BuscarServicio1} 
         options={{ headerShown: false }}  
-      />     
+      />    
+          <Stack.Screen 
+        name="BuscarServicio2" 
+        component={BuscarServicio2} 
+        options={{ headerShown: false }}  
+      />  
+        <Stack.Screen 
+        name="ResultadosBusqueda" 
+        component={ResultadosBusqueda} 
+        options={{ headerShown: false }}  
+      />  
+        <Stack.Screen 
+        name="PerfilProveedor" 
+        component={PerfilProveedor} 
+        options={{ headerShown: false }}  
+      />  
     </Stack.Navigator>
     </NavigationContainer>
 

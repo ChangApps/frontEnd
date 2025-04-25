@@ -20,3 +20,8 @@ npm install axios
 
 #Para el storage
  npm install @react-native-async-storage/async-storage
+
+ #Para desplegable en buscar servicio
+npm install @react-native-picker/picker
+
+#Notas: Intentar modularizar mas EditarPerfil,PerfilProveedor

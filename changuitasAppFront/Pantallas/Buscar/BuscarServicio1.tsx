@@ -28,9 +28,8 @@ const BuscarServicio1 = () => {
       alert("Por favor selecciona un servicio.");
       return;
     }
-   // navigation.navigate('BuscarServicio2', { selectedService: [selectedService] });
+    navigation.navigate('BuscarServicio2', { selectedService: [selectedService] });
   };
-
 
   return (
     <View style={EstilosBuscarServicio1.container}>
