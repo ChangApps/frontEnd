@@ -194,12 +194,10 @@ const PerfilProveedor = () => {
   
       if (response.ok) {
         Alert.alert("Éxito", "Proveedor servicio creado con éxito.");
-       // navigation.navigate('DetalleTarea');
 
        const idSolicitud = responseJson.id 
        const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
-   //    console.log("EL id de la solicitud es: ",idSolicitud);
-      // navigation.navigate('DetalleTarea', { id,idSolicitud});
+        navigation.navigate('DetalleTarea', { id,idSolicitud});
 
       } else {
         Alert.alert("Error", responseJson.error || "No se pudo enviar la solicitud.");
@@ -287,11 +285,8 @@ const PerfilProveedor = () => {
   
       // Procesa los datos del proveedor de servicio
       const dataProveedor = await responseProveedor.json();
-      //console.log('Datos del ProveedorServicio recibidos:', dataProveedor);
-  
       const proveedor = Array.isArray(dataProveedor) ? dataProveedor[0] : dataProveedor;
       setIdProveedorServicio(proveedor?.id);
-      //console.log("ID proveedor:", proveedor?.id);
     } catch (error) {
       setMessage("Error. al enviar la solicitud.");
       setVisible(true);

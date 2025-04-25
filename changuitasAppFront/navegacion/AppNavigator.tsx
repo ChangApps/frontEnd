@@ -29,7 +29,8 @@ import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
 import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
 import ResultadosBusqueda from '../Pantallas/Buscar/ResultadosBusqueda';
 import PerfilProveedor from '../Pantallas/Buscar/PerfilProveedor';
-
+import DetalleTarea from '../Pantallas/Buscar/DetalleTarea';
+import CalificarTarea from '../Pantallas/Buscar/CalificarTarea';
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -53,6 +54,8 @@ export type RootStackParamList = {
     error?: string; // Para el mensaje de error
   };
   PerfilProveedor: { id: any[] };
+  DetalleTarea: { id: string; idSolicitud: string };
+  CalificarTarea: { idSolicitud: string };
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -158,6 +161,16 @@ export default function AppNavigator() {
         <Stack.Screen 
         name="PerfilProveedor" 
         component={PerfilProveedor} 
+        options={{ headerShown: false }}  
+      />  
+          <Stack.Screen 
+        name="DetalleTarea" 
+        component={DetalleTarea} 
+        options={{ headerShown: false }}  
+      />  
+       <Stack.Screen 
+        name="CalificarTarea" 
+        component={CalificarTarea} 
         options={{ headerShown: false }}  
       />  
     </Stack.Navigator>

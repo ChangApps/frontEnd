@@ -24,4 +24,7 @@ npm install axios
  #Para desplegable en buscar servicio
 npm install @react-native-picker/picker
 
-#Notas: Intentar modularizar mas EditarPerfil,PerfilProveedor
+#Notas: Intentar modularizar mas EditarPerfil,PerfilProveedor 
+        En la pestañas de perfil (perfil,editar,mis servicios , bloquedos) no se mueve al activo  se queda en el perfil
+        Cuando se seleccione una imagen de perfil en web que se pueda recortar como en el celular
+        Sacar los console log que no sean importante, dejar  solo los mas nesecarios 
