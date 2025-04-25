@@ -1,11 +1,10 @@
 import React, { useState,useEffect, useContext } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback} from 'react-native';
+import { View, Text, SafeAreaView,TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL from '../../auxiliares/API_URL';
-import * as ImagePicker from 'expo-image-picker';
+import API_URL from '../../auxiliares/API_URL';;
 import axios from 'axios';
 import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
@@ -415,20 +414,6 @@ const EditarPerfil = () => {
 
           {/* Formulario de datos personales */}
           <View style={EstilosEditarPerfil.formulario}>
-      <Text style={EstilosEditarPerfil.label}>Nombre</Text>
-          <TextInput
-            style={EstilosEditarPerfil.input}
-            value={camposModificados.first_name || datosOriginales.first_name || ''}
-            onChangeText={(valor) => manejarCambioCampo('first_name', valor)}
-          />
-
-          <Text style={EstilosEditarPerfil.label}>Apellido</Text>
-          <TextInput
-            style={EstilosEditarPerfil.input}
-            value={camposModificados.last_name || datosOriginales.last_name || ''}
-            onChangeText={(valor) => manejarCambioCampo('last_name', valor)}
-          />
-
           <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
           <TextInput
             style={EstilosEditarPerfil.input}
