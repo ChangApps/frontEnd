@@ -31,6 +31,10 @@ import ResultadosBusqueda from '../Pantallas/Buscar/ResultadosBusqueda';
 import PerfilProveedor from '../Pantallas/Buscar/PerfilProveedor';
 import DetalleTarea from '../Pantallas/Buscar/DetalleTarea';
 import CalificarTarea from '../Pantallas/Buscar/CalificarTarea';
+
+import Historial1 from '../Pantallas/Historial/Historial1';
+import Historial2 from '../Pantallas/Historial/Historial2';
+
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
@@ -56,6 +60,8 @@ export type RootStackParamList = {
   PerfilProveedor: { id: any[] };
   DetalleTarea: { id: string; idSolicitud: string };
   CalificarTarea: { idSolicitud: string };
+  Historial1: undefined;
+  Historial2: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -171,6 +177,16 @@ export default function AppNavigator() {
        <Stack.Screen 
         name="CalificarTarea" 
         component={CalificarTarea} 
+        options={{ headerShown: false }}  
+      />  
+          <Stack.Screen 
+        name="Historial1" 
+        component={Historial1} 
+        options={{ headerShown: false }}  
+      />  
+        <Stack.Screen 
+        name="Historial2" 
+        component={Historial2} 
         options={{ headerShown: false }}  
       />  
     </Stack.Navigator>

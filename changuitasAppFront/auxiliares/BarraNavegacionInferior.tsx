@@ -19,7 +19,7 @@ const BarraNavegacionInferior = () => {
         <Text style={EstilosPerfilUsuario.textoNavegacion}>Buscar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={EstilosPerfilUsuario.iconoNavegacion}>
         <Ionicons name="grid-outline" size={24} color="gray" />
         <Text style={EstilosPerfilUsuario.textoNavegacion}>Historial</Text>
       </TouchableOpacity>

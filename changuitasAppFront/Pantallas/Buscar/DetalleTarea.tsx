@@ -55,10 +55,10 @@ const DetalleTarea = () => {
         throw new Error('No se encontró el token de acceso');
       }
   
-  //    console.log("ROute params de id solicitud: ",idSolicitud);
       const idDatosSolicitud = route.params.idSolicitud;
+      console.log("ROute params de id solicitud: ",idDatosSolicitud);
 
-      const responsDatosSolicitud = await fetch(`${API_URL}/solicitudes/${idDatosSolicitud}`, {
+      const responsDatosSolicitud = await fetch(`${API_URL}/historial/${idDatosSolicitud}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,10 @@ const DetalleTarea = () => {
       });
   
       if (!responsDatosSolicitud.ok) {
-        throw new Error('Error al obtener los datos de la solicitud');
+        // Puedes revisar el contenido de la respuesta en caso de error
+        const errorData = await responsDatosSolicitud.json();
+        console.error('Error del servidor:', errorData);
+        throw new Error(`Error al obtener los datos de la solicitud: ${errorData.detail || 'Respuesta no válida'}`);
       }
   
       const dataSolicitud = await responsDatosSolicitud.json();
