@@ -56,9 +56,7 @@ const DetalleTarea = () => {
       }
   
       const idDatosSolicitud = route.params.idSolicitud;
-      console.log("ROute params de id solicitud: ",idDatosSolicitud);
-
-      const responsDatosSolicitud = await fetch(`${API_URL}/historial/${idDatosSolicitud}`, {
+      const responsDatosSolicitud = await fetch(`${API_URL}/solicitudes/${idDatosSolicitud}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -93,8 +91,6 @@ const DetalleTarea = () => {
       const userId = route.params.id;
       setidSolicitud(route.params.idSolicitud);
 
-  //    console.log("iD DE SOLICITUD RECIBIDO: ",route.params.idSolicitud);
-
       const responseUsuario = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'GET',
         headers: {
@@ -108,7 +104,6 @@ const DetalleTarea = () => {
       }
   
       const dataUsuario = await responseUsuario.json();
-    //  console.log("Data usuario: ",dataUsuario);
       setUsuario({
         nombre: dataUsuario.first_name || 'Nombre no disponible',
         apellido: dataUsuario.last_name || 'Apellido no disponible'
