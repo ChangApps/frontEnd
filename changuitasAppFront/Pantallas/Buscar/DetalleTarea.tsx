@@ -43,6 +43,7 @@ const DetalleTarea = () => {
   };
   
   useEffect(() => {
+    console.log("Id de solicitud recibido: ",route.params.idSolicitud);
     fetchUsuario();
     fetchDatosSolicitud();
   }, []);  // Solo se ejecuta una vez cuando el componente se monta
@@ -174,7 +175,7 @@ const DetalleTarea = () => {
     <SafeAreaView style={ EstilosDetalleTarea.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={ EstilosDetalleTarea.encabezado}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
         <Text style={ EstilosDetalleTarea.textoEncabezado}>Detalle de la tarea</Text>

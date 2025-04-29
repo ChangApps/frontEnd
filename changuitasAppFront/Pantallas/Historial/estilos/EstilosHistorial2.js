@@ -175,6 +175,11 @@ const EstilosHistorial2 = StyleSheet.create({
     fontSize: 18,         
     color: '#333',        
   },
+  fecha: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 2,
+  },
 });
 
 export default EstilosHistorial2;

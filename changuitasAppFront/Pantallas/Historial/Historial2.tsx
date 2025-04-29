@@ -19,7 +19,7 @@ const Historial2 = () => {
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
   const [loading, setLoading] = useState<boolean>(true);
-  const [historial, setHistorial] = useState([]); //Estado para guardar el arreglo del historial
+  const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);  // Estado para almacenar los datos de los proveedores del response
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
 
@@ -56,6 +56,21 @@ const Historial2 = () => {
     is_verified: boolean;
   }
 
+  interface SolicitudHistorial {
+    id: number;
+    comentario: string | null;
+    fechaSolicitud: string;
+    fechaTrabajo: string;
+    fechaValoracion: string | null;
+    valoracion: number | null;
+    proveedorServicio: number;
+    cliente: number;
+    notificacion: any; 
+    estado: string;
+    proveedor_id: number;
+    nombreServicio: string;
+    cliente_nombre: string;
+  }
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -236,42 +251,45 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
 
             {/* Elemento de resultado */}
             <FlatList
-  data={proveedores.filter(item => 
-    solicitudesInfo.some(solicitud => solicitud.proveedorId === item.id && (solicitud.estadoSolicitud === 'F' || solicitud.estadoSolicitud === 'C'))
-  )}
-
-  keyExtractor={(item) => item.id.toString()}
+  data={historial.filter(item => item.estado === 'F' || item.estado === 'C')}
+  keyExtractor={(item) => item.id.toString()} // id de la solicitud
   renderItem={({ item }) => {
-    const solicitud = solicitudesInfo.find(s => s.proveedorId === item.id);
+    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
+    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
 
-    // Obtiene el puntaje como numero
-    const puntaje = item.puntaje ? Math.round(item.puntaje) : 0;
-    
     return (
       <View style={EstilosHistorial2.resultItem}>
-        <Image style={EstilosHistorial2.image} source={{ uri: item.fotoPerfil || 'https://via.placeholder.com/100' }} />
+        <Image
+          style={EstilosHistorial2.image}
+          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
+        />
         <View style={EstilosHistorial2.resultDetails}>
-          <Text style={EstilosHistorial2.name}>{`${item.first_name} ${item.last_name}`}</Text>
+          <Text style={EstilosHistorial2.name}>
+            {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
+          </Text>
+
+          <Text style={EstilosHistorial2.fecha}>
+            Fecha: {item.fechaSolicitud}
+          </Text>
+
           <View style={EstilosHistorial2.ratingStars}>
-            {/* Renderiza estrellas basadas en el puntaje */}
             {Array.from({ length: 5 }, (_, i) => (
               <Ionicons
                 key={i}
                 name="star"
                 size={16}
-                color={i < puntaje ? "black" : "#CCCCCC"} // Estrella llena o vacía
+                color={i < puntaje ? "black" : "#CCCCCC"}
               />
             ))}
           </View>
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => {
-            console.log("Botón presionado");
-            navigation.navigate('DetalleTarea', { 
-               id: item.id.toString(),  
-               idSolicitud: solicitud?.idSolicitud?.toString() || "No disponible"
+            navigation.navigate('DetalleTarea', {
+              id: proveedor?.id?.toString() || 'No disponible',
+              idSolicitud: item.id.toString()
             });
-          }} 
+          }}
           style={EstilosHistorial2.arrowButton}
         >
           <Ionicons name="chevron-forward" size={20} color="#333" />
@@ -281,7 +299,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
   }}
   ListEmptyComponent={
     <View style={EstilosHistorial2.emptyContainer}>
-      <Text style={EstilosHistorial2.textoVacio}>No hay proveedores disponibles</Text>
+      <Text style={EstilosHistorial2.textoVacio}>No hay historial disponible</Text>
     </View>
   }
 />
@@ -294,7 +312,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
           top: -150,
           left: 0,
           right: 0,
-          zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
+          zIndex: 100000, 
           marginRight: 50,
         }}
       >
