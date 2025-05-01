@@ -134,7 +134,7 @@ const EstilosMisServicios = StyleSheet.create({
     nombreServicio: { fontSize: 16, fontWeight: 'bold' },
     descripcion: { fontSize: 14, color: 'gray' },
     horario: { fontSize: 12, color: '#197278' },
-    sinServicios: { textAlign: 'center', marginTop: 20, color: 'gray', fontSize: 16 },
+    sinServicios: { textAlign: 'center', marginTop: 20, color: 'grey', fontSize: 18 },
     desplegable: {
       position: 'absolute',
       top: 70,
@@ -164,6 +164,16 @@ const EstilosMisServicios = StyleSheet.create({
       backgroundColor: "#ffe5e5",
       alignSelf: 'flex-end', // Lo posiciona a la derecha
       marginTop: -40,
+    },
+    noResultsContainer: {
+      flex: 1, 
+      justifyContent: 'center', 
+      alignItems: 'center',
+    },
+    noResultsImage: {
+      width: 200,
+      height: 200,
+      marginBottom: 20,
     },
   });
 
