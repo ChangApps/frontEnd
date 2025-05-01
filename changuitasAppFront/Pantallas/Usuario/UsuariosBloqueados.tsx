@@ -142,7 +142,15 @@ const UsuariosBloqueados = () => {
       <ActivityIndicator size="large" color="#197278" />
     ) : (
       usuariosBloqueados.length === 0 ? (
-        <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text> 
+        <View style={EstilosUsuariosBloqueados.noResultsContainer}>
+                    <Image
+                      source={require('./estilos/no-results.png')}
+                      style={EstilosUsuariosBloqueados.noResultsImage}
+                      resizeMode="contain"
+                    />
+                    <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text> 
+                  </View>
+
       ) : (
         <FlatList
           data={usuariosBloqueados}

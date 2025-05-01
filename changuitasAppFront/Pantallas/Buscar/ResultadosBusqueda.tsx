@@ -83,11 +83,11 @@ const ResultadosBusqueda = () => {
                 ) : proveedoresFiltrados.length === 0 ? (
                   <View style={EstilosResultadosBusqueda.noResultsContainer}>
                     <Image
-                      source={require('./estilos/no-results.png')}
+                      source={require('./estilos/list-is-empty.png')}
                       style={EstilosResultadosBusqueda.noResultsImage}
                       resizeMode="contain"
                     />
-                    <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>No se encontraron proveedores para el servicio solicitado.</Text>
+                    <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>No se encontraron proveedores para los filtros seleccionados.</Text>
                   </View>
                 ) : (
                   

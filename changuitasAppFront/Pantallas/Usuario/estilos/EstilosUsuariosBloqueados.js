@@ -186,9 +186,19 @@ const  EstilosUsuariosBloqueados = StyleSheet.create({
       borderRadius: 5,
       backgroundColor: '#E0E0E0',
     },
+    noResultsContainer: {
+      flex: 1, 
+      justifyContent: 'center', 
+      alignItems: 'center',
+    },
+    noResultsImage: {
+      width: 200,
+      height: 200,
+      marginBottom: 20,
+    },
     mensajeNoUsuarios: {
       fontSize: 18,
-      color: '#197278',
+      color: 'grey',
       textAlign: 'center',
       marginTop: 20,
     }

@@ -107,7 +107,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
   },
   mensajeNoUsuarios: {
     fontSize: 18,
-    color: '#197278',
+    color: 'grey',
     textAlign: 'center',
   }
 });

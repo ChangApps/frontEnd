@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -186,7 +186,14 @@ const MisServicios = () => {
          {loading ? (
           <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
         ) : services.length === 0 ? (
+          <View style={EstilosMisServicios.noResultsContainer}>
           <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+          <Image
+              source={require('./estilos/bored.png')}
+              style={EstilosMisServicios.noResultsImage}
+              resizeMode="contain"
+            />
+          </View>
         ) : (
           <FlatList
             data={services}
