@@ -39,6 +39,11 @@ const EstilosResultadosBusqueda = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
   },
+  noResultsImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
   name: {
     fontSize: 16,
     fontWeight: '600',

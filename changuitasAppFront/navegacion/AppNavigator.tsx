@@ -71,125 +71,125 @@ export default function AppNavigator() {
 
 
   return (
-    <NavigationContainer >
+    <NavigationContainer>
 
-    <Stack.Navigator
-    initialRouteName={"InicioDeSesion"}
-    screenOptions={{
-      cardStyle: { flex: 1 }, // Para que el scroll funcione en web
-    }}
-  >     
-    <Stack.Screen 
-            name="InicioDeSesion" 
-            component={InicioDeSesion} 
-            options={{ headerShown: false }}  
-          />
-              <Stack.Screen 
-            name="Registro" 
-            component={Registro} 
-            options={{ headerShown: false }}  
-          />
-             <Stack.Screen 
-            name="Verificacion1Mail" 
-            component={Verificacion1Mail} 
-            options={{ headerShown: false }}  
-          />
-              <Stack.Screen 
-            name="Verificacion2Registro" 
-            component={Verificacion2Registro} 
-            options={{ headerShown: false }}  
-          />
-             <Stack.Screen 
-            name="RecuperarContrasena1" 
-            component={RecuperarContrasena1} 
-            options={{ headerShown: false }}  
-          />
-                 <Stack.Screen 
-            name="RecuperarContrasena2" 
-            component={RecuperarContrasena2} 
-            options={{ headerShown: false }}  
-          />
-                  <Stack.Screen 
-            name="RecuperarContrasena3" 
-            component={RecuperarContrasena3} 
-            options={{ headerShown: false }}  
-          />
-                   <Stack.Screen 
-            name="RecuperarNombreUsuario" 
-            component={RecuperarNombreUsuario} 
-            options={{ headerShown: false }}  
-          />
+      <Stack.Navigator
+      initialRouteName={"InicioDeSesion"}
+      screenOptions={{
+        cardStyle: { flex: 1 }, // Para que el scroll funcione en web
+      }}
+      >    
+      <Stack.Screen 
+              name="InicioDeSesion" 
+              component={InicioDeSesion} 
+              options={{ headerShown: false }}  
+            />
                 <Stack.Screen 
-            name="Home" 
-            component={Home} 
-            options={{ headerShown: false }}  
-          />       
-          <Stack.Screen 
-          name="PerfilUsuario" 
-          component={PerfilUsuario} 
-          options={{ headerShown: false }}  
-        />
-           <Stack.Screen 
-          name="Resenias" 
-          component={Resenias} 
-          options={{ headerShown: false }}  
-        />
-          <Stack.Screen 
-          name="UsuariosBloqueados" 
-          component={UsuariosBloqueados} 
-          options={{ headerShown: false }}  
-        />
+              name="Registro" 
+              component={Registro} 
+              options={{ headerShown: false }}  
+            />
+              <Stack.Screen 
+              name="Verificacion1Mail" 
+              component={Verificacion1Mail} 
+              options={{ headerShown: false }}  
+            />
+                <Stack.Screen 
+              name="Verificacion2Registro" 
+              component={Verificacion2Registro} 
+              options={{ headerShown: false }}  
+            />
+              <Stack.Screen 
+              name="RecuperarContrasena1" 
+              component={RecuperarContrasena1} 
+              options={{ headerShown: false }}  
+            />
+                  <Stack.Screen 
+              name="RecuperarContrasena2" 
+              component={RecuperarContrasena2} 
+              options={{ headerShown: false }}  
+            />
+                    <Stack.Screen 
+              name="RecuperarContrasena3" 
+              component={RecuperarContrasena3} 
+              options={{ headerShown: false }}  
+            />
+                    <Stack.Screen 
+              name="RecuperarNombreUsuario" 
+              component={RecuperarNombreUsuario} 
+              options={{ headerShown: false }}  
+            />
+                  <Stack.Screen 
+              name="Home" 
+              component={Home} 
+              options={{ headerShown: false }}  
+            />       
             <Stack.Screen 
-          name="MisServicios" 
-          component={MisServicios} 
+            name="PerfilUsuario" 
+            component={PerfilUsuario} 
+            options={{ headerShown: false }}  
+          />
+            <Stack.Screen 
+            name="Resenias" 
+            component={Resenias} 
+            options={{ headerShown: false }}  
+          />
+            <Stack.Screen 
+            name="UsuariosBloqueados" 
+            component={UsuariosBloqueados} 
+            options={{ headerShown: false }}  
+          />
+              <Stack.Screen 
+            name="MisServicios" 
+            component={MisServicios} 
+            options={{ headerShown: false }}  
+          /> 
+          <Stack.Screen 
+            name="EditarPerfil" 
+            component={EditarPerfil} 
+            options={{ headerShown: false }}  
+          /> 
+          <Stack.Screen 
+          name="BuscarServicio1" 
+          component={BuscarServicio1} 
           options={{ headerShown: false }}  
-        /> 
-         <Stack.Screen 
-          name="EditarPerfil" 
-          component={EditarPerfil} 
+        />    
+            <Stack.Screen 
+          name="BuscarServicio2" 
+          component={BuscarServicio2} 
           options={{ headerShown: false }}  
-        /> 
-         <Stack.Screen 
-        name="BuscarServicio1" 
-        component={BuscarServicio1} 
-        options={{ headerShown: false }}  
-      />    
+        />  
           <Stack.Screen 
-        name="BuscarServicio2" 
-        component={BuscarServicio2} 
-        options={{ headerShown: false }}  
-      />  
-        <Stack.Screen 
-        name="ResultadosBusqueda" 
-        component={ResultadosBusqueda} 
-        options={{ headerShown: false }}  
-      />  
-        <Stack.Screen 
-        name="PerfilProveedor" 
-        component={PerfilProveedor} 
-        options={{ headerShown: false }}  
-      />  
+          name="ResultadosBusqueda" 
+          component={ResultadosBusqueda} 
+          options={{ headerShown: false }}  
+        />  
           <Stack.Screen 
-        name="DetalleTarea" 
-        component={DetalleTarea} 
-        options={{ headerShown: false }}  
-      />  
-       <Stack.Screen 
-        name="CalificarTarea" 
-        component={CalificarTarea} 
-        options={{ headerShown: false }}  
-      />  
-          <Stack.Screen 
-        name="Historial1" 
-        component={Historial1} 
-        options={{ headerShown: false }}  
-      />  
+          name="PerfilProveedor" 
+          component={PerfilProveedor} 
+          options={{ headerShown: false }}  
+        />  
+            <Stack.Screen 
+          name="DetalleTarea" 
+          component={DetalleTarea} 
+          options={{ headerShown: false }}  
+        />  
         <Stack.Screen 
-        name="Historial2" 
-        component={Historial2} 
-        options={{ headerShown: false }}  
-      />  
-    </Stack.Navigator>
+          name="CalificarTarea" 
+          component={CalificarTarea} 
+          options={{ headerShown: false }}  
+        />  
+            <Stack.Screen 
+          name="Historial1" 
+          component={Historial1} 
+          options={{ headerShown: false }}  
+        />  
+          <Stack.Screen 
+          name="Historial2" 
+          component={Historial2} 
+          options={{ headerShown: false }}  
+        />  
+      </Stack.Navigator>
     </NavigationContainer>
 
   );

@@ -77,14 +77,18 @@ const ResultadosBusqueda = () => {
   
           {/* Mostrar mensaje de error si existe */}
           {error ? (
-                    <View style={EstilosResultadosBusqueda .errorContainer}>
-                        <Text style={EstilosResultadosBusqueda .errorText}>{error}</Text>
-                    </View>
-          ):
-                    proveedoresFiltrados.length === 0 ? (
-                      <View style={EstilosResultadosBusqueda .noResultsContainer}>
-                        <Text style={EstilosResultadosBusqueda .mensajeNoUsuarios}>No se encontraron usuarios.</Text>
-                    </View>
+                    <View style={EstilosResultadosBusqueda.errorContainer}>
+                    <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
+                  </View>
+                ) : proveedoresFiltrados.length === 0 ? (
+                  <View style={EstilosResultadosBusqueda.noResultsContainer}>
+                    <Image
+                      source={require('./estilos/no-results.png')}
+                      style={EstilosResultadosBusqueda.noResultsImage}
+                      resizeMode="contain"
+                    />
+                    <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>No se encontraron proveedores para el servicio solicitado.</Text>
+                  </View>
                 ) : (
                   
                   proveedoresFiltrados.map((item, index) => (

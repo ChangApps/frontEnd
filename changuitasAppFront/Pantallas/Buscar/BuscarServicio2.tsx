@@ -90,10 +90,12 @@ const BuscarServicio2 = () => {
         navigation.navigate('ResultadosBusqueda', { proveedores: [], error: 'No se encontraron proveedores para el servicio solicitado (excluyendo tu cuenta).' });
       }
     } catch (error: any) {
-      navigation.navigate('ResultadosBusqueda', { 
-        proveedores: [], 
-        error: error.response?.data?.message || 'No se encontraron proveedores para el servicio solicitado.' 
-      });
+        const mensajeError = error?.response?.data?.message;
+
+        navigation.navigate('ResultadosBusqueda', { 
+          proveedores: [], 
+          error: mensajeError || null  // Solo enviamos error si realmente existe
+        });
     } finally {
       setLoading(false);
     }
