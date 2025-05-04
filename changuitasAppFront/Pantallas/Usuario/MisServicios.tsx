@@ -176,7 +176,7 @@ const MisServicios = () => {
         {/* Botón Agregar Servicio */}
         <TouchableOpacity 
           style={EstilosMisServicios.botonAgregarServicio} 
-     //     onPress={() => navigation.navigate('AgregarServicio1')}
+             onPress={() => navigation.navigate('AgregarServicio1')}
         >
           <Ionicons name="add" size={20} color="#197278" />
           <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
