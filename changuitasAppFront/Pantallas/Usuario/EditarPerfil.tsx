@@ -6,7 +6,6 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../../auxiliares/API_URL';;
 import axios from 'axios';
-import FormData from 'form-data';
 import { Snackbar } from 'react-native-paper';
 import EstilosEditarPerfil from './estilos/EstilosEditarPerfil';
 import {cerrarSesion} from '../../autenticacion/authService';
@@ -15,22 +14,19 @@ import { mostrarOpcionesSelectorImagen } from '../../auxiliares/seleccionImagen'
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import { ImageCropperWeb } from '../../auxiliares/ImageCropperWeb';
+import { guardarCambios } from './aux/guardarCambios';
 
 const EditarPerfil = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
  //Estado para el cerrarSesion
  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-
   // Estado para la foto de perfil
   //const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   //const [state,setState] = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
-
     // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -40,7 +36,6 @@ const EditarPerfil = () => {
    const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
    const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
    const [cropperVisible, setCropperVisible] = useState<boolean>(false);
-
 
    const datosOriginales: { [key: string]: any } = {
     first_name: '',
@@ -80,7 +75,6 @@ const EditarPerfil = () => {
   const handleCloseModal = () => {
     setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
   };
-
 
    const logout = async () => {
      try {
@@ -124,7 +118,6 @@ const EditarPerfil = () => {
     }
   };
 
-  
   // Llama a obtenerFotoPerfil al montar el componente
   useEffect(() => {
     obtenerFotoPerfil();
@@ -151,215 +144,6 @@ const EditarPerfil = () => {
     const toggleDesplegable = () => {
       setMostrarDesplegable(!mostrarDesplegable);
     };
-
-  // Función para guardar cambios
-  const guardarCambios = async () => {
-    
-    // Verificar si el usuario realmente quiere cambiar la contraseña
-    const quiereCambiarPassword = 
-    camposModificados.password || 
-    camposModificados.password2 || 
-    camposModificados.old_password;
-    
-
-    // Si el usuario quiere cambiar la contraseña, validar que todos los campos estén llenos
-    if (quiereCambiarPassword) {
-      if (!camposModificados.old_password || !camposModificados.password || !camposModificados.password2) {
-        setMessage('Por favor, complete todos los campos de contraseña.');
-        setVisible(true);
-        return;
-      }
-  
-      if (camposModificados.password !== camposModificados.password2) {
-        setMessage('Las contraseñas nuevas no coinciden.');
-        setVisible(true);
-        return;
-      }
-    }
-
-
-    try {
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      const userId = await AsyncStorage.getItem('userId');
-  
-      if (!accessToken || !userId) {
-        throw new Error('No se encontraron credenciales de usuario');
-      }
-  
-    // Crear FormData para enviar tanto los datos como la imagen
-    const formData = new FormData();
-
-    if (imageUri && imageUri !== imageUriOriginal) {
-      try {
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        const fileType = blob.type.split('/')[1] || 'jpg';
-    
-        if (Platform.OS === "web") {
-          formData.append('fotoPerfil', blob, `photo.${fileType}`);
-        } else {
-          formData.append('fotoPerfil', {
-            uri: imageUri,
-            name: `photo.${fileType}`,
-            type: blob.type,
-          });
-        }
-      } catch (error) {
-        console.error('Error al procesar la imagen:', error);
-        Alert.alert('Error', 'No se pudo procesar la imagen seleccionada.');
-        return;
-      }
-    }
-        // Filtrar los campos que han sido modificados
-    const datosActualizados: { [key: string]: any } = {}; // Permitir claves dinámicas
-
-    Object.keys(camposModificados).forEach((campo) => {
-    if (typeof camposModificados[campo] === 'object') {
-        const subCampos: { [key: string]: any } = {};
-
-        Object.keys(camposModificados[campo]).forEach((subCampo) => {
-        if (camposModificados[campo][subCampo] !== datosOriginales[campo]?.[subCampo]) {
-            subCampos[subCampo] = camposModificados[campo][subCampo];
-        }
-        });
-
-        if (Object.keys(subCampos).length > 0) {
-        datosActualizados[campo] = subCampos;
-        }
-
-    } else if (
-        camposModificados[campo] !== datosOriginales[campo] &&
-        campo !== 'password2'
-    ) {
-        if (showPasswordFields && (campo === 'password' || campo === 'old_password')) {
-        if (camposModificados[campo]) {
-            datosActualizados[campo] = camposModificados[campo];
-        }
-        } else if (campo !== 'password' && campo !== 'old_password') {
-        datosActualizados[campo] = camposModificados[campo];
-        }
-    }
-    });
-      // Validar contraseñas si se están cambiando
-      if (showPasswordFields) {
-        if (camposModificados.password !== camposModificados.password2) {
-          if (Platform.OS === 'web') {
-            // Lanza un error específico para que se capture en el bloque catch
-            throw new Error('Las contraseñas nuevas no coinciden');
-          } else {
-            Alert.alert('Error', 'Las contraseñas nuevas no coinciden');
-          }
-          return;
-        }
-      
-        if (!camposModificados.old_password) {
-          if (Platform.OS === 'web') {
-            // Lanza un error específico para que se capture en el bloque catch
-            throw new Error('Debe ingresar la contraseña actual');
-          } else {
-            Alert.alert('Error', 'Debe ingresar la contraseña actual');
-          }
-          return;
-        }
-      }
-      
-
-      // Si no hay cambios y no hay nueva imagen, no enviar la solicitud
-      if (
-        Object.keys(datosActualizados).length === 0 &&
-        (!imageUri || imageUri === imageUriOriginal)
-      ) {
-        Alert.alert('Sin cambios', 'No hay campos modificados para guardar.');
-        return;
-      }
-  
-    // Agregar los datos actualizados al FormData
-    Object.keys(datosActualizados).forEach(key => {
-      if (typeof datosActualizados[key] === 'object') {
-        formData.append(key, JSON.stringify(datosActualizados[key]));
-      } else {
-        formData.append(key, datosActualizados[key]);
-      }
-    });
-
-
-    // Realizar la solicitud PATCH al backend usando FormData
-    const response = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (response.status === 200) {
-      Alert.alert('Éxito', 'Datos actualizados correctamente.');
-      navigation.navigate('Home');
-    } else {
-      Alert.alert('Error', 'No se pudieron guardar los cambios.');
-    }
-}  catch (error: any) {
-    if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
-      const errorData = error.response.data;
-      let errorMessage = '';
-
-      const translations: { [key: string]: string } = {
-        email: 'Correo electrónico',
-        telefono: 'Teléfono',
-        direccion: 'Dirección',
-        calle: 'Calle',
-        altura: 'Altura',
-        password: 'Contraseña',
-        password2: 'Repetir contraseña',
-        old_password: 'Contraseña anterior',
-      };
-  
-      const translatedErrors: { [key: string]: string } = {
-        "Enter a valid email address.": "Introduce una dirección de correo electrónico válida.",
-        "A valid integer is required.": "Introduce un valor válido.",
-        "A valid string is required.": "Introduce un valor válido.",
-      };
-
-      const translateErrors = (
-        errors: Record<string, unknown>,
-        parentKey: string = ''
-      ): string => {
-        let message = '';
-        for (const [key, value] of Object.entries(errors)) {
-          const field = parentKey
-            ? `${translations[parentKey] || parentKey} -> ${translations[key] || key}`
-            : translations[key] || key;
-  
-          if (Array.isArray(value)) {
-            const messages = value.map((msg) =>
-              typeof msg === 'string' ? translatedErrors[msg] || msg : ''
-            );
-            message += `${field}: ${messages.join(', ')}\n`;
-          } else if (typeof value === 'object' && value !== null) {
-            message += translateErrors(value as Record<string, unknown>, key);
-          } else if (typeof value === 'string') {
-            const singleMessage = translatedErrors[value] || value;
-            message += `${field}: ${singleMessage}\n`;
-          }
-        }
-        return message;
-      };
-      errorMessage = translateErrors(errorData).trim();
-      setMessage(errorMessage);
-      setVisible(true);
-    } else if (error.message) {
-      // Mensaje de error específico
-      setMessage(error.message);
-      setVisible(true);
-    } else {
-      // Error inesperado o sin detalles específicos
-      setMessage('Ocurrió un error inesperado.');
-      setVisible(true);
-      Alert.alert('Error', 'Ocurrió un problema con la conexión.');
-    }
-    };
-  };
-
-
 
   return (
   <SafeAreaView style={EstilosEditarPerfil.contenedor}>
@@ -581,7 +365,21 @@ const EditarPerfil = () => {
       {/* Botón de Guardar Cambios*/}
      {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
       {!visible && (
-        <TouchableOpacity onPress={guardarCambios} style={EstilosEditarPerfil.botonGuardarCambios}>
+       <TouchableOpacity
+       onPress={() =>
+         guardarCambios(
+           camposModificados,
+           datosOriginales,
+           imageUri,
+           imageUriOriginal,
+           showPasswordFields,
+           navigation,
+           setMessage,
+           setVisible
+         )
+       }
+       style={EstilosEditarPerfil.botonGuardarCambios}
+     >
           <Text style={EstilosEditarPerfil.textoBotonGuardar}>Guardar Cambios</Text>
         </TouchableOpacity>
       )} 
