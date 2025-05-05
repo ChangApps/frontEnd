@@ -24,6 +24,5 @@ npm install axios
  #Para desplegable en buscar servicio
 npm install @react-native-picker/picker
 
-#Notas: Intentar modularizar mas EditarPerfil,PerfilProveedor 
-        Cuando se seleccione una imagen de perfil en web que se pueda recortar como en el celular
-        Sacar los console log que no sean importante, dejar  solo los mas nesecarios 
+#Para recortar la imagen en web
+ npm install react-image-crop

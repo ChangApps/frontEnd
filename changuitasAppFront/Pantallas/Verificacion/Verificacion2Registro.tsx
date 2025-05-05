@@ -10,12 +10,13 @@ import API_URL from "../../auxiliares/API_URL";
 import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
 import {mostrarOpcionesSelectorImagen} from '../../auxiliares/seleccionImagen';
+import { ImageCropperWeb } from "../../auxiliares/ImageCropperWeb";
 
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
   // Estado para la foto de perfil
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
@@ -23,6 +24,7 @@ const Verificacion2Registro = () => {
    // Estado para almacenar los datos del usuario
    const [usuario, setUsuario] = useState(route.params?.datosUsuario || {});
   // const [state, setState] = useContext(AuthContext);
+  const [cropperVisible, setCropperVisible] = useState<boolean>(false);
 
 
    const handleImagePress = () => {
@@ -132,7 +134,7 @@ const Verificacion2Registro = () => {
       console.log("Token guardado: ", data.access);
 
       console.log("Exito");
-   //   navigation.navigate("PantallaHome");
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error en login:", error);
       setErrorMessage("Error al iniciar sesión.");
@@ -165,10 +167,42 @@ const Verificacion2Registro = () => {
   </TouchableOpacity>
 </View>
 
-        <TouchableOpacity onPress={() => mostrarOpcionesSelectorImagen(setImageUri, setImageFile)}>
-          <Text style={EstilosVerificacion2.textoOpcion}>+ Seleccionar Imagen</Text>
-        </TouchableOpacity>
+{Platform.OS === 'web' ? (
+  <>
+    <TouchableOpacity
+      onPress={() =>
+        mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+      }
+    >
+      <Text style={EstilosVerificacion2.textoOpcion}>Seleccionar Imagen</Text>
+    </TouchableOpacity>
 
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={cropperVisible}
+      onRequestClose={() => setCropperVisible(false)}
+    >
+      <View style={EstilosVerificacion2.modalOverlay}>
+        <View style={EstilosVerificacion2.modalContent}>
+          <ImageCropperWeb
+            imageUri={imageUri}
+            setImageUri={setImageUri}
+            setCropperVisible={setCropperVisible}
+          />
+        </View>
+      </View>
+    </Modal>
+  </>
+) : (
+  <TouchableOpacity
+    onPress={() =>
+      mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+    }
+  >
+    <Text style={EstilosVerificacion2.textoOpcion}>Seleccionar Imagen</Text>
+  </TouchableOpacity>
+)}
         <Modal visible={modalVisible} animationType="fade" transparent>
           <TouchableWithoutFeedback onPress={handleCloseModal}>
             <View style={EstilosVerificacion2.modalContainer}>

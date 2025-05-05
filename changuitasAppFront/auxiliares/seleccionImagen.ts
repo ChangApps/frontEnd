@@ -8,6 +8,8 @@ export const manejarRespuestaSelectorImagen = (
 ) => {
   if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
     setImageUri(resultado.assets[0].uri);
+  } else {
+    console.log("No se seleccionó ninguna imagen.");
   }
 };
 
@@ -15,7 +17,8 @@ export const manejarRespuestaSelectorImagen = (
 export const manejarCambioArchivoWeb = (
   event: Event,
   setImageUri: (uri: string) => void,
-  setImageFile: (file: File | null) => void
+  setImageFile: (file: File | null) => void,
+  setCropperVisible: (visible: boolean) => void
 ) => {
   const target = event.target as HTMLInputElement;
   const file = target.files ? target.files[0] : null;
@@ -24,33 +27,40 @@ export const manejarCambioArchivoWeb = (
     setImageFile(file);
     const imageUrl = URL.createObjectURL(file);
     setImageUri(imageUrl);
+    setCropperVisible(true);  // Mostrar el recortador de imagen
+  } else {
+    console.log("No se seleccionó ningún archivo.");
   }
 };
 
 // Mostrar opciones según plataforma
 export const mostrarOpcionesSelectorImagen = (
   setImageUri: (uri: string) => void,
-  setImageFile: (file: File | null) => void
+  setImageFile: (file: File | null) => void,
+  setCropperVisible: (visible: boolean) => void
 ) => {
   if (Platform.OS === "web") {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
-    fileInput.onchange = (event) => manejarCambioArchivoWeb(event, setImageUri, setImageFile);
+    fileInput.onchange = (event) =>
+      manejarCambioArchivoWeb(event, setImageUri, setImageFile, setCropperVisible);
     fileInput.click();
   } else {
     Alert.alert("Seleccionar una imagen", "Elige la opción para seleccionar una imagen", [
       { text: "Cancelar", style: "cancel" },
-      { text: "Tomar una foto", onPress: () => abrirCamara(setImageUri) },
-      { text: "Elegir desde la galería", onPress: () => abrirSelectorImagen(setImageUri) },
+      { text: "Tomar una foto", onPress: () => {
+        abrirCamara(setImageUri);
+      }},
+      { text: "Elegir desde la galería", onPress: () => {
+        abrirSelectorImagen(setImageUri);
+      }},
     ]);
   }
 };
 
 // Abrir galería
-export const abrirSelectorImagen = async (
-  setImageUri: (uri: string) => void
-) => {
+export const abrirSelectorImagen = async (setImageUri: (uri: string) => void) => {
   const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
   if (!permiso.granted) {
@@ -68,9 +78,7 @@ export const abrirSelectorImagen = async (
 };
 
 // Abrir cámara
-export const abrirCamara = async (
-  setImageUri: (uri: string) => void
-) => {
+export const abrirCamara = async (setImageUri: (uri: string) => void) => {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
   if (status !== "granted") {

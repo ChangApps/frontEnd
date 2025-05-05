@@ -14,6 +14,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import { mostrarOpcionesSelectorImagen } from '../../auxiliares/seleccionImagen';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import { ImageCropperWeb } from '../../auxiliares/ImageCropperWeb';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -22,7 +23,8 @@ const EditarPerfil = () => {
  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
 
   // Estado para la foto de perfil
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  //const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -37,6 +39,7 @@ const EditarPerfil = () => {
    const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
    const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
    const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
+   const [cropperVisible, setCropperVisible] = useState<boolean>(false);
 
 
    const datosOriginales: { [key: string]: any } = {
@@ -390,9 +393,43 @@ const EditarPerfil = () => {
             style={EstilosEditarPerfil.imagenUsuario} 
           />
           </TouchableOpacity>
-           <TouchableOpacity onPress={() => mostrarOpcionesSelectorImagen(setImageUri, setImageFile)}>
-            <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-          </TouchableOpacity>
+          {Platform.OS === 'web' ? (
+  <>
+    <TouchableOpacity
+      onPress={() =>
+        mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+      }
+    >
+      <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+    </TouchableOpacity>
+
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={cropperVisible}
+      onRequestClose={() => setCropperVisible(false)}
+    >
+      <View style={EstilosEditarPerfil.modalOverlay}>
+        <View style={EstilosEditarPerfil.modalContent}>
+          <ImageCropperWeb
+            imageUri={imageUri}
+            setImageUri={setImageUri}
+            setCropperVisible={setCropperVisible}
+          />
+        </View>
+      </View>
+    </Modal>
+  </>
+) : (
+  <TouchableOpacity
+    onPress={() =>
+      mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+    }
+  >
+    <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+  </TouchableOpacity>
+)}
+
         </View>
 
         <Modal
