@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Linking,Alert, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
@@ -179,7 +180,7 @@ const PerfilProveedor = () => {
         return;
       }
   
-      const response = await fetch(`${API_URL}/solicitudes/`, {
+      const response = await fetch(`${API_URL}/iniciar-changuita/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -516,4 +517,3 @@ const PerfilProveedor = () => {
 };
 
 export default PerfilProveedor;
-
