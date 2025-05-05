@@ -196,8 +196,10 @@ const PerfilProveedor = () => {
       if (response.ok) {
         Alert.alert("Éxito", "Proveedor servicio creado con éxito.");
 
-       const idSolicitud = responseJson.id 
+       const idSolicitud = responseJson.id_solicitud
        const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
+       console.log('id_solicitud', idSolicitud);
+       console.log('id_usuario', id);
         navigation.navigate('DetalleTarea', { id,idSolicitud});
 
       } else {

@@ -119,7 +119,7 @@ const fetchUHistorial = async () => {
       throw new Error('No se encontró el token o el ID de usuario');
     }
 
-    const responseHistorial = await fetch(`${API_URL}/historial/${userId}/`, {
+    const responseHistorial = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
