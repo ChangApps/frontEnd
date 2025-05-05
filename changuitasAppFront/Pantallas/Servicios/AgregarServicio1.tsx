@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import EstilosAgregarServicio1 from './estilos/EstilosAgregarServicio1';
 
 const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -24,17 +25,17 @@ const AgregarServicio1 = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={EstilosAgregarServicio1.container}>
       {/* Encabezado */}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <View style={EstilosAgregarServicio1.headerContainer}>
+        <TouchableOpacity style={EstilosAgregarServicio1.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Agregar un servicio (1/2)</Text>
+        <Text style={EstilosAgregarServicio1.headerText}>Agregar un servicio (1/2)</Text>
       </View>
 
       {/* Servicios */}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={EstilosAgregarServicio1.scrollContainer}>
         {renderCategory("BELLEZA", ["Depilación", "Maquillaje", "Manicura", "Peluquería", "Podología"], selectedService, handleSelectService)}
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
@@ -50,12 +51,12 @@ const AgregarServicio1 = () => {
         {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedService, handleSelectService)}
 
         {/* Botones */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.nextButtonText}>Siguiente</Text>
+        <View style={EstilosAgregarServicio1.buttonContainer}>
+          <TouchableOpacity style={EstilosAgregarServicio1.nextButton} onPress={handleNext}>
+            <Text style={EstilosAgregarServicio1.nextButtonText}>Siguiente</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('MisServicios')}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          <TouchableOpacity style={EstilosAgregarServicio1.cancelButton} onPress={() => navigation.navigate('MisServicios')}>
+            <Text style={EstilosAgregarServicio1.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -74,110 +75,21 @@ const renderCategory = (
   handleSelectService: (service: string) => void
 ) => (
   <View key={title}>
-    <Text style={styles.categoryTitle}>{title}</Text>
+    <Text style={EstilosAgregarServicio1.categoryTitle}>{title}</Text>
     {options.map(option => (
       <TouchableOpacity
         key={option}
-        style={styles.optionContainer}
+        style={EstilosAgregarServicio1.optionContainer}
         onPress={() => handleSelectService(option)}
       >
         <Checkbox
           status={selectedService === option ? 'checked' : 'unchecked'}
           onPress={() => handleSelectService(option)}
         />
-        <Text style={styles.optionText}>{option}</Text>
+        <Text style={EstilosAgregarServicio1.optionText}>{option}</Text>
       </TouchableOpacity>
     ))}
   </View>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginTop: 40,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#197278',
-    padding: 15,
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  scrollContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 80,
-  },
-  categoryTitle: {
-    fontSize: 16,
-    color: '#197278',
-    fontWeight: '600',
-    marginTop: 20,
-  },
-  optionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  optionText: {
-    fontSize: 16,
-    color: 'black',
-    marginLeft: 8,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-  },
-  nextButton: {
-    backgroundColor: '#197278',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 50,
-  },
-  nextButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  cancelButton: {
-    borderWidth: 1,
-    borderColor: '#197278',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 50,
-  },
-  cancelButtonText: {
-    color: '#197278',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  barraNavegacion: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  iconoNavegacion: {
-    alignItems: 'center',
-  },
-  textoNavegacion: {
-    fontSize: 12,
-    color: 'gray',
-  },
-});
 
 export default AgregarServicio1;
