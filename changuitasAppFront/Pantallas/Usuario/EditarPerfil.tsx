@@ -14,7 +14,7 @@ import { mostrarOpcionesSelectorImagen } from '../../auxiliares/seleccionImagen'
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import { ImageCropperWeb } from '../../auxiliares/ImageCropperWeb';
-import { guardarCambios } from './aux/guardarCambios';
+import { guardarCambios } from './auxiliar/guardarCambios';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
