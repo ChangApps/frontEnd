@@ -122,7 +122,7 @@ const fetchUHistorial = async () => {
       throw new Error('No se encontró el token o el ID de usuario');
     }
 
-    const responseHistorial = await fetch(`${API_URL}/historial/${userId}/`, {
+    const responseHistorial = await fetch(`${API_URL}/historial/proveedor/${userId}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -139,13 +139,13 @@ const fetchUHistorial = async () => {
     if (historialData.length > 0) {
       setHistorial(historialData);
 
-      // Filtrar las solicitudes con estado 'F' o 'C' antes de continuar
-      const solicitudesFiltradas = historialData.filter((item:any) => 
-        item.estado === 'F' || item.estado === 'C' // Filtramos por estado
-      );
+      // // Filtrar las solicitudes con estado 'F' o 'C' antes de continuar
+      // const solicitudesFiltradas = historialData.filter((item:any) => 
+      //   item.estado === 'F' || item.estado === 'C' // Filtramos por estado
+      // );
 
       // Extraer los proveedores y la información de solicitudes
-      const solicitudesData = solicitudesFiltradas.map((item: any) => ({
+      const solicitudesData = historialData.map((item: any) => ({
         proveedorId: item.proveedor_id, 
         idSolicitud: item.id,          
         fechaSolicitud: item.fechaSolicitud, 
@@ -230,96 +230,118 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         </TouchableOpacity>
       </View>
 
-        {/* Menú Desplegable */}
-       {mostrarDesplegable && (
+      {/* Menú Desplegable */}
+      {mostrarDesplegable && (
         <View style={EstilosHistorial2.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosHistorial2.opcionDesplegable}>
-            <Text style={EstilosHistorial2.textoDesplegable}>Cerrar sesión</Text>
+          <TouchableOpacity
+            onPress={logout}
+            style={EstilosHistorial2.opcionDesplegable}
+          >
+            <Text style={EstilosHistorial2.textoDesplegable}>
+              Cerrar sesión
+            </Text>
           </TouchableOpacity>
         </View>
       )}
-         
-         {/* Barra de pestañas */}
-         <View style={EstilosHistorial2.barraPestanas}>
-        <TouchableOpacity style={EstilosHistorial2.pestanaInactiva} onPress={() => navigation.navigate('Historial1')}>
-          <Text style={EstilosHistorial2.textoPestanaInactiva}>Servicios contratados</Text>
+
+      {/* Barra de pestañas */}
+      <View style={EstilosHistorial2.barraPestanas}>
+        <TouchableOpacity
+          style={EstilosHistorial2.pestanaInactiva}
+          onPress={() => navigation.navigate("Historial1")}
+        >
+          <Text style={EstilosHistorial2.textoPestanaInactiva}>
+            Servicios contratados
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={EstilosHistorial2.pestanaActiva} onPress={() => navigation.navigate('Historial2')}>
+        <TouchableOpacity
+          style={EstilosHistorial2.pestanaActiva}
+          onPress={() => navigation.navigate("Historial2")}
+        >
           <Text style={EstilosHistorial2.textoPestanaActiva}>Trabajos</Text>
         </TouchableOpacity>
       </View>
 
-            {/* Elemento de resultado */}
-            <FlatList
-  data={historial.filter(item => item.estado === 'F' || item.estado === 'C')}
-  keyExtractor={(item) => item.id.toString()} // id de la solicitud
-  renderItem={({ item }) => {
-    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
-    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
+      {/* Elemento de resultado */}
+      <FlatList
+        data={historial}
+        keyExtractor={(item) => item.id.toString()} // id de la solicitud
+        renderItem={({ item }) => {
+          const proveedor = proveedores.find((p) => p.id === item.proveedor_id);
+          const puntaje = proveedor?.puntaje
+            ? Math.round(proveedor.puntaje)
+            : 0;
 
-    return (
-      <View style={EstilosHistorial2.resultItem}>
-        <Image
-          style={EstilosHistorial2.image}
-          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
-        />
-        <View style={EstilosHistorial2.resultDetails}>
-          <Text style={EstilosHistorial2.name}>
-            {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
-          </Text>
-
-          <Text style={EstilosHistorial2.fecha}>
-            Fecha: {item.fechaSolicitud}
-          </Text>
-
-          <View style={EstilosHistorial2.ratingStars}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <Ionicons
-                key={i}
-                name="star"
-                size={16}
-                color={i < puntaje ? "black" : "#CCCCCC"}
+          return (
+            <View style={EstilosHistorial2.resultItem}>
+              <Image
+                style={EstilosHistorial2.image}
+                source={{
+                  uri:
+                    proveedor?.fotoPerfil || "https://via.placeholder.com/100",
+                }}
               />
-            ))}
+              <View style={EstilosHistorial2.resultDetails}>
+                <Text style={EstilosHistorial2.name}>
+                  {`${proveedor?.first_name || "Nombre"} ${
+                    proveedor?.last_name || ""
+                  }`}
+                </Text>
+
+                <Text style={EstilosHistorial2.fecha}>
+                  Fecha: {item.fechaSolicitud}
+                </Text>
+
+                <View style={EstilosHistorial2.ratingStars}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Ionicons
+                      key={i}
+                      name="star"
+                      size={16}
+                      color={i < puntaje ? "black" : "#CCCCCC"}
+                    />
+                  ))}
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("DetalleTarea", {
+                    id: proveedor?.id?.toString() || "No disponible",
+                    idSolicitud: item.id.toString(),
+                  });
+                }}
+                style={EstilosHistorial2.arrowButton}
+              >
+                <Ionicons name="chevron-forward" size={20} color="#333" />
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+        ListEmptyComponent={
+          <View style={EstilosHistorial2.emptyContainer}>
+            <Text style={EstilosHistorial2.textoVacio}>
+              No hay historial disponible
+            </Text>
           </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('DetalleTarea', {
-              id: proveedor?.id?.toString() || 'No disponible',
-              idSolicitud: item.id.toString()
-            });
-          }}
-          style={EstilosHistorial2.arrowButton}
-        >
-          <Ionicons name="chevron-forward" size={20} color="#333" />
-        </TouchableOpacity>
-      </View>
-    );
-  }}
-  ListEmptyComponent={
-    <View style={EstilosHistorial2.emptyContainer}>
-      <Text style={EstilosHistorial2.textoVacio}>No hay historial disponible</Text>
-    </View>
-  }
-/>
-<Snackbar
+        }
+      />
+      <Snackbar
         visible={visible}
-        onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
-        duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
+        onDismiss={() => setVisible(false)} // Ocultar el Snackbar cuando se cierre
+        duration={Snackbar.DURATION_SHORT} // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: -150,
           left: 0,
           right: 0,
-          zIndex: 100000, 
+          zIndex: 100000,
           marginRight: 50,
         }}
       >
         {message}
       </Snackbar>
       {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>
+      <BarraNavegacionInferior />
     </SafeAreaView>
   );
 };
