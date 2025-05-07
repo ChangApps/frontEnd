@@ -81,13 +81,17 @@ const renderCategory = (
     <View key={title}>
       <Text style={EstilosBuscarServicio1.categoryTitle}>{title}</Text>
       {options.map((option: any) => (
-        <View style={EstilosBuscarServicio1.optionContainer} key={option}>
-          <Checkbox
-            status={selectedService === option ? 'checked' : 'unchecked'}
-            onPress={() => handleSelectService(option)}
-          />
-          <Text style={EstilosBuscarServicio1.optionText}>{option}</Text>
-        </View>
+       <TouchableOpacity
+        style={EstilosBuscarServicio1.optionContainer}
+        key={option}
+        onPress={() => handleSelectService(option)}
+        activeOpacity={0.7}
+      >
+        <Checkbox
+          status={selectedService === option ? 'checked' : 'unchecked'}
+        />
+        <Text style={EstilosBuscarServicio1.optionText}>{option}</Text>
+     </TouchableOpacity>
       ))}
     </View>
   );
