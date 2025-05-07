@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView,  TouchableOpacity} from 'react-native';
+import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import { Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -107,41 +107,45 @@ const PantallaHome = () => {
   };
 
   return (
-    <SafeAreaView style={EstilosHome.contenedor}>
-      {/* Encabezado */}
-      <View style={EstilosHome.encabezado}>
-        <Text style={EstilosHome.textoInicio}>Inicio</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Text style={EstilosHome.menuPuntos}>...</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Menú Desplegable */}
-      {mostrarDesplegable && (
-        <View style={EstilosHome.desplegable}>
-          <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-          </TouchableOpacity>
-          <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-            <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosHome.contenedor}>
+        {/* Encabezado */}
+        <View style={EstilosHome.encabezado}>
+          <Text style={EstilosHome.textoInicio}>Inicio</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Text style={EstilosHome.menuPuntos}>...</Text>
           </TouchableOpacity>
         </View>
-      )}
 
-      {/* Contenido Principal */}
-      <View style={EstilosHome.contenidoPrincipal}>
-        <Text style={EstilosHome.tituloApp}>Changuitas{'\n'}App</Text>
-        
-        <View style={EstilosHome.contenedorCaracteristicas}>
-          {caracteristicas.map((item, indice) => (
-            <TouchableOpacity key={indice} style={EstilosHome.cajaCaracteristica}>
-              <Text style={EstilosHome.textoCaracteristica}>• {item}</Text>
+        {/* Menú Desplegable */}
+        {mostrarDesplegable && (
+          <View style={EstilosHome.desplegable}>
+            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
             </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
+              <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
-      <BarraNavegacionInferior/>
-    </SafeAreaView>
+        {/* Contenido Principal */}
+        <View style={EstilosHome.contenidoPrincipal}>
+          <Text style={EstilosHome.tituloApp}>Changuitas{'\n'}App</Text>
+          
+          <View style={EstilosHome.contenedorCaracteristicas}>
+            {caracteristicas.map((item, indice) => (
+              <TouchableOpacity key={indice} style={EstilosHome.cajaCaracteristica}>
+                <Text style={EstilosHome.textoCaracteristica}>• {item}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <BarraNavegacionInferior/>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

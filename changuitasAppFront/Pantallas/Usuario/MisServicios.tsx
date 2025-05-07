@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -152,60 +152,64 @@ const MisServicios = () => {
     </View>
   );
   return (
-    <SafeAreaView style={EstilosMisServicios.contenedor}>
-      {/* Header con Perfil*/}
-      <View style={EstilosMisServicios.header}>
-        <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-        {/* Menú Desplegable */}
-           {mostrarDesplegable && (
-        <View style={EstilosMisServicios.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosMisServicios.opcionDesplegable}>
-            <Text style={EstilosMisServicios.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosMisServicios.contenedor}>
+        {/* Header con Perfil*/}
+        <View style={EstilosMisServicios.header}>
+          <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
-      )}
 
-     {/* Barra de pestañas */}
-    <BarraPestanasPerfil/>
-
-        {/* Botón Agregar Servicio */}
-        <TouchableOpacity 
-          style={EstilosMisServicios.botonAgregarServicio} 
-     //     onPress={() => navigation.navigate('AgregarServicio1')}
-        >
-          <Ionicons name="add" size={20} color="#197278" />
-          <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
-        </TouchableOpacity>
-
-         {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
-         {loading ? (
-          <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
-        ) : services.length === 0 ? (
-          <View style={EstilosMisServicios.noResultsContainer}>
-          <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
-          <Image
-              source={require('./estilos/bored.png')}
-              style={EstilosMisServicios.noResultsImage}
-              resizeMode="contain"
-            />
+          {/* Menú Desplegable */}
+            {mostrarDesplegable && (
+          <View style={EstilosMisServicios.desplegable}>
+            <TouchableOpacity onPress={logout} style={EstilosMisServicios.opcionDesplegable}>
+              <Text style={EstilosMisServicios.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
           </View>
-        ) : (
-          <FlatList
-            data={services}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderServiceItem}
-            contentContainerStyle={EstilosMisServicios.listaServicios}
-          />
         )}
 
-      {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>        
-    </SafeAreaView>
+      {/* Barra de pestañas */}
+      <BarraPestanasPerfil/>
+
+          {/* Botón Agregar Servicio */}
+          <TouchableOpacity 
+            style={EstilosMisServicios.botonAgregarServicio} 
+      //     onPress={() => navigation.navigate('AgregarServicio1')}
+          >
+            <Ionicons name="add" size={20} color="#197278" />
+            <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
+          </TouchableOpacity>
+
+          {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+          {loading ? (
+            <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
+          ) : services.length === 0 ? (
+            <View style={EstilosMisServicios.noResultsContainer}>
+            <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+            <Image
+                source={require('./estilos/bored.png')}
+                style={EstilosMisServicios.noResultsImage}
+                resizeMode="contain"
+              />
+            </View>
+          ) : (
+            <FlatList
+              data={services}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderServiceItem}
+              contentContainerStyle={EstilosMisServicios.listaServicios}
+            />
+          )}
+
+        {/* Barra de navegación inferior */}
+        <BarraNavegacionInferior/>        
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
 
   );
 };
