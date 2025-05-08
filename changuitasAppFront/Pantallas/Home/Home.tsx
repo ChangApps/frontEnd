@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView,  TouchableOpacity} from 'react-native';
+import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking} from 'react-native';
 import { Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,7 @@ import {cerrarSesion} from '../../autenticacion/authService';
 import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import API_URL from '../../auxiliares/API_URL';
 
 //import { AuthContext } from '../Autenticacion/auth';
 
@@ -16,6 +17,7 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [accessToken, setAccessToken] = useState('');
+  const [usuario, setUsuario] = useState<any>(null);
 //  const [state,setState] = useContext(AuthContext);
   const caracteristicas = [
     '+30 servicios',
@@ -24,7 +26,48 @@ const PantallaHome = () => {
       
   ];
 
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
+  const fetchUsuarioLogueado = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) throw new Error('No token');
+  
+      // 1. Obtengo el ID del usuario con el GET
+      const userIdResponse = await fetch(`${API_URL}/usuario/userId/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (!userIdResponse.ok) throw new Error('No se pudo obtener el ID de usuario');
+  
+      const userIdData = await userIdResponse.json();
+      const userId = userIdData.id;
+  
+      // 2. Obtengo los datos del usuario utilizando el  ID
+      const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (!response.ok) throw new Error('Error al obtener el usuario');
+  
+      const data = await response.json();
+      setUsuario(data);
+    } catch (error) {
+      console.error('Error al obtener usuario logueado:', error);
+    }
+  };
+  
+  
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -38,6 +81,7 @@ const PantallaHome = () => {
         const storedAccessToken = await AsyncStorage.getItem('accessToken');
         if (storedAccessToken) {
           setAccessToken(storedAccessToken);
+            await fetchUsuarioLogueado();
         }
       } catch (error) {
         console.error("Error al obtener el accessToken desde AsyncStorage:", error);
@@ -107,41 +151,50 @@ const PantallaHome = () => {
   };
 
   return (
-    <SafeAreaView style={EstilosHome.contenedor}>
-      {/* Encabezado */}
-      <View style={EstilosHome.encabezado}>
-        <Text style={EstilosHome.textoInicio}>Inicio</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Text style={EstilosHome.menuPuntos}>...</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Menú Desplegable */}
-      {mostrarDesplegable && (
-        <View style={EstilosHome.desplegable}>
-          <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-          </TouchableOpacity>
-          <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-            <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosHome.contenedor}>
+        {/* Encabezado */}
+        <View style={EstilosHome.encabezado}>
+          <Text style={EstilosHome.textoInicio}>Inicio</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Text style={EstilosHome.menuPuntos}>...</Text>
           </TouchableOpacity>
         </View>
-      )}
 
-      {/* Contenido Principal */}
-      <View style={EstilosHome.contenidoPrincipal}>
-        <Text style={EstilosHome.tituloApp}>Changuitas{'\n'}App</Text>
-        
-        <View style={EstilosHome.contenedorCaracteristicas}>
-          {caracteristicas.map((item, indice) => (
-            <TouchableOpacity key={indice} style={EstilosHome.cajaCaracteristica}>
-              <Text style={EstilosHome.textoCaracteristica}>• {item}</Text>
+        {/* Menú Desplegable */}
+        {mostrarDesplegable && (
+          <View style={EstilosHome.desplegable}>
+            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
             </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+            {usuario && usuario.is_staff && ( //Si el usuario es staff, renderizo el boton para el panel Administrador de Django
+              <TouchableOpacity style={EstilosHome.opcionDesplegable} onPress={redirectAdmin}>
+                <Text style={EstilosHome.textoDesplegable}>Admin</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
+              <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
-      <BarraNavegacionInferior/>
-    </SafeAreaView>
+        {/* Contenido Principal */}
+        <View style={EstilosHome.contenidoPrincipal}>
+          <Text style={EstilosHome.tituloApp}>Changuitas{'\n'}App</Text>
+          
+          <View style={EstilosHome.contenedorCaracteristicas}>
+            {caracteristicas.map((item, indice) => (
+              <TouchableOpacity key={indice} style={EstilosHome.cajaCaracteristica}>
+                <Text style={EstilosHome.textoCaracteristica}>• {item}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <BarraNavegacionInferior/>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
