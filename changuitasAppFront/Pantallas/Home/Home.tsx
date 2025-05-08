@@ -32,22 +32,13 @@ const PantallaHome = () => {
 
   const fetchUsuarioLogueado = async () => {
     try {
+        // 1. Obtengo el userId y el token desde AsyncStorage
+      const userId = await AsyncStorage.getItem('userId');
       const accessToken = await AsyncStorage.getItem('accessToken');
-      if (!accessToken) throw new Error('No token');
-  
-      // 1. Obtengo el ID del usuario con el GET
-      const userIdResponse = await fetch(`${API_URL}/usuario/userId/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-  
-      if (!userIdResponse.ok) throw new Error('No se pudo obtener el ID de usuario');
-  
-      const userIdData = await userIdResponse.json();
-      const userId = userIdData.id;
+
+      if (!userId || !accessToken) {
+        throw new Error('Faltan credenciales');
+      }
   
       // 2. Obtengo los datos del usuario utilizando el  ID
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
