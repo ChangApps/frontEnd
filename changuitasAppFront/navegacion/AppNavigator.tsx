@@ -25,6 +25,9 @@ import UsuariosBloqueados from '../Pantallas/Usuario/UsuariosBloqueados';
 import MisServicios from '../Pantallas/Usuario/MisServicios';
 import EditarPerfil from '../Pantallas/Usuario/EditarPerfil';
 
+import AgregarServicio1 from '../Pantallas/Servicios/AgregarServicio1';
+import AgregarServicio2 from '../Pantallas/Servicios/AgregarServicio2';
+
 import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
 import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
 import ResultadosBusqueda from '../Pantallas/Buscar/ResultadosBusqueda';
@@ -51,6 +54,8 @@ export type RootStackParamList = {
   UsuariosBloqueados:undefined;
   MisServicios:undefined;
   EditarPerfil:undefined;
+  AgregarServicio1:undefined;
+  AgregarServicio2: { selectedServices: string[] }; // Define que AgregarServicio2 espera un parametro
   BuscarServicio1:undefined;
   BuscarServicio2: { selectedService: string[] };
   ResultadosBusqueda: { 
@@ -147,6 +152,16 @@ export default function AppNavigator() {
           <Stack.Screen 
             name="EditarPerfil" 
             component={EditarPerfil} 
+            options={{ headerShown: false }}  
+          /> 
+          <Stack.Screen 
+            name="AgregarServicio1" 
+            component={AgregarServicio1} 
+            options={{ headerShown: false }}  
+          /> 
+          <Stack.Screen 
+            name="AgregarServicio2" 
+            component={AgregarServicio2} 
             options={{ headerShown: false }}  
           /> 
           <Stack.Screen 

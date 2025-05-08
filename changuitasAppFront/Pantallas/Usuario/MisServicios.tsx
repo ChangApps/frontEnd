@@ -174,43 +174,42 @@ const MisServicios = () => {
         )}
 
       {/* Barra de pestañas */}
-      <BarraPestanasPerfil/>
+    <BarraPestanasPerfil/>
 
-          {/* Botón Agregar Servicio */}
-          <TouchableOpacity 
-            style={EstilosMisServicios.botonAgregarServicio} 
-      //     onPress={() => navigation.navigate('AgregarServicio1')}
-          >
-            <Ionicons name="add" size={20} color="#197278" />
-            <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
-          </TouchableOpacity>
+        {/* Botón Agregar Servicio */}
+        <TouchableOpacity 
+          style={EstilosMisServicios.botonAgregarServicio} 
+             onPress={() => navigation.navigate('AgregarServicio1')}
+        >
+          <Ionicons name="add" size={20} color="#197278" />
+          <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
+        </TouchableOpacity>
 
-          {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
-          {loading ? (
-            <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
-          ) : services.length === 0 ? (
-            <View style={EstilosMisServicios.noResultsContainer}>
-            <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
-            <Image
-                source={require('./estilos/bored.png')}
-                style={EstilosMisServicios.noResultsImage}
-                resizeMode="contain"
-              />
-            </View>
-          ) : (
-            <FlatList
-              data={services}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderServiceItem}
-              contentContainerStyle={EstilosMisServicios.listaServicios}
+         {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+         {loading ? (
+          <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
+        ) : services.length === 0 ? (
+          <View style={EstilosMisServicios.noResultsContainer}>
+          <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+          <Image
+              source={require('./estilos/bored.png')}
+              style={EstilosMisServicios.noResultsImage}
+              resizeMode="contain"
             />
-          )}
+          </View>
+        ) : (
+          <FlatList
+            data={services}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderServiceItem}
+            contentContainerStyle={EstilosMisServicios.listaServicios}
+          />
+        )}
 
-        {/* Barra de navegación inferior */}
-        <BarraNavegacionInferior/>        
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-
+      {/* Barra de navegación inferior */}
+      <BarraNavegacionInferior/>        
+    </SafeAreaView>
+ </TouchableWithoutFeedback>
   );
 };
 
