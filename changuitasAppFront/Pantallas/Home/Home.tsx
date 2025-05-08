@@ -35,7 +35,7 @@ const PantallaHome = () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) throw new Error('No token');
   
-      // 1. Obtener el ID del usuario actual desde tu endpoint personalizado
+      // 1. Obtengo el ID del usuario con el GET
       const userIdResponse = await fetch(`${API_URL}/usuario/userId/`, {
         method: 'GET',
         headers: {
@@ -49,7 +49,7 @@ const PantallaHome = () => {
       const userIdData = await userIdResponse.json();
       const userId = userIdData.id;
   
-      // 2. Obtener los datos completos del usuario usando el ID
+      // 2. Obtengo los datos del usuario utilizando el  ID
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'GET',
         headers: {
@@ -168,7 +168,7 @@ const PantallaHome = () => {
           <View style={EstilosHome.desplegable}>
             <TouchableOpacity style={EstilosHome.opcionDesplegable}>
             </TouchableOpacity>
-            {usuario && usuario.is_staff && (
+            {usuario && usuario.is_staff && ( //Si el usuario es staff, renderizo el boton para el panel Administrador de Django
               <TouchableOpacity style={EstilosHome.opcionDesplegable} onPress={redirectAdmin}>
                 <Text style={EstilosHome.textoDesplegable}>Admin</Text>
               </TouchableOpacity>
