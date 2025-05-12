@@ -114,8 +114,8 @@ const EstilosPerfilUsuario = StyleSheet.create({
       backgroundColor: 'white',
       borderTopWidth: 1,
       borderTopColor: '#ddd',
-      position: 'absolute',
-      bottom: 0,
+      position: 'relative', 
+      top: -40, //para la barra estaba encima de los botones
       width: '100%',
     },
     iconoNavegacion: {
