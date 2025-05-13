@@ -169,6 +169,21 @@ const EstilosHistorial1 = StyleSheet.create({
     color: '#666',
     marginTop: 2,
   },
+  noResultsContainer: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+  },
+  noResultsImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  mensajeNoUsuarios: {
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
+  }
 });
 
 export default EstilosHistorial1;
