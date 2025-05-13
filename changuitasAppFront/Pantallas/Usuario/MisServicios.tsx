@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -152,25 +152,28 @@ const MisServicios = () => {
     </View>
   );
   return (
-    <SafeAreaView style={EstilosMisServicios.contenedor}>
-      {/* Header con Perfil*/}
-      <View style={EstilosMisServicios.header}>
-        <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-        {/* Menú Desplegable */}
-           {mostrarDesplegable && (
-        <View style={EstilosMisServicios.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosMisServicios.opcionDesplegable}>
-            <Text style={EstilosMisServicios.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosMisServicios.contenedor}>
+        {/* Header con Perfil*/}
+        <View style={EstilosMisServicios.header}>
+          <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
-      )}
 
-     {/* Barra de pestañas */}
+          {/* Menú Desplegable */}
+            {mostrarDesplegable && (
+          <View style={EstilosMisServicios.desplegable}>
+            <TouchableOpacity onPress={logout} style={EstilosMisServicios.opcionDesplegable}>
+              <Text style={EstilosMisServicios.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+      {/* Barra de pestañas */}
     <BarraPestanasPerfil/>
 
         {/* Botón Agregar Servicio */}
@@ -206,7 +209,7 @@ const MisServicios = () => {
       {/* Barra de navegación inferior */}
       <BarraNavegacionInferior/>        
     </SafeAreaView>
-
+ </TouchableWithoutFeedback>
   );
 };
 

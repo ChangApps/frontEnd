@@ -139,94 +139,98 @@ const PerfilUsuario: React.FC = () => {
   }
 
   return (
-     <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
-      {/* Encabezado con opciones de menú */}
-      <View style={EstilosPerfilUsuario.encabezado}>
-        <Text style={EstilosPerfilUsuario.textoEncabezado}>Perfil</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Menú Desplegable */}
-      {mostrarDesplegable && (
-        <View style={EstilosPerfilUsuario.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosPerfilUsuario.opcionDesplegable}>
-            <Text style={EstilosPerfilUsuario.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
+        {/* Encabezado con opciones de menú */}
+        <View style={EstilosPerfilUsuario.encabezado}>
+          <Text style={EstilosPerfilUsuario.textoEncabezado}>Perfil</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
-      )}
-      {/* Barra de pestañas */}
-       <BarraPestanasPerfil/>
 
-        {/* Información del Usuario */}
-        <View style={EstilosPerfilUsuario.seccionUsuario}>
-        <TouchableOpacity onPress={handleImagePress}>
-          <Image 
-            source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-            style={EstilosPerfilUsuario.imagenUsuario} 
-          />
-        </TouchableOpacity>
-        <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
-      </View>
-      
-      <Modal
-        visible={modalVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={handleCloseModal}
-      >
-        <TouchableWithoutFeedback onPress={handleCloseModal}>
-          <View style={EstilosPerfilUsuario.modalContainer}>
+        {/* Menú Desplegable */}
+        {mostrarDesplegable && (
+          <View style={EstilosPerfilUsuario.desplegable}>
+            <TouchableOpacity onPress={logout} style={EstilosPerfilUsuario.opcionDesplegable}>
+              <Text style={EstilosPerfilUsuario.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/* Barra de pestañas */}
+        <BarraPestanasPerfil/>
+
+          {/* Información del Usuario */}
+          <View style={EstilosPerfilUsuario.seccionUsuario}>
+          <TouchableOpacity onPress={handleImagePress}>
             <Image 
               source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-              style={EstilosPerfilUsuario.imagenModal} 
+              style={EstilosPerfilUsuario.imagenUsuario} 
             />
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
-      {/* Datos adicionales */}
-      <View style={EstilosPerfilUsuario.datosExtras}>
-        <View style={EstilosPerfilUsuario.datoItem}>
-        <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
-        {/*Esta parte convierte (o "castea") el objeto usuario al tipo any.
-El tipo any en TypeScript desactiva las verificaciones de tipo, permitiendo acceder a cualquier propiedad sin que TypeScript marque un error de momento temporal*/}
-          <Text style={EstilosPerfilUsuario.datoLabel}>Contrató</Text>
+          </TouchableOpacity>
+          <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
         </View>
-        <View style={EstilosPerfilUsuario.datoItem}>
-        <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
-          <Text style={EstilosPerfilUsuario.datoLabel}>Trabajó</Text>
-        </View>
-        <TouchableOpacity 
-          onPress={() => {
-            navigation.navigate("Resenias", { idUsuario: usuarioId });
-          }}
-        >
-        <View style={EstilosPerfilUsuario.datoItem}>
-        <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
-          <Text style={EstilosPerfilUsuario.datoLabel}>Puntaje</Text>
-        </View>
-        </TouchableOpacity>
         
-      </View>
- 
-      {/* Datos Personales */}
-      <Text style={EstilosPerfilUsuario.tituloDatosPersonales}>DATOS PERSONALES</Text>
-      <View style={EstilosPerfilUsuario.datosPersonales}>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>Nombre: {usuario?.first_name}</Text>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>Correo Electrónico: {usuario?.email}</Text>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>Teléfono: {usuario?.telefono}</Text>
-        <Text style={EstilosPerfilUsuario.infoUsuario}>
-          Dirección: {usuario?.direccion.calle}, {usuario?.direccion.altura}{' '}
-          {usuario?.direccion.piso ? `Piso ${usuario?.direccion.piso}` : ''}{' '}
-          {usuario?.direccion.nroDepto ? `Depto ${usuario?.direccion.nroDepto}` : ''}, {usuario?.direccion.barrio}
-        </Text>
-      </View>
-    <BarraNavegacionInferior/>
-    </SafeAreaView>
+        <Modal
+          visible={modalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseModal}>
+            <View style={EstilosPerfilUsuario.modalContainer}>
+              <Image 
+                source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
+                style={EstilosPerfilUsuario.imagenModal} 
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        {/* Datos adicionales */}
+        <View style={EstilosPerfilUsuario.datosExtras}>
+          <View style={EstilosPerfilUsuario.datoItem}>
+          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
+          {/*Esta parte convierte (o "castea") el objeto usuario al tipo any.
+  El tipo any en TypeScript desactiva las verificaciones de tipo, permitiendo acceder a cualquier propiedad sin que TypeScript marque un error de momento temporal*/}
+            <Text style={EstilosPerfilUsuario.datoLabel}>Contrató</Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datoItem}>
+          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
+            <Text style={EstilosPerfilUsuario.datoLabel}>Trabajó</Text>
+          </View>
+          <TouchableOpacity 
+            onPress={() => {
+              navigation.navigate("Resenias", { idUsuario: usuarioId });
+            }}
+          >
+          <View style={EstilosPerfilUsuario.datoItem}>
+          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
+            <Text style={EstilosPerfilUsuario.datoLabel}>Puntaje</Text>
+          </View>
+          </TouchableOpacity>
+          
+        </View>
+  
+        {/* Datos Personales */}
+        <Text style={EstilosPerfilUsuario.tituloDatosPersonales}>DATOS PERSONALES</Text>
+        <View style={EstilosPerfilUsuario.datosPersonales}>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>Nombre: {usuario?.first_name}</Text>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>Apellido: {usuario?.last_name}</Text>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>Correo Electrónico: {usuario?.email}</Text>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>Teléfono: {usuario?.telefono}</Text>
+          <Text style={EstilosPerfilUsuario.infoUsuario}>
+            Dirección: {usuario?.direccion.calle}, {usuario?.direccion.altura}{' '}
+            {usuario?.direccion.piso ? `Piso ${usuario?.direccion.piso}` : ''}{' '}
+            {usuario?.direccion.nroDepto ? `Depto ${usuario?.direccion.nroDepto}` : ''}, {usuario?.direccion.barrio}
+          </Text>
+        </View>
+      <BarraNavegacionInferior/>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

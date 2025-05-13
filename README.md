@@ -26,3 +26,9 @@ npm install @react-native-picker/picker
 
 #Para recortar la imagen en web
  npm install react-image-crop
+
+ #Para pasar a sdk 53
+ expo update
+#Dependencias
+ npm install react-native-gesture-handler
+ npm install form-data

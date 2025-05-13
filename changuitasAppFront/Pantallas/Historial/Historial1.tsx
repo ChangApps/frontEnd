@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { Snackbar } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -214,113 +214,112 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
   
 
   return (
-    <SafeAreaView style={EstilosHistorial1.contenedor}>
-      {/* Encabezado con opciones de menú */}
-      <View style={EstilosHistorial1.encabezado}>
-        <Text style={EstilosHistorial1.textoEncabezado}>Historial</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-       {/* Menú Desplegable */}
-       {mostrarDesplegable && (
-        <View style={EstilosHistorial1.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosHistorial1.opcionDesplegable}>
-            <Text style={EstilosHistorial1.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosHistorial1.contenedor}>
+        {/* Encabezado con opciones de menú */}
+        <View style={EstilosHistorial1.encabezado}>
+          <Text style={EstilosHistorial1.textoEncabezado}>Historial</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
-      )}
 
-         {/* Barra de pestañas */}
-         <View style={EstilosHistorial1.barraPestanas}>
-        <TouchableOpacity style={EstilosHistorial1.pestanaActiva} onPress={() => navigation.navigate('Historial1')}>
-          <Text style={EstilosHistorial1.textoPestanaActiva}>Servicios contratados</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={EstilosHistorial1.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
-          <Text style={EstilosHistorial1.textoPestanaInactiva}>Mis trabajos</Text>
-        </TouchableOpacity>
-      </View>
-
-
-      <FlatList
-  data={historial}
-  keyExtractor={(item) => item.id.toString()} // id de la solicitud
-  renderItem={({ item }) => {
-    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
-    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
-    return (
-      <View style={EstilosHistorial1.resultItem}>
-        <Image
-          style={EstilosHistorial1.image}
-          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
-        />
-        <View style={EstilosHistorial1.resultDetails}>
-          <Text style={EstilosHistorial1.name}>
-            {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
-          </Text>
-
-          <Text style={EstilosHistorial1.fecha}>
-            Fecha: {item.fechaSolicitud}
-          </Text>
-
-          <View style={EstilosHistorial1.ratingStars}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <Ionicons
-                key={i}
-                name="star"
-                size={16}
-                color={i < puntaje ? "black" : "#CCCCCC"}
-              />
-            ))}
+        {/* Menú Desplegable */}
+        {mostrarDesplegable && (
+          <View style={EstilosHistorial1.desplegable}>
+            <TouchableOpacity onPress={logout} style={EstilosHistorial1.opcionDesplegable}>
+              <Text style={EstilosHistorial1.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
           </View>
+        )}
+
+          {/* Barra de pestañas */}
+          <View style={EstilosHistorial1.barraPestanas}>
+          <TouchableOpacity style={EstilosHistorial1.pestanaActiva} onPress={() => navigation.navigate('Historial1')}>
+            <Text style={EstilosHistorial1.textoPestanaActiva}>Servicios contratados</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={EstilosHistorial1.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
+            <Text style={EstilosHistorial1.textoPestanaInactiva}>Trabajos</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Botón presionado");
-            navigation.navigate('DetalleTarea', {
-              id: proveedor?.id.toString() || 'No disponible',
-              idSolicitud: item.id.toString()
-            });
-          }}
-          style={EstilosHistorial1.arrowButton}
-        >
-          <Ionicons name="chevron-forward" size={20} color="#333" />
-        </TouchableOpacity>
+
+
+        <FlatList
+    data={historial}
+    keyExtractor={(item) => item.id.toString()} // id de la solicitud
+    renderItem={({ item }) => {
+      const proveedor = proveedores.find(p => p.id === item.proveedor_id);
+      const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
+      return (
+        <View style={EstilosHistorial1.resultItem}>
+          <Image
+            style={EstilosHistorial1.image}
+            source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
+          />
+          <View style={EstilosHistorial1.resultDetails}>
+            <Text style={EstilosHistorial1.name}>
+              {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
+            </Text>
+
+            <Text style={EstilosHistorial1.fecha}>
+              Fecha: {item.fechaSolicitud}
+            </Text>
+
+            <View style={EstilosHistorial1.ratingStars}>
+              {Array.from({ length: 5 }, (_, i) => (
+                <Ionicons
+                  key={i}
+                  name="star"
+                  size={16}
+                  color={i < puntaje ? "black" : "#CCCCCC"}
+                />
+              ))}
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("Botón presionado");
+              navigation.navigate('DetalleTarea', {
+                id: proveedor?.id.toString() || 'No disponible',
+                idSolicitud: item.id.toString()
+              });
+            }}
+            style={EstilosHistorial1.arrowButton}
+          >
+            <Ionicons name="chevron-forward" size={20} color="#333" />
+          </TouchableOpacity>
+        </View>
+      );
+    }}
+    ListEmptyComponent={
+      <View style={EstilosHistorial1.emptyContainer}>
+        <Text style={EstilosHistorial1.textoVacio}>No hay historial disponible</Text>
       </View>
-    );
-  }}
-  ListEmptyComponent={
-    <View style={EstilosHistorial1.noResultsContainer}>
-        <Image
-          source={require('./estilos/service.png')}
-          style={EstilosHistorial1.noResultsImage}
-          resizeMode="contain"
-        />
-        <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz contratado ningún servicio.</Text>
-    </View>
-  }
-/>
+    }
+  />
 
-     <Snackbar
-        visible={visible}
-        onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
-        duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
-        style={{
-          position: 'absolute',
-          top: -150,
-          left: 0,
-          right: 0,
-          zIndex: 100000,  
-          marginRight: 50,
-        }}
-      >
-        {message}
-      </Snackbar>
+      <Snackbar
+          visible={visible}
+          onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
+          duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
+          style={{
+            position: 'absolute',
+            top: -150,
+            left: 0,
+            right: 0,
+            zIndex: 100000,  
+            marginRight: 50,
+          }}
+        >
+          {message}
+        </Snackbar>
 
-      {/* Barra de navegación inferior */}
-     <BarraNavegacionInferior/>
-    </SafeAreaView>
+        {/* Barra de navegación inferior */}
+      <BarraNavegacionInferior/>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

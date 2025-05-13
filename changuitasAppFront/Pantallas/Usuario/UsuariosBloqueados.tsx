@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList,Image  } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList,Image,TouchableWithoutFeedback} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -117,65 +117,68 @@ const UsuariosBloqueados = () => {
   }, []);
  
   return (
-    <SafeAreaView style={EstilosUsuariosBloqueados.contenedor}>
-      {/* Header con Perfil*/}
-      <View style={EstilosUsuariosBloqueados.header}>
-        <Text style={EstilosUsuariosBloqueados.textoEncabezado}>Perfil</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-        {/* Menú Desplegable */}
-           {mostrarDesplegable && (
-        <View style={EstilosUsuariosBloqueados.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosUsuariosBloqueados.opcionDesplegable}>
-            <Text style={EstilosUsuariosBloqueados.textoDesplegable}>Cerrar sesión</Text>
+    <TouchableWithoutFeedback onPress={() => {
+      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
+      <SafeAreaView style={EstilosUsuariosBloqueados.contenedor}>
+        {/* Header con Perfil*/}
+        <View style={EstilosUsuariosBloqueados.header}>
+          <Text style={EstilosUsuariosBloqueados.textoEncabezado}>Perfil</Text>
+          <TouchableOpacity onPress={toggleDesplegable}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
+
+          {/* Menú Desplegable */}
+            {mostrarDesplegable && (
+          <View style={EstilosUsuariosBloqueados.desplegable}>
+            <TouchableOpacity onPress={logout} style={EstilosUsuariosBloqueados.opcionDesplegable}>
+              <Text style={EstilosUsuariosBloqueados.textoDesplegable}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+      {/* Barra de pestañas */}
+      <BarraPestanasPerfil/>
+      
+  {loading ? (
+        <ActivityIndicator size="large" color="#197278" />
+      ) : (
+        usuariosBloqueados.length === 0 ? (
+          <View style={EstilosUsuariosBloqueados.noResultsContainer}>
+                      <Image
+                        source={require('./estilos/no-results.png')}
+                        style={EstilosUsuariosBloqueados.noResultsImage}
+                        resizeMode="contain"
+                      />
+                      <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text> 
+                    </View>
+
+        ) : (
+          <FlatList
+            data={usuariosBloqueados}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={EstilosUsuariosBloqueados.usuarioBloqueado}>
+                <Image 
+                  source={{ uri: item.foto || 'https://via.placeholder.com/50' }} 
+                  style={EstilosUsuariosBloqueados.image} 
+                />
+                <Text>{item.nombre}</Text>
+                <TouchableOpacity onPress={() => desbloquearUsuario(item.id)}>
+                  <Text style={EstilosUsuariosBloqueados.botonDesbloquear}>Desbloquear</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            contentContainerStyle={EstilosUsuariosBloqueados.listaUsuarios}
+          />
+        )
       )}
 
-     {/* Barra de pestañas */}
-     <BarraPestanasPerfil/>
-     
-{loading ? (
-      <ActivityIndicator size="large" color="#197278" />
-    ) : (
-      usuariosBloqueados.length === 0 ? (
-        <View style={EstilosUsuariosBloqueados.noResultsContainer}>
-                    <Image
-                      source={require('./estilos/no-results.png')}
-                      style={EstilosUsuariosBloqueados.noResultsImage}
-                      resizeMode="contain"
-                    />
-                    <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text> 
-                  </View>
-
-      ) : (
-        <FlatList
-          data={usuariosBloqueados}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={EstilosUsuariosBloqueados.usuarioBloqueado}>
-              <Image 
-                source={{ uri: item.foto || 'https://via.placeholder.com/50' }} 
-                style={EstilosUsuariosBloqueados.image} 
-              />
-              <Text>{item.nombre}</Text>
-              <TouchableOpacity onPress={() => desbloquearUsuario(item.id)}>
-                <Text style={EstilosUsuariosBloqueados.botonDesbloquear}>Desbloquear</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          contentContainerStyle={EstilosUsuariosBloqueados.listaUsuarios}
-        />
-      )
-    )}
-
-      {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>        
-    </SafeAreaView>
-
+        {/* Barra de navegación inferior */}
+        <BarraNavegacionInferior/>        
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 export default UsuariosBloqueados;
