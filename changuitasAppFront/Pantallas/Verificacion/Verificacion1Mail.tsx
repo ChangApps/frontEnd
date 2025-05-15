@@ -46,7 +46,8 @@ const Verificacion1Mail = () => {
   
       const data = await response.json();
       if (response.ok) {
-        Alert.alert("Éxito", "Código enviado al correo");
+      setMessage("El código a sido enviado al correo.");
+      setVisible(true);
       } else {
         Alert.alert("Error", data.error || "No se pudo enviar el código");
       }
@@ -93,6 +94,9 @@ const Verificacion1Mail = () => {
   return (
     <SafeAreaView style={EstilosVerificacion1Mail.areaSegura}>
       <View style={EstilosVerificacion1Mail.contenedor}>
+         <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosVerificacion1Mail.botonAtras}>
+        <Ionicons name="arrow-back" size={24} color="#197278" />
+      </TouchableOpacity>
         <Text style={EstilosVerificacion1Mail.titulo}>Verificación</Text>
         <Text style={EstilosVerificacion1Mail.subtitulo}>PASO 1</Text>
         <Text style={EstilosVerificacion1Mail.instruccion}>Ingrese el código numérico que se ha enviado a su correo electrónico:</Text>
@@ -109,8 +113,7 @@ const Verificacion1Mail = () => {
         {/* Botón para validar el código  onPress=validarCodigo */}
         <TouchableOpacity
           style={EstilosVerificacion1Mail.botonSiguiente}
-          onPress={() => navigation.navigate('Verificacion2Registro', { datosUsuario: route.params.datosUsuario })}  
-          >
+         onPress={validarCodigo}>
           <Text style={EstilosVerificacion1Mail.textoBoton}>Siguiente</Text>
           <Ionicons name="arrow-forward" size={20} color="#197278" />
         </TouchableOpacity>
@@ -122,7 +125,7 @@ const Verificacion1Mail = () => {
         visible={visible}
         onDismiss={() => setVisible(false)}
         duration={4000} // 4 segundos
-        style={{ marginLeft: -30, alignSelf: "center", width: "90%" }}
+        style={{ marginLeft: -20, alignSelf: "center", width: "90%" }}
       >
         {message}
       </Snackbar>

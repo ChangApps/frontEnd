@@ -130,6 +130,13 @@ const fetchUHistorial = async () => {
       },
     });
 
+        // Manejo especial para 404
+    if (responseHistorial.status === 404) {
+      console.log("No se encontraron registros de historial (404)");
+      setHistorial([]);
+      setSolicitudesInfo([]);
+      return; // Salir de la función sin mostrar error
+    }
     if (!responseHistorial.ok) {
       throw new Error('Error en la respuesta del servidor');
     }
