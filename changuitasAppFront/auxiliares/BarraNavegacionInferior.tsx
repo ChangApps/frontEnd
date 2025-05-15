@@ -1,35 +1,77 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navegacion/AppNavigator';
-import EstilosPerfilUsuario from '../Pantallas/Usuario/estilos/EstilosPerfilUsuario';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 const BarraNavegacionInferior = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const insets = useSafeAreaInsets();
+  const alturaBase = Platform.OS === "web" ? 70 : 100;
+  const alturaFinal = alturaBase + insets.bottom;
 
   return (
-    <View style={EstilosPerfilUsuario.barraNavegacion}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={EstilosPerfilUsuario.iconoNavegacion}>
+   <SafeAreaView
+  edges={['bottom']}
+  style={[
+    estilos.barraNavegacion,
+    {
+      height: alturaFinal,
+      paddingBottom: insets.bottom,
+       bottom: Platform.OS === 'android' ? -insets.bottom - 0 : 0,
+    },
+  ]}
+>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={estilos.iconoNavegacion}>
         <Ionicons name="home-outline" size={24} color="gray" />
-        <Text style={EstilosPerfilUsuario.textoNavegacion}>Inicio</Text>
+        <Text style={estilos.textoNavegacion}>Inicio</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={EstilosPerfilUsuario.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
         <Ionicons name="search-outline" size={24} color="gray" />
-        <Text style={EstilosPerfilUsuario.textoNavegacion}>Buscar</Text>
+        <Text style={estilos.textoNavegacion}>Buscar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={EstilosPerfilUsuario.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
         <Ionicons name="grid-outline" size={24} color="gray" />
-        <Text style={EstilosPerfilUsuario.textoNavegacion}>Historial</Text>
+        <Text style={estilos.textoNavegacion}>Historial</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={EstilosPerfilUsuario.iconoNavegacion}>
+      <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={estilos.iconoNavegacion}>
         <Ionicons name="person-outline" size={24} color="gray" />
-        <Text style={EstilosPerfilUsuario.textoNavegacion}>Perfil</Text>
+        <Text style={estilos.textoNavegacion}>Perfil</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
+
+const estilos = StyleSheet.create({
+  barraNavegacion: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    zIndex: 100,
+  },
+  iconoNavegacion: {
+    alignItems: 'center',
+  },
+  textoNavegacion: {
+    fontSize: 12,
+    color: 'gray',
+    marginTop: 2,
+  },
+});
 
 export default BarraNavegacionInferior;

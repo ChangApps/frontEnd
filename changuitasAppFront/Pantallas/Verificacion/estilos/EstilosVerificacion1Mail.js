@@ -15,6 +15,14 @@ const EstilosVerificacion1Mail = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+    marginLeft:30,
+    marginTop:-35,
+  },
+    botonAtras: {
+    marginRight: 10,
+    padding: 5,
+    marginLeft:-10,
+    marginTop:1,
   },
   subtitulo: {
     fontSize: 18,
