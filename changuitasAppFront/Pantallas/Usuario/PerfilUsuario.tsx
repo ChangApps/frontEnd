@@ -11,7 +11,7 @@ import EstilosPerfilUsuario from './estilos/EstilosPerfilUsuario';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
-//import { AuthContext } from '../../autenticacion/auth';
+import { AuthContext } from '../../autenticacion/auth';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -22,7 +22,7 @@ const PerfilUsuario: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
-  // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
 
     const handleImagePress = () => {
       setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -57,7 +57,7 @@ const PerfilUsuario: React.FC = () => {
   const logout = async () => {
     try {
     
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {

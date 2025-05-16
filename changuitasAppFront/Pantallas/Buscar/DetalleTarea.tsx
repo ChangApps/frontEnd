@@ -16,7 +16,7 @@ const DetalleTarea = () => {
 
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
- // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [nombreServicio, setNombreServicio] = useState('');
   const route = useRoute<RouteProp<RootStackParamList, 'DetalleTarea'>>();
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
@@ -146,7 +146,7 @@ const DetalleTarea = () => {
   };
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+     setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {

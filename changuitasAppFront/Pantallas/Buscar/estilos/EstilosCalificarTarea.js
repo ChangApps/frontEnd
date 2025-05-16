@@ -15,9 +15,14 @@ const EstilosCalificarTarea = StyleSheet.create({
       backgroundColor: 'white',
       marginTop: 50,
     },
+    botonVolver: {
+      padding: 8,
+      marginLeft:-25,
+    },
     textoEncabezado: {
       fontSize: 24,
       fontWeight: '600',
+      marginRight: 190,
     },
     header: {
       fontSize: 24,

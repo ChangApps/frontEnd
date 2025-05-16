@@ -11,14 +11,14 @@ import EstilosHome from './estilos/EstilosHome';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
 
-//import { AuthContext } from '../Autenticacion/auth';
+import { AuthContext } from '../../autenticacion/auth';
 
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [usuario, setUsuario] = useState<any>(null);
-//  const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const caracteristicas = [
     '+30 servicios',
      'Confiable',
@@ -120,13 +120,13 @@ const PantallaHome = () => {
       
         logout();
       }
-    }, 60000); // Cada 1 minuto
+    }, 120000); // Cada 2 minutos
     return () => clearInterval(intervalId);
   }, []);
 
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
