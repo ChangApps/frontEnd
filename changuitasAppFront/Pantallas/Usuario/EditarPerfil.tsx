@@ -18,14 +18,11 @@ import { guardarCambios } from './auxiliar/guardarCambios';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
- //Estado para el cerrarSesion
  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  // Estado para la foto de perfil
-  //const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  //const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
     // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -78,7 +75,7 @@ const EditarPerfil = () => {
 
    const logout = async () => {
      try {
-   //    setState({ token: "" });
+       setState({ token: "" });
        await cerrarSesion(); // Simula el proceso de cierre de sesión
        console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
      }  catch (error: any) {

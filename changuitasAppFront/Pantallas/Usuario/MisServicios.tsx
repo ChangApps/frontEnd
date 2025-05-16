@@ -31,7 +31,7 @@ const MisServicios = () => {
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  //const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [idServicioSeleccionado, setIdServicioSeleccionado] = useState(null);
   
   const toggleDesplegable = () => {
@@ -41,7 +41,7 @@ const MisServicios = () => {
  
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {

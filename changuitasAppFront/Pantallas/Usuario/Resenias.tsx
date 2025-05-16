@@ -19,11 +19,11 @@ const Resenias = () => {
     const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
     const [loading, setLoading] = useState<boolean>(true);
     const [solicitudes, setSolicitudes] = useState([]); //Estado para guardar el arreglo del historial
-//    const [state,setState] = useContext(AuthContext);
+    const [state,setState] = useContext(AuthContext);
 
     const logout = async () => {
         try {
-      //    setState({ token: "" });
+          setState({ token: "" });
           await cerrarSesion(); // Simula el proceso de cierre de sesión
           console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
         }  catch (error: any) {

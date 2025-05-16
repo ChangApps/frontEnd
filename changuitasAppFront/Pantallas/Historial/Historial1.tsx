@@ -14,7 +14,7 @@ import EstilosHistorial1 from './estilos/EstilosHistorial1';
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
- // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
@@ -95,7 +95,7 @@ useEffect(() => {
 
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {

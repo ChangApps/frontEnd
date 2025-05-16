@@ -64,7 +64,10 @@ const CalificarTarea = () => {
     <View style={EstilosCalificarTarea.container}>
       {/* Encabezado */}
       <View style={EstilosCalificarTarea.encabezado}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity 
+            onPress={() => navigation.goBack()} 
+            style={EstilosCalificarTarea.botonVolver}
+          >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <Text style={EstilosCalificarTarea.textoEncabezado}>Calificar tarea</Text>

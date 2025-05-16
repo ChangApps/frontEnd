@@ -40,7 +40,7 @@ const PerfilProveedor = () => {
   const [isMounted, setIsMounted] = useState(true)
   const route = useRoute<RouteProp<RootStackParamList, 'PerfilProveedor'>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
- // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
   const [reseniasUserId, setreseniasUserId] = useState<any[]>([]); 
@@ -214,7 +214,7 @@ const PerfilProveedor = () => {
 
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
