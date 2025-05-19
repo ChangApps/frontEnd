@@ -145,6 +145,9 @@ const Verificacion2Registro = () => {
   return (
     <SafeAreaView style={EstilosVerificacion2.areaSegura}>
       <View style={EstilosVerificacion2.contenedor}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosVerificacion2.botonAtras}>
+        <Ionicons name="arrow-back" size={30} color="#197278" />
+      </TouchableOpacity>
         <Text style={EstilosVerificacion2.titulo}>Verificación</Text>
         <Text style={EstilosVerificacion2.textoPaso}>PASO 2</Text>
         <Text style={EstilosVerificacion2.subtitulo}>Subir foto de perfil</Text>
