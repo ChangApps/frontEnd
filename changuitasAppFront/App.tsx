@@ -1,10 +1,5 @@
-import { AuthProvider } from './autenticacion/auth';
-import AppNavigator from './navegacion/AppNavigator';
+import Main from './Main';
 
-export default function App() {
-  return (
-    <AuthProvider>
-    <AppNavigator />
-  </AuthProvider>
-  );
+export default function App(){
+  return <Main/>;
 }
