@@ -122,15 +122,14 @@ const DetalleTarea = () => {
 
       const idSolicitud = route.params.idSolicitud;
 
-      const response = await fetch(`${API_URL}/solicitudes/${idSolicitud}/`, {
-        method: 'PATCH',
+      const response = await fetch(`${API_URL}/finalizar-changuita/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          estado: "C",
-          fechaValoracion: new Date().toISOString().split('T')[0], // Sirviria como fecha de cancelacion
+          solicitud_id:idSolicitud
         }),
       });
 
@@ -151,7 +150,8 @@ const DetalleTarea = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
         console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
+        setMessage("Error en el cierre de sesion");
+        setVisible(true);
     } finally {
     console.log("Intentando ir al iniciar sesion ");
     navigation.reset({
@@ -163,11 +163,12 @@ const DetalleTarea = () => {
 
   const serviceData = {
     servicio: nombreServicio,
-    fecha: fechaSolicitud, // obtenerFechaActual(),
+    fecha: fechaSolicitud, 
     puntaje: (valoracion && valoracion > 0) ? valoracion : 'Aun no asignado',
     estado: estado === 'F' ? 'Finalizado' 
     : estado === 'C' ? 'Cancelado' 
     : estado === 'I' ? 'Iniciado' 
+    : estado === 'PA' ? 'Pendiente Aceptacion'
     : estado,
   };
 

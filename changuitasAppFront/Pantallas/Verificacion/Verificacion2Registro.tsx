@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../auxiliares/API_URL";
-//import { AuthContext } from '../../autenticacion/auth';
+import { AuthContext } from '../../autenticacion/auth';
 import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
 import {mostrarOpcionesSelectorImagen} from '../../auxiliares/seleccionImagen';
@@ -23,7 +23,7 @@ const Verificacion2Registro = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'Verificacion2Registro'>>();
    // Estado para almacenar los datos del usuario
    const [usuario, setUsuario] = useState(route.params?.datosUsuario || {});
-  // const [state, setState] = useContext(AuthContext);
+   const [state, setState] = useContext(AuthContext);
   const [cropperVisible, setCropperVisible] = useState<boolean>(false);
 
 
@@ -124,8 +124,7 @@ const Verificacion2Registro = () => {
         return;
       }
 
- //     setState({ token: data.access });
-
+      setState({ token: data.access });
       await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
       await AsyncStorage.setItem("accessToken", data.access);
       await AsyncStorage.setItem("refreshToken", data.refresh);

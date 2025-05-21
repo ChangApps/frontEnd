@@ -33,7 +33,7 @@ const RecuperarContrasena2 = () => {
         return;
       }
   
-      const response = await fetch(`${API_URL}/obtener-id-por-email/`, {
+      const response = await fetch(`${API_URL}/obtener-email-por-id/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email }), 
@@ -47,7 +47,6 @@ const RecuperarContrasena2 = () => {
         Alert.alert("Error", "No se pudo obtener el ID.");
       }
     } catch (error) {
-      Alert.alert("Error", "Problema de conexión con el servidor");
       setMessage("Error de conexión. Inténtalo de nuevo.");
       setVisible(true);
     }
@@ -80,12 +79,10 @@ const RecuperarContrasena2 = () => {
         setVisible(true);
         obtenerId(); // Llama a la función obtenerId después de la validación
       } else {
-        Alert.alert("Error", data.error || "El código no es válido");
         setMessage(data?.email || "El código no es válido.");
         setVisible(true);
       }
     } catch (error) {
-      Alert.alert("Error", "Problema de conexión con el servidor");
       setMessage("Error de conexión. Inténtalo de nuevo.");
       setVisible(true);
     }
