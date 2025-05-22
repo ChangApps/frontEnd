@@ -4,7 +4,7 @@ const EstilosMisServicios = StyleSheet.create({
     contenedor: {
       flex: 1,
       backgroundColor: 'white',
-      marginTop:43,
+      paddingTop:43,
     },
     header: {
       flexDirection: 'row',

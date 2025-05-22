@@ -9,8 +9,8 @@ const EstilosBuscarServicio1 = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    marginTop: 0,
-    backgroundColor: '#197278', // Color de fondo azul
+    marginTop: 50,
+    backgroundColor: '#197278',
   },
   backButton: {
     marginRight: 10,
@@ -18,7 +18,7 @@ const EstilosBuscarServicio1 = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: '600',
-    color: 'white', // Color blanco para el texto
+    color: 'white',
   },
   scrollContainer: {
     paddingHorizontal: 20,
@@ -43,7 +43,7 @@ const EstilosBuscarServicio1 = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 20,
-    marginBottom: 70,
+    marginBottom: 100,
   },
   nextButton: {
     backgroundColor: '#197278',

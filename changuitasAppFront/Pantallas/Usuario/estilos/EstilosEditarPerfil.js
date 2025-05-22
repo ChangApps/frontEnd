@@ -4,7 +4,7 @@ const EstilosEditarPerfil = StyleSheet.create({
     contenedor: {
       flex: 1,
       backgroundColor: 'white',
-      marginTop:43,
+      paddingTop:43,
     },
     header: {
       flexDirection: 'row',
@@ -72,9 +72,9 @@ const EstilosEditarPerfil = StyleSheet.create({
       color: '#333',
     },
     imagenUsuario: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
+      width: 120,
+      height: 120,
+      borderRadius: 60,
       backgroundColor: '#f0f0f0',
     },
     cambiarFotoTexto: {

@@ -10,7 +10,7 @@ import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
-
+import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 
 
@@ -150,7 +150,7 @@ const PantallaHome = () => {
         <View style={EstilosHome.encabezado}>
           <Text style={EstilosHome.textoInicio}>Inicio</Text>
           <TouchableOpacity onPress={toggleDesplegable}>
-            <Text style={EstilosHome.menuPuntos}>...</Text>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
           </TouchableOpacity>
         </View>
 
