@@ -308,7 +308,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
           style={EstilosHistorial1.noResultsImage}
           resizeMode="contain"
         />
-        <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz realizado ningún trabajo.</Text>
+        <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz contratado ningún trabajo.</Text>
     </View>
     }
   />
