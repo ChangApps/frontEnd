@@ -11,12 +11,20 @@ const EstilosVerificacion2 = StyleSheet.create({
     paddingTop: 50,
     alignItems: 'flex-start',
   },
+  botonAtras: {
+    marginRight: 10,
+    padding: 5,
+    marginLeft:-10,
+    marginTop:10,
+  },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 10,
     marginRight:10,
+    marginLeft:32,
+    marginTop:-38
   },
   textoPaso: {
     fontSize: 16,

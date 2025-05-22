@@ -19,7 +19,7 @@ const UsuariosBloqueados = () => {
   
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
- // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [usuariosBloqueados, setUsuariosBloqueados] = useState<any[]>([]);
 
 
@@ -33,7 +33,7 @@ const UsuariosBloqueados = () => {
  
   const logout = async () => {
     try {
-  //    setState({ token: "" });
+      setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {

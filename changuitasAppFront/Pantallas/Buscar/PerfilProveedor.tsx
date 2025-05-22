@@ -40,23 +40,14 @@ const PerfilProveedor = () => {
   const [isMounted, setIsMounted] = useState(true)
   const route = useRoute<RouteProp<RootStackParamList, 'PerfilProveedor'>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
- // const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
   const [reseniasUserId, setreseniasUserId] = useState<any[]>([]); 
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
-  const [idNotificacionCreada, setIdNotificacionCreada] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
 
-  const obtenerFechaActual = () => {
-    const fecha = new Date();
-    const anio = fecha.getFullYear();
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');  // Mes debe ser de 2 dígitos
-    const dia = fecha.getDate().toString().padStart(2, '0');  // Día debe ser de 2 dígitos
-    return `${anio}-${mes}-${dia}`;  // Formato 'YYYY-MM-DD'
-  };
- 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
   };
@@ -69,7 +60,23 @@ const PerfilProveedor = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-
+  const logout = async () => {
+    try {
+      setState({ token: "" });
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
+    }  catch (error: any) {
+        console.log('Error en el cierre de sesión:', error.message);
+        setMessage("Error en el cierre de sesion");
+        setVisible(true);
+    } finally {
+    console.log("Intentando ir al iniciar sesion ");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "InicioDeSesion" }],
+    });
+    }
+  };
 
   useEffect(() => {
     const obtenerDatosAsyncStorage = async () => {
@@ -96,106 +103,37 @@ const PerfilProveedor = () => {
     }
   }, [userId]); // Se ejecuta cuando userId cambia
 
-  // Crear el objeto de datos con la información obtenida
-  const data = {
-    comentario: null, 
-    fechaSolicitud: obtenerFechaActual(),
-    fechaTrabajo: obtenerFechaActual(),  
-    fechaValoracion: null,
-    valoracion: null,
-    proveedorServicio:IdproveedorServicio, 
-    cliente: userId,
-    notificacion: null,
-    estado:"I",
-  };
- 
-
-  const fetchNotificacion = async () => {
-    try {
-      // Obtiene el token de acceso desde AsyncStorage
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('Token obtenido de AsyncStorage:', accessToken);
-  
-      if (!accessToken) {
-        throw new Error('No se encontró el token de acceso');
-      }
-  
-      // Obtener la fecha y hora actual en formato UTC
-      const fechaActual = new Date();
-      const fechaHoraUTC = fechaActual.toISOString(); // Formato "YYYY-MM-DDTHH:mm:ss.sssZ"
-  
-      // Se crea el objeto de datos para la notificación
-      const dataNotificacion = {
-        fechaHora: fechaHoraUTC,
-        mensaje: "Se ha iniciado una nueva solicitud",
-        tipoSistema: true,
-        Usuario: userId,
-      };
-  
-      console.log("Datos de notificación a enviar:", dataNotificacion);
-  
-      // Realizamos la solicitud al backend para crear la notificación
-      const responseNotificacion = await fetch(`${API_URL}/notificacion`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(dataNotificacion),
-      });
-  
-      console.log('Response status (NOTIFICACION):', responseNotificacion.status);
-  
-      if (!responseNotificacion.ok) {
-        throw new Error(`Error al crear la notificación: ${responseNotificacion.status}`);
-      }
-  
-      // Procesar la respuesta del servidor
-      const responseData = await responseNotificacion.json();
-      console.log('Datos de la notificación recibidos:', responseData);
-
-          // Extraer el ID de la notificación creada
-       const notificacionId = responseData.id;
-      console.log('ID de la notificación creada:', notificacionId);
-
-      return notificacionId; // Retornar el ID de la notificación
-      
-    } catch (error) {
-      console.error('Error al crear la notificación:', error);
-      setMessage("Error. al crear la notificacion.");
-      setVisible(true);
-    }
-  };
 
 //Agregar errores al snackbar 
   const iniciarChanguita = async () => {
     try {
-      console.log("data a enviar:", data);  
-  
       const accessToken = await AsyncStorage.getItem('accessToken');
   
       if (!accessToken) {
         Alert.alert("Error", "No hay token de autenticación.");
         return;
       }
-  
-      const response = await fetch(`${API_URL}/solicitudes/`, {
+      const response = await fetch(`${API_URL}/iniciar-changuita/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(data),  
+        body: JSON.stringify({
+          proveedorServicio:IdproveedorServicio,
+        }), 
       });
   
       const responseJson = await response.json();  
   
       console.log("Respuesta del servidor:", responseJson);  // Respuesta de la API
-  
+      console.log("ID de la solicitud recibido:", responseJson.id_solicitud);
+
       if (response.ok) {
         Alert.alert("Éxito", "Proveedor servicio creado con éxito.");
 
-       const idSolicitud = responseJson.id 
+       const idSolicitud = responseJson.id_solicitud; 
+       console.log("ID solicitud detalle: ",idSolicitud);
        const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
         navigation.navigate('DetalleTarea', { id,idSolicitud});
 
@@ -207,25 +145,6 @@ const PerfilProveedor = () => {
     } catch (error) {
       setMessage("Error. al enviar la solicitud.");
       setVisible(true);
-    }
-  };
-
-
-
-  const logout = async () => {
-    try {
-  //    setState({ token: "" });
-      await cerrarSesion(); // Simula el proceso de cierre de sesión
-      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    }  catch (error: any) {
-        console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
-    } finally {
-    console.log("Intentando ir al iniciar sesion ");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "InicioDeSesion" }],
-    });
     }
   };
 
@@ -299,7 +218,6 @@ const PerfilProveedor = () => {
     try {
       // Obtén el token de acceso desde AsyncStorage
       const accessToken = await AsyncStorage.getItem('accessToken');
-      //console.log('Token obtenido de AsyncStorage:', accessToken);
   
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');

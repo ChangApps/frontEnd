@@ -8,6 +8,7 @@ import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosInicioDeSesion from './estilos/EstilosInicioDeSesion';
 import API_URL from "../../auxiliares/API_URL";
+import { AuthContext } from "../../autenticacion/auth";
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -16,6 +17,8 @@ const InicioDeSesion = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { width } = useWindowDimensions();
+  const [state, setState] = useContext(AuthContext);
+ 
 
   const login = async () => {
     // Verifica si los campos están vacíos o contienen solo espacios
@@ -39,6 +42,9 @@ const InicioDeSesion = () => {
         return;  // Sale si hay un error en los datos recibidos
       }
   
+      setState({
+        token: data.access,
+    });
       // Almacena el token en AsyncStorage
       await AsyncStorage.setItem('@auth', JSON.stringify({ token: data.access }));
       console.log('Token guardado:', data.access);
