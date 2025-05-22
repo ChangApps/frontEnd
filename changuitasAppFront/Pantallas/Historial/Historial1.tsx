@@ -249,7 +249,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
             <Text style={EstilosHistorial1.textoPestanaActiva}>Servicios contratados</Text>
           </TouchableOpacity>
           <TouchableOpacity style={EstilosHistorial1.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
-            <Text style={EstilosHistorial1.textoPestanaInactiva}>Trabajos</Text>
+            <Text style={EstilosHistorial1.textoPestanaInactiva}>Mis trabajos</Text>
           </TouchableOpacity>
         </View>
 
@@ -302,9 +302,14 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
       );
     }}
     ListEmptyComponent={
-      <View style={EstilosHistorial1.emptyContainer}>
-        <Text style={EstilosHistorial1.textoVacio}>No hay historial disponible</Text>
-      </View>
+      <View style={EstilosHistorial1.noResultsContainer}>
+        <Image
+          source={require('./estilos/service.png')}
+          style={EstilosHistorial1.noResultsImage}
+          resizeMode="contain"
+        />
+        <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz realizado ningún trabajo.</Text>
+    </View>
     }
   />
 

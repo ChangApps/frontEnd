@@ -12,7 +12,7 @@ const EstilosHistorial1 = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: 'white',
-    marginTop: 30,
+    marginTop: 50,
   },
   textoEncabezado: {
     fontSize: 24,

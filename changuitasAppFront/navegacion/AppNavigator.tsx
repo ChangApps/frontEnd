@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 //------------Registro-Login-------------
 import InicioDeSesion from '../Pantallas/Registro-Login/InicioDeSesion';
+import PantallaAyuda from '../Pantallas/Registro-Login/PantallaAyuda';
 import Registro from '../Pantallas/Registro-Login/Registro';
 //----------------------------------------
 
@@ -41,6 +42,7 @@ import Historial2 from '../Pantallas/Historial/Historial2';
 //Aca se definen los parametros que reciben las pantallas
 export type RootStackParamList = {
   InicioDeSesion: undefined;
+  PantallaAyuda: undefined;
   Registro: undefined;
   Verificacion1Mail: { datosUsuario: any };
   Verificacion2Registro: {datosUsuario:any};
@@ -87,6 +89,11 @@ export default function AppNavigator() {
       <Stack.Screen 
               name="InicioDeSesion" 
               component={InicioDeSesion} 
+              options={{ headerShown: false }}  
+            />
+            <Stack.Screen 
+              name="PantallaAyuda" 
+              component={PantallaAyuda} 
               options={{ headerShown: false }}  
             />
                 <Stack.Screen 

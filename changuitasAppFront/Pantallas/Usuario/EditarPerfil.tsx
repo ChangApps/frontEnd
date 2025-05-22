@@ -18,14 +18,11 @@ import { guardarCambios } from './auxiliar/guardarCambios';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
- //Estado para el cerrarSesion
  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  // Estado para la foto de perfil
-  //const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  //const [state,setState] = useContext(AuthContext);
+  const [state,setState] = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
     // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -36,6 +33,10 @@ const EditarPerfil = () => {
    const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
    const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
    const [cropperVisible, setCropperVisible] = useState<boolean>(false);
+   // Estados para mostrar/ocultar secciones
+  const [mostrarDatosContacto, setMostrarDatosContacto] = useState(true);
+  const [mostrarDireccion, setMostrarDireccion] = useState(false);
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
    const datosOriginales: { [key: string]: any } = {
     first_name: '',
@@ -78,7 +79,7 @@ const EditarPerfil = () => {
 
    const logout = async () => {
      try {
-   //    setState({ token: "" });
+       setState({ token: "" });
        await cerrarSesion(); // Simula el proceso de cierre de sesión
        console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
      }  catch (error: any) {
@@ -238,62 +239,75 @@ const EditarPerfil = () => {
 
               {/* Formulario de datos personales */}
               <View style={EstilosEditarPerfil.formulario}>
-              <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.email || datosOriginales.email || ''}
-                onChangeText={(valor) => manejarCambioCampo('email', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Teléfono</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.telefono || datosOriginales.telefono || ''}
-                onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Calle</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
-                onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Altura</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
-                onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Número de Departamento</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
-                onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Piso</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
-                onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
-              />
-
-              <Text style={EstilosEditarPerfil.label}>Barrio</Text>
-              <TextInput
-                style={EstilosEditarPerfil.input}
-                value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
-                onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
-              />
 
 
+<TouchableOpacity onPress={() => setMostrarDatosContacto(!mostrarDatosContacto)}>
+  <Text style={EstilosEditarPerfil.tituloSeccion}>Datos de Contacto</Text>
+</TouchableOpacity>
+{mostrarDatosContacto && (
+  <>
+    <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.email || datosOriginales.email || ''}
+      onChangeText={(valor) => manejarCambioCampo('email', valor)}
+    />
+    <Text style={EstilosEditarPerfil.label}>Teléfono</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.telefono || datosOriginales.telefono || ''}
+      onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
+    />
+  </>
+)}
+
+<TouchableOpacity onPress={() => setMostrarDireccion(!mostrarDireccion)}>
+  <Text style={EstilosEditarPerfil.tituloSeccion}>Dirección</Text>
+</TouchableOpacity>
+{mostrarDireccion && (
+  <>
+    <Text style={EstilosEditarPerfil.label}>Calle</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
+      onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
+    />
+    <Text style={EstilosEditarPerfil.label}>Altura</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
+      onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
+    />
+    <Text style={EstilosEditarPerfil.label}>Número de Departamento</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
+      onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
+    />
+    <Text style={EstilosEditarPerfil.label}>Piso</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
+      onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
+    />
+    <Text style={EstilosEditarPerfil.label}>Barrio</Text>
+    <TextInput
+      style={EstilosEditarPerfil.input}
+      value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
+      onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
+    />
+  </>
+)}
+
+
+<TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
+  
               {/* Botón para mostrar/ocultar campos de contraseña */}
               <TouchableOpacity 
                 style={EstilosEditarPerfil.botonCambiarPassword}
                 onPress={() => setShowPasswordFields(!showPasswordFields)}
               >
-                <Text style={EstilosEditarPerfil.textoCambiarPassword}>
+        <Text style={[EstilosEditarPerfil.tituloSeccion, { alignSelf: 'flex-start' }]}>
                   {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
                 </Text>
               </TouchableOpacity>
@@ -362,9 +376,9 @@ const EditarPerfil = () => {
                 </View>
               </>
             )}
+            </TouchableOpacity>
         </View>
-         
-        
+           
       {/* Botón de Guardar Cambios*/}
      {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
       {!visible && (

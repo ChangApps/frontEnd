@@ -64,6 +64,13 @@ const EstilosEditarPerfil = StyleSheet.create({
       alignItems: 'center',
       marginVertical: 20,
     },
+    tituloSeccion: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginTop: 20,
+      marginBottom: 10,
+      color: '#333',
+    },
     imagenUsuario: {
       width: 80,
       height: 80,
@@ -126,7 +133,7 @@ const EstilosEditarPerfil = StyleSheet.create({
     },
     scrollContainer: {
       flexGrow: 1,
-      paddingBottom: 80, 
+      paddingBottom: 160, 
     },
   
     botonCambiarPassword: {
