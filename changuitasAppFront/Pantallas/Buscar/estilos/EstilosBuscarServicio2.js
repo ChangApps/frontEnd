@@ -5,27 +5,25 @@ const EstilosBuscarServicio2 = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  header: {
-    backgroundColor: '#197278', // Color de fondo
-    color: 'white', // Color del texto
-    fontSize: 18, // Tamaño del texto
-    fontWeight: '600', // Negrita
-    paddingVertical: 10, // Espaciado vertical interno
-    paddingHorizontal: 15, // Espaciado horizontal interno
-    textAlign: 'left', // Alineación a la izquierda
-    marginBottom: 15, // Margen inferior
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    marginTop: 50,
+    backgroundColor: '#197278',
   },
-  
-  
+  backButton: {
+    marginRight: 10,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: 'white',
+  },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingBottom: 100,
     marginTop: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
   },
   descriptionInput: {
     borderWidth: 1,

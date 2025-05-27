@@ -34,10 +34,7 @@ const BuscarServicio1 = () => {
   return (
     <View style={EstilosBuscarServicio1.container}>
       <View style={EstilosBuscarServicio1.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosBuscarServicio1.backButton}>
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={EstilosBuscarServicio1.header}>Buscar un servicio (1/3)</Text>
+        <Text style={EstilosBuscarServicio1.header}>Buscar un servicio (1/2)</Text>
       </View>
       
       <ScrollView contentContainerStyle={EstilosBuscarServicio1.scrollContainer}>

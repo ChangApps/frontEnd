@@ -163,10 +163,10 @@ const BuscarServicio2 = () => {
   
   return (
     <View style={EstilosBuscarServicio2.container}>
-      <Text style={EstilosBuscarServicio2.header}>Buscar un servicio (2/2)</Text>
+      <View style={EstilosBuscarServicio2.headerContainer}>
+        <Text style={EstilosBuscarServicio2.header}>Buscar un servicio (2/2)</Text>
+      </View>
       <ScrollView contentContainerStyle={EstilosBuscarServicio2.scrollContainer}>
-        <Text style={EstilosBuscarServicio2.label}>Descripción del Servicio:</Text>
-
         <View style={EstilosBuscarServicio2.dayContainer}>
           <Text style={EstilosBuscarServicio2.dayLabel}>Día</Text>
           <Text style={EstilosBuscarServicio2.hourLabel}>Hora</Text>

@@ -12,7 +12,7 @@ const EstilosHistorial1 = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: 'white',
-    marginTop: 30,
+    marginTop: 50,
   },
   textoEncabezado: {
     fontSize: 24,
@@ -169,6 +169,21 @@ const EstilosHistorial1 = StyleSheet.create({
     color: '#666',
     marginTop: 2,
   },
+  noResultsContainer: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+  },
+  noResultsImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  mensajeNoUsuarios: {
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
+  }
 });
 
 export default EstilosHistorial1;

@@ -25,7 +25,7 @@ const EstilosHome = StyleSheet.create({
   },
   desplegable: {
     position: 'absolute',
-    top: 90,
+    top: 70,
     right: 20,
     width: 150,
     backgroundColor: '#ffffff',
@@ -39,7 +39,7 @@ const EstilosHome = StyleSheet.create({
     zIndex: 10,
   },
   opcionDesplegable: {
-    paddingVertical: 10,
+    paddingVertical: 6,
     paddingHorizontal: 15,
   },
   textoDesplegable: {

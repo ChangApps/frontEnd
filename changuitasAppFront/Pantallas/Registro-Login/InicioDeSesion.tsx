@@ -131,6 +131,11 @@ const InicioDeSesion = () => {
           </LinearGradient>
         </TouchableOpacity>
 
+      {/* Botón ayuda */}
+    <TouchableOpacity onPress={() => navigation.navigate('PantallaAyuda')}>
+          <Text style={EstilosInicioDeSesion.textoRegistrarse}>Ayuda</Text>
+        </TouchableOpacity>
+
       {/* Botón de registrarse */}
       <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>
@@ -142,6 +147,7 @@ const InicioDeSesion = () => {
     <TouchableOpacity onPress={() => navigation.navigate('RecuperarNombreUsuario')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi nombre de usuario</Text>
         </TouchableOpacity>
+        
    {/* Botón de recuperar contraseña */}
     <TouchableOpacity onPress={() => navigation.navigate('RecuperarContrasena1')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi contraseña</Text>
