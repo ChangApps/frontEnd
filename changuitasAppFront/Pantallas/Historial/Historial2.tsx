@@ -20,7 +20,7 @@ const Historial2 = () => {
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
   const [loading, setLoading] = useState<boolean>(true);
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
-  const [proveedores, setProveedores] = useState<Proveedor[]>([]);  // Estado para almacenar los datos de los proveedores del response
+  const [clientes, setClientes] = useState<Cliente[]>([]);  // Estado para almacenar los datos de los proveedores del response
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
 
 
@@ -38,7 +38,7 @@ const Historial2 = () => {
     barrio: string;
   }
   
-  interface Proveedor {
+  interface Cliente {
     id: number;
     username: string;
     first_name: string;
@@ -152,81 +152,67 @@ const fetchUHistorial = async () => {
         item.estado === 'F' || item.estado === 'C' // Filtramos por estado
       );
     */
-      // Extraer los proveedores y la información de solicitudes
-      const solicitudesData = historialData.map((item: any) => ({
-        proveedorId: item.proveedor_id, 
-        idSolicitud: item.id,          
-        fechaSolicitud: item.fechaSolicitud, 
-        estadoSolicitud: item.estado  
-      }));
+const solicitudesData = historialData.map((item: any) => ({
+  clienteId: item.cliente, 
+  idSolicitud: item.id,          
+  fechaSolicitud: item.fechaSolicitud, 
+  estadoSolicitud: item.estado  
+}));
+console.log("Solicitudes procesadas:", solicitudesData);
 
-      setSolicitudesInfo(solicitudesData);
+setSolicitudesInfo(solicitudesData);
 
-      // Obtener los proveedores relacionados con las solicitudes filtradas
-      const proveedores = solicitudesData.map((item: any) => item.proveedorId);
-      await fetchMultipleProveedoresData(proveedores);
+// Obtener los proveedores relacionados con las solicitudes
+const clientes = solicitudesData.map((item: any) => item.clienteId);
+await fetchMultipleClientesData(clientes);
     } else {
       throw new Error('El historial está vacío');
     }
   } catch (error:any) {
     console.error('Error al cargar datos del usuario (historial):', error.message);
-    setMessage('No se pudo cargar el historial');
-    setVisible(true);
   } finally {
     setLoading(false);
   }
 };
 
 // Función que obtiene los datos de los proveedores
-const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
-    try {
-      console.log("Adentro del fetch multiple proveedores data");
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      if (!accessToken) {
-        throw new Error('No se encontró el token de acceso');
-      }
-  
-      if (proveedorIds.length === 0) {
-        throw new Error('No hay proveedores disponibles');
-      }
-  
-      // Realizamos las solicitudes en paralelo usando Promise.all
-      const proveedoresDataPromises = proveedorIds.map(idDelproveedor => {
-        return fetch(`${API_URL}/usuarios/${idDelproveedor}/`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-      });
-  
-      // Esperamos todas las respuestas
-      const proveedorResponses = await Promise.all(proveedoresDataPromises);
-  
-      // Comprobamos si alguna de las respuestas no fue exitosa
-      for (let i = 0; i < proveedorResponses.length; i++) {
-        if (!proveedorResponses[i].ok) {
-          throw new Error(`Error al obtener el proveedor con ID ${proveedorIds[i]}: ${proveedorResponses[i].status}`);
-        }
-      }
-  
-      // Procesamos las respuestas en paralelo
-      const proveedoresData = await Promise.all(proveedorResponses.map(response => response.json()));
-  
-      console.log('Respuesta exitosa: Datos de los proveedores recibidos:', proveedoresData);
-  
-      // Actualiza el estado con los datos de los proveedores
-      setProveedores(proveedoresData); 
+const fetchMultipleClientesData = async (clienteIds: number[]) => {
+  try {
+    console.log("Adentro del fetch multiple clientes data");
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    if (!accessToken) throw new Error('No se encontró el token de acceso');
 
-    } catch (error:any) {
-      console.error('Error al cargar datos de los proveedores:', error.message);
-      setMessage('No se pudo cargar los datos de los proveedores');
-      setVisible(true);
-    } finally {
-      setLoading(false); // Cuando termina el fetch de proveedores, se desactiva la carga
+    if (clienteIds.length === 0) throw new Error('No hay clientes disponibles');
+
+    const clientesDataPromises = clienteIds.map(id =>
+      fetch(`${API_URL}/usuarios/${id}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      })
+    );
+
+    const clienteResponses = await Promise.all(clientesDataPromises);
+    for (let i = 0; i < clienteResponses.length; i++) {
+      if (!clienteResponses[i].ok) {
+        throw new Error(`Error al obtener cliente con ID ${clienteIds[i]}: ${clienteResponses[i].status}`);
+      }
     }
-  };
+
+    const clientesData = await Promise.all(clienteResponses.map(r => r.json()));
+    console.log("Clientes recibidos:", clientesData);
+    setClientes(clientesData); // Suponiendo que usás setClientes
+
+  } catch (error: any) {
+    console.error("Error al cargar datos de clientes:", error.message);
+    setMessage("No se pudo cargar los datos de los clientes");
+    setVisible(true);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <SafeAreaView style={EstilosHistorial2.contenedor}>
@@ -258,22 +244,22 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
       </View>
 
             {/* Elemento de resultado */}
-            <FlatList
- data={historial}
-  keyExtractor={(item) => item.id.toString()} // id de la solicitud
+     <FlatList
+  data={historial}
+  keyExtractor={(item) => item.id.toString()} // ID de la solicitud
   renderItem={({ item }) => {
-    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
-    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
+    const cliente = clientes.find(c => c.id === item.cliente); 
+    const puntaje = cliente?.puntaje ? Math.round(cliente.puntaje) : 0;
 
     return (
       <View style={EstilosHistorial2.resultItem}>
         <Image
           style={EstilosHistorial2.image}
-          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
+          source={{ uri: cliente?.fotoPerfil || 'https://via.placeholder.com/100' }}
         />
         <View style={EstilosHistorial2.resultDetails}>
           <Text style={EstilosHistorial2.name}>
-            {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
+            {`${cliente?.first_name || 'Nombre'} ${cliente?.last_name || ''}`}
           </Text>
 
           <Text style={EstilosHistorial2.fecha}>
@@ -294,7 +280,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('DetalleTarea', {
-              id: proveedor?.id?.toString() || 'No disponible',
+              id: cliente?.id?.toString() || 'No disponible',
               idSolicitud: item.id.toString()
             });
           }}
@@ -307,12 +293,12 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
   }}
   ListEmptyComponent={
     <View style={EstilosHistorial2.noResultsContainer}>
-        <Image
-          source={require('./estilos/service.png')}
-          style={EstilosHistorial2.noResultsImage}
-          resizeMode="contain"
-        />
-        <Text style={EstilosHistorial2.mensajeNoUsuarios}>No haz realizado ningún trabajo.</Text>
+      <Image
+        source={require('./estilos/service.png')}
+        style={EstilosHistorial2.noResultsImage}
+        resizeMode="contain"
+      />
+      <Text style={EstilosHistorial2.mensajeNoUsuarios}>No haz realizado ningún trabajo.</Text>
     </View>
   }
 />

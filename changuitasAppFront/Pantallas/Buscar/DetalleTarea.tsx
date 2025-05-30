@@ -49,6 +49,12 @@ const DetalleTarea = () => {
     fetchDatosSolicitud();
   }, []);  // Solo se ejecuta una vez cuando el componente se monta
 
+  useEffect(() => {
+  console.log("Rol actualizado:", rol);
+    console.log("Render - rol:", rol, "estado:", estado);
+
+}, [rol]);
+
   const aceptarChanguita = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
@@ -286,14 +292,8 @@ const DetalleTarea = () => {
       </Modal>
 
 {/* Botón si el estado es PA y sos trabajador */}
-{rol === 'trabajador' && estado === 'Pendiente Aceptacion' && (
+{rol === 'trabajador' && estado === 'PA' && (
   <View style={EstilosDetalleTarea.buttonContainer}>
-    <TouchableOpacity
-      style={EstilosDetalleTarea.nextButton}
-      onPress={aceptarChanguita}
-    >
-      <Text style={EstilosDetalleTarea.nextButtonText}>Aceptar changuita</Text>
-    </TouchableOpacity>
     <TouchableOpacity 
       style={EstilosDetalleTarea.prevButton} 
       onPress={cancelarSolicitud}
@@ -302,6 +302,19 @@ const DetalleTarea = () => {
     </TouchableOpacity>
   </View>
 )}
+
+{/* Botón si el estado es Iniciado y sos trabajador */}
+{rol === 'trabajador' && estado === 'I' && (
+  <View style={EstilosDetalleTarea.buttonContainer}>
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.prevButton} 
+      onPress={cancelarSolicitud}
+    >
+      <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+    </TouchableOpacity>
+  </View>
+)}
+
 
 {/* Finalizar y cancelar, visible solo si no es PA y no está finalizada ni cancelada */}
 {rol === 'cliente' && !(estado === 'F' || estado === 'C' || estado === 'Finalizado' || estado === 'Cancelado' || estado === 'Pendiente Aceptacion') && (
