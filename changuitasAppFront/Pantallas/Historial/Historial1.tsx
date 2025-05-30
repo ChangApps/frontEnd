@@ -164,8 +164,6 @@ const fetchUHistorial = async () => {
     } else {
       console.error('Error desconocido:', error);
     }
-    setMessage('No se pudo cargar el historial');
-    setVisible(true);
   }
 };
 

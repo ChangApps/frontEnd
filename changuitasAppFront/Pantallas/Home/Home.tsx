@@ -120,7 +120,7 @@ const PantallaHome = () => {
       
         logout();
       }
-    }, 120000); // Cada 2 minutos
+    }, 60000); // Cada 1 minuto
     return () => clearInterval(intervalId);
   }, []);
 

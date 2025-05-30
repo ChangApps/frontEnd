@@ -122,7 +122,7 @@ const fetchUHistorial = async () => {
       throw new Error('No se encontró el token o el ID de usuario');
     }
 
-    const responseHistorial = await fetch(`${API_URL}/historial/${userId}/`, {
+    const responseHistorial = await fetch(`${API_URL}/historial/proveedor/${userId}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -146,13 +146,14 @@ const fetchUHistorial = async () => {
     if (historialData.length > 0) {
       setHistorial(historialData);
 
+      /*
       // Filtrar las solicitudes con estado 'F' o 'C' antes de continuar
       const solicitudesFiltradas = historialData.filter((item:any) => 
         item.estado === 'F' || item.estado === 'C' // Filtramos por estado
       );
-
+    */
       // Extraer los proveedores y la información de solicitudes
-      const solicitudesData = solicitudesFiltradas.map((item: any) => ({
+      const solicitudesData = historialData.map((item: any) => ({
         proveedorId: item.proveedor_id, 
         idSolicitud: item.id,          
         fechaSolicitud: item.fechaSolicitud, 
@@ -258,7 +259,7 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
 
             {/* Elemento de resultado */}
             <FlatList
-  data={historial.filter(item => item.estado === 'F' || item.estado === 'C')}
+ data={historial}
   keyExtractor={(item) => item.id.toString()} // id de la solicitud
   renderItem={({ item }) => {
     const proveedor = proveedores.find(p => p.id === item.proveedor_id);
