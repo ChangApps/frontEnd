@@ -31,6 +31,17 @@ const DetalleTarea = () => {
   const [estado, setEstado] = useState(""); 
   const [valoracion, setValoracion] = useState(null); 
   const [rol, setRol] = useState<'cliente' | 'trabajador' | null>(null);
+  const [mostrarModal, setMostrarModal] = useState(false); //para el cancelar changuita
+  const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
+
+const motivosCancelacion = [
+  'No puedo asistir',
+  'Tuve un inconveniente personal',
+  'El cliente no responde',
+  'Cambio de planes',
+  'Otro motivo',
+];
+
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -291,12 +302,82 @@ const DetalleTarea = () => {
         </TouchableWithoutFeedback>
       </Modal>
 
+<Modal
+  transparent={true}
+  visible={mostrarModal}
+  animationType="fade"
+  onRequestClose={() => setMostrarModal(false)}
+>
+  <View style={{
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}>
+    <View style={{
+      width: '90%',
+      backgroundColor: '#fff',
+      borderRadius: 12,
+      padding: 20,
+    }}>
+      <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 15 }}>
+        ¿Por qué querés cancelar la changuita?
+      </Text>
+
+      {motivosCancelacion.map((motivo, index) => (
+        <TouchableOpacity
+          key={index}
+          onPress={() => setMotivoSeleccionado(motivo)}
+          style={{
+            paddingVertical: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Ionicons
+            name={motivoSeleccionado === motivo ? 'radio-button-on' : 'radio-button-off'}
+            size={20}
+            color="#197278"
+            style={{ marginRight: 10 }}
+          />
+          <Text style={{ fontSize: 16 }}>{motivo}</Text>
+        </TouchableOpacity>
+      ))}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 }}>
+        <TouchableOpacity onPress={() => setMostrarModal(false)} style={{ marginRight: 15 }}>
+          <Text style={{ color: '#888' }}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          disabled={!motivoSeleccionado}
+          onPress={() => {
+            // Enviar motivo al backend o manejar acción
+            console.log('Changuita cancelada por:', motivoSeleccionado);
+            cancelarSolicitud();
+            setMostrarModal(false);
+            setMotivoSeleccionado('');
+          }}
+        >
+          <Text style={{
+            color: motivoSeleccionado ? '#b00020' : '#ccc',
+            fontWeight: 'bold'
+          }}>
+            Confirmar
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+
+
+
 {/* Botón si el estado es PA y sos trabajador */}
 {rol === 'trabajador' && estado === 'PA' && (
   <View style={EstilosDetalleTarea.buttonContainer}>
     <TouchableOpacity 
       style={EstilosDetalleTarea.prevButton} 
-      onPress={cancelarSolicitud}
+   onPress={() => setMostrarModal(true)}
     >
       <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
     </TouchableOpacity>
@@ -308,7 +389,7 @@ const DetalleTarea = () => {
   <View style={EstilosDetalleTarea.buttonContainer}>
     <TouchableOpacity 
       style={EstilosDetalleTarea.prevButton} 
-      onPress={cancelarSolicitud}
+    onPress={() => setMostrarModal(true)}
     >
       <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
     </TouchableOpacity>
@@ -327,7 +408,7 @@ const DetalleTarea = () => {
     </TouchableOpacity>
     <TouchableOpacity 
       style={ EstilosDetalleTarea.prevButton} 
-      onPress={cancelarSolicitud}
+     onPress={() => setMostrarModal(true)}
     >
       <Text style={ EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
     </TouchableOpacity>
