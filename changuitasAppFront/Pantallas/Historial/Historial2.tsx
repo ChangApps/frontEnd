@@ -244,12 +244,21 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
       </View>
 
             {/* Elemento de resultado */}
-     <FlatList
+ <FlatList
   data={historial}
-  keyExtractor={(item) => item.id.toString()} // ID de la solicitud
+  keyExtractor={(item) => item.id.toString()}
   renderItem={({ item }) => {
-    const cliente = clientes.find(c => c.id === item.cliente); 
+    const cliente = clientes.find(c => c.id === item.cliente);
     const puntaje = cliente?.puntaje ? Math.round(cliente.puntaje) : 0;
+
+    const esEstadoCritico = item.estado === 'F' || item.estado === 'C';
+
+    const estadoLegible = {
+      'PA': 'Pendiente de Aceptación',
+      'I': 'Iniciado',
+      'F': 'Finalizado',
+      'C': 'Cancelado',
+    }[item.estado] || item.estado;
 
     return (
       <View style={EstilosHistorial2.resultItem}>
@@ -258,9 +267,21 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
           source={{ uri: cliente?.fotoPerfil || 'https://via.placeholder.com/100' }}
         />
         <View style={EstilosHistorial2.resultDetails}>
-          <Text style={EstilosHistorial2.name}>
-            {`${cliente?.first_name || 'Nombre'} ${cliente?.last_name || ''}`}
-          </Text>
+
+          {/* Nombre + Estado en una línea */}
+          <View style={EstilosHistorial2.nombreConEstadoContainer}>
+            <Text style={EstilosHistorial2.name}>
+              {`${cliente?.first_name || 'Nombre'} ${cliente?.last_name || ''}`}
+            </Text>
+
+            {esEstadoCritico ? (
+              <View style={EstilosHistorial2.estadoCriticoContainer}>
+                <Text style={EstilosHistorial2.estadoCriticoText}>{estadoLegible}</Text>
+              </View>
+            ) : (
+              <Text style={EstilosHistorial2.estadoNormal}>{estadoLegible}</Text>
+            )}
+          </View>
 
           <Text style={EstilosHistorial2.fecha}>
             Fecha: {item.fechaSolicitud}
@@ -277,6 +298,7 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
             ))}
           </View>
         </View>
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('DetalleTarea', {

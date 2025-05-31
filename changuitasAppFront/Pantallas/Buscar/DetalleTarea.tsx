@@ -383,7 +383,6 @@ const motivosCancelacion = [
         <TouchableOpacity
           disabled={!motivoSeleccionado}
           onPress={() => {
-            // Enviar motivo al backend o manejar acción
             console.log('Changuita cancelada por:', motivoSeleccionado);
             cancelarSolicitud();
             setMostrarModal(false);
@@ -391,7 +390,7 @@ const motivosCancelacion = [
           }}
         >
           <Text style={{
-            color: motivoSeleccionado ? '#b00020' : '#ccc',
+            color: motivoSeleccionado ? '#2E7D32' : '#ccc',
             fontWeight: 'bold'
           }}>
             Confirmar

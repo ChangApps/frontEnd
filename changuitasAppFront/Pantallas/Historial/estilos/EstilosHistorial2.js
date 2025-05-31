@@ -91,25 +91,6 @@ const EstilosHistorial2 = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
-  barraNavegacion: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  iconoNavegacion: {
-    alignItems: 'center',
-  },
-  textoNavegacion: {
-    fontSize: 12,
-    color: 'gray',
-  },
   desplegable: {
     position: 'absolute',
     top: 80,
@@ -158,10 +139,36 @@ const EstilosHistorial2 = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
   },
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+nombreConEstadoContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  flexWrap: 'nowrap',
+},
+
+name: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#333',
+  marginRight: 8, // separa el nombre del cartel
+},
+
+estadoCriticoContainer: {
+  backgroundColor: '#ff4d4d', // rojo claro
+  paddingHorizontal: 8,
+  paddingVertical: 4,
+  borderRadius: 5,
+  marginTop: 0,
+  alignSelf: 'flex-start',
+},
+
+estadoCriticoText: {
+  color: 'white',
+  fontWeight: 'bold',
+},
+  estadoNormal: {
+    marginTop: 4,
+    fontStyle: 'italic',
+    color: '#555',
   },
   emptyContainer: {
     flex: 1, 
@@ -194,7 +201,7 @@ const EstilosHistorial2 = StyleSheet.create({
     fontSize: 18,
     color: 'grey',
     textAlign: 'center',
-  }
+  },
 });
 
 export default EstilosHistorial2;

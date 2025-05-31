@@ -60,10 +60,34 @@ const EstilosHistorial1 = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
   },
+  nombreConEstadoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'nowrap', // para que no haga wrap en cel
+  },
+
   name: {
     fontSize: 16,
     fontWeight: '600',
     color: '#333',
+    marginRight: 8, // espacio entre nombre y cartel rojo
+  },
+     estadoCriticoContainer: {
+    backgroundColor: '#ff4d4d', // rojo claro
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 5,
+    marginTop: 4,
+    alignSelf: 'flex-start',
+  },
+  estadoCriticoText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  estadoNormal: {
+    marginTop: 4,
+    fontStyle: 'italic',
+    color: '#555',
   },
   category: {
     fontSize: 14,
@@ -183,7 +207,7 @@ const EstilosHistorial1 = StyleSheet.create({
     fontSize: 18,
     color: 'grey',
     textAlign: 'center',
-  }
+  },
 });
 
 export default EstilosHistorial1;
