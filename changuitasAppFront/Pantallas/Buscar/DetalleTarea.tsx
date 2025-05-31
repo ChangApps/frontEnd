@@ -185,6 +185,37 @@ const motivosCancelacion = [
 
       const idSolicitud = route.params.idSolicitud;
 
+      const response = await fetch(`${API_URL}/cancelar-changuita/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          solicitud_id:idSolicitud
+        }),
+      });
+
+      if (!response.ok) throw new Error('Error al cancelar la changuita');
+
+      console.log("Changuita cancelada correctamente");
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error al cancelar la changuita:', error);
+      setMessage('Error al cancelar la changuita.');
+      setVisible(true);
+    }
+  };
+
+
+
+  const finalizarSolicitud = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) throw new Error('No se encontró el token de acceso');
+
+      const idSolicitud = route.params.idSolicitud;
+
       const response = await fetch(`${API_URL}/finalizar-changuita/`, {
         method: 'POST',
         headers: {
@@ -196,16 +227,17 @@ const motivosCancelacion = [
         }),
       });
 
-      if (!response.ok) throw new Error('Error al actualizar la solicitud');
+      if (!response.ok) throw new Error('Error al finalizar la changuita');
 
-      console.log("Solicitud actualizada correctamente");
-      navigation.navigate('Home');
+      console.log("Changuita finalizada correctamente");
+      navigation.navigate('CalificarTarea', { idSolicitud });
     } catch (error) {
-      console.error('Error al actualizar la solicitud:', error);
-      setMessage('Error al actualizar la solicitud.');
+      console.error('Error al finalizar la changuita:', error);
+      setMessage('Error al finalizar la changuita.');
       setVisible(true);
     }
   };
+
   const logout = async () => {
     try {
      setState({ token: "" });
@@ -371,16 +403,23 @@ const motivosCancelacion = [
 </Modal>
 
 
-
-{/* Botón si el estado es PA y sos trabajador */}
 {rol === 'trabajador' && estado === 'PA' && (
   <View style={EstilosDetalleTarea.buttonContainer}>
+    
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.nextButton} 
+      onPress={aceptarChanguita}
+    >
+      <Text style={EstilosDetalleTarea.nextButtonText}>Aceptar changuita</Text>
+    </TouchableOpacity>
+
     <TouchableOpacity 
       style={EstilosDetalleTarea.prevButton} 
-   onPress={() => setMostrarModal(true)}
+      onPress={() => setMostrarModal(true)}
     >
       <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
     </TouchableOpacity>
+    
   </View>
 )}
 
@@ -397,20 +436,25 @@ const motivosCancelacion = [
 )}
 
 
-{/* Finalizar y cancelar, visible solo si no es PA y no está finalizada ni cancelada */}
-{rol === 'cliente' && !(estado === 'F' || estado === 'C' || estado === 'Finalizado' || estado === 'Cancelado' || estado === 'Pendiente Aceptacion') && (
-  <View style={ EstilosDetalleTarea.buttonContainer}>
+{rol === 'cliente' && !(estado === 'F' || estado === 'C' || estado === 'Finalizado' || estado === 'Cancelado') && (
+  <View style={EstilosDetalleTarea.buttonContainer}>
+    
+    {/* Mostrar solo si el estado NO es PA */}
+    {estado !== 'PA' && estado !== 'Pendiente Aceptacion' && (
+      <TouchableOpacity 
+        style={EstilosDetalleTarea.nextButton} 
+        onPress={() =>  finalizarSolicitud()}
+      >
+        <Text style={EstilosDetalleTarea.nextButtonText}>Finalizar changuita</Text>
+      </TouchableOpacity>
+    )}
+
+    {/* Mostrar botón de cancelar en cualquier otro caso válido */}
     <TouchableOpacity 
-      style={ EstilosDetalleTarea.nextButton} 
-      onPress={() => navigation.navigate('CalificarTarea', { idSolicitud })}
+      style={EstilosDetalleTarea.prevButton} 
+      onPress={() => setMostrarModal(true)}
     >
-      <Text style={ EstilosDetalleTarea.nextButtonText}>Finalizar changuita</Text>
-    </TouchableOpacity>
-    <TouchableOpacity 
-      style={ EstilosDetalleTarea.prevButton} 
-     onPress={() => setMostrarModal(true)}
-    >
-      <Text style={ EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+      <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
     </TouchableOpacity>
   </View>
 )}
