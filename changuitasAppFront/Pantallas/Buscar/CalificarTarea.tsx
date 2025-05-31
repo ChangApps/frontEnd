@@ -35,17 +35,16 @@ const CalificarTarea = () => {
 
       const idSolicitud = route.params.idSolicitud;
 
-      const response = await fetch(`${API_URL}/solicitudes/${idSolicitud}/`, {
-        method: 'PATCH',
+      const response = await fetch(`${API_URL}/valorar-changuita/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
+          solicitud_id:idSolicitud,
           comentario,
           valoracion: calificacion,
-          estado: "F",
-          fechaValoracion: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
         }),
       });
 

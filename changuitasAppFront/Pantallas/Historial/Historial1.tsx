@@ -164,8 +164,6 @@ const fetchUHistorial = async () => {
     } else {
       console.error('Error desconocido:', error);
     }
-    setMessage('No se pudo cargar el historial');
-    setVisible(true);
   }
 };
 
@@ -254,65 +252,87 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         </View>
 
 
-        <FlatList
-    data={historial}
-    keyExtractor={(item) => item.id.toString()} // id de la solicitud
-    renderItem={({ item }) => {
-      const proveedor = proveedores.find(p => p.id === item.proveedor_id);
-      const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
-      return (
-        <View style={EstilosHistorial1.resultItem}>
-          <Image
-            style={EstilosHistorial1.image}
-            source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
-          />
-          <View style={EstilosHistorial1.resultDetails}>
+<FlatList
+  data={historial}
+  keyExtractor={(item) => item.id.toString()}
+  renderItem={({ item }) => {
+    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
+    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
+
+    const esEstadoCritico = item.estado === 'F' || item.estado === 'C';
+
+    const estadoLegible = {
+      'PA': 'Pendiente de Aceptación',
+      'I': 'Iniciado',
+      'F': 'Finalizado',
+      'C': 'Cancelado',
+    }[item.estado] || item.estado;
+
+    return (
+      <View style={EstilosHistorial1.resultItem}>
+        <Image
+          style={EstilosHistorial1.image}
+          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
+        />
+        <View style={EstilosHistorial1.resultDetails}>
+          
+          {/* Nombre + Estado en la misma línea */}
+          <View style={EstilosHistorial1.nombreConEstadoContainer}>
             <Text style={EstilosHistorial1.name}>
               {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
             </Text>
 
-            <Text style={EstilosHistorial1.fecha}>
-              Fecha: {item.fechaSolicitud}
-            </Text>
-
-            <View style={EstilosHistorial1.ratingStars}>
-              {Array.from({ length: 5 }, (_, i) => (
-                <Ionicons
-                  key={i}
-                  name="star"
-                  size={16}
-                  color={i < puntaje ? "black" : "#CCCCCC"}
-                />
-              ))}
-            </View>
+            {esEstadoCritico ? (
+              <View style={EstilosHistorial1.estadoCriticoContainer}>
+                <Text style={EstilosHistorial1.estadoCriticoText}>{estadoLegible}</Text>
+              </View>
+            ) : (
+              <Text style={EstilosHistorial1.estadoNormal}>{estadoLegible}</Text>
+            )}
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              console.log("Botón presionado");
-              navigation.navigate('DetalleTarea', {
-                id: proveedor?.id.toString() || 'No disponible',
-                idSolicitud: item.id.toString()
-              });
-            }}
-            style={EstilosHistorial1.arrowButton}
-          >
-            <Ionicons name="chevron-forward" size={20} color="#333" />
-          </TouchableOpacity>
-        </View>
-      );
-    }}
-    ListEmptyComponent={
-      <View style={EstilosHistorial1.noResultsContainer}>
-        <Image
-          source={require('./estilos/service.png')}
-          style={EstilosHistorial1.noResultsImage}
-          resizeMode="contain"
-        />
-        <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz contratado ningún trabajo.</Text>
-    </View>
-    }
-  />
 
+          <Text style={EstilosHistorial1.fecha}>
+            Fecha: {item.fechaSolicitud}
+          </Text>
+
+          {/* Estrellas */}
+          <View style={EstilosHistorial1.ratingStars}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <Ionicons
+                key={i}
+                name="star"
+                size={16}
+                color={i < puntaje ? "black" : "#CCCCCC"}
+              />
+            ))}
+          </View>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('DetalleTarea', {
+              id: proveedor?.id.toString() || 'No disponible',
+              idSolicitud: item.id.toString()
+            });
+          }}
+          style={EstilosHistorial1.arrowButton}
+        >
+          <Ionicons name="chevron-forward" size={20} color="#333" />
+        </TouchableOpacity>
+      </View>
+    );
+  }}
+  ListEmptyComponent={
+    <View style={EstilosHistorial1.noResultsContainer}>
+      <Image
+        source={require('./estilos/service.png')}
+        style={EstilosHistorial1.noResultsImage}
+        resizeMode="contain"
+      />
+      <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz contratado ningún trabajo.</Text>
+    </View>
+  }
+/>
       <Snackbar
           visible={visible}
           onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre

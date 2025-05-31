@@ -30,6 +30,18 @@ const DetalleTarea = () => {
   const [fechaSolicitud, setfechaSolicitud] = useState(""); 
   const [estado, setEstado] = useState(""); 
   const [valoracion, setValoracion] = useState(null); 
+  const [rol, setRol] = useState<'cliente' | 'trabajador' | null>(null);
+  const [mostrarModal, setMostrarModal] = useState(false); //para el cancelar changuita
+  const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
+
+const motivosCancelacion = [
+  'No puedo asistir',
+  'Tuve un inconveniente personal',
+  'El cliente no responde',
+  'Cambio de planes',
+  'Otro motivo',
+];
+
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -48,7 +60,41 @@ const DetalleTarea = () => {
     fetchDatosSolicitud();
   }, []);  // Solo se ejecuta una vez cuando el componente se monta
 
+  useEffect(() => {
+  console.log("Rol actualizado:", rol);
+    console.log("Render - rol:", rol, "estado:", estado);
 
+}, [rol]);
+
+  const aceptarChanguita = async () => {
+    try {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (!token) throw new Error('No se encontró el token');
+  
+      console.log("ID de solicitud: ",idSolicitud);
+      const response = await fetch(`${API_URL}/aceptar-changuita/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          solicitud_id: idSolicitud 
+        })
+      });
+  
+      if (!response.ok) throw new Error('No se pudo aceptar la changuita');
+  
+    await fetchDatosSolicitud();
+      setMessage('¡Changuita aceptada!');
+      setVisible(true);
+    } catch (error: any) {
+      console.error('Error al aceptar changuita:', error.message);
+      setMessage('Error al aceptar changuita');
+      setVisible(true);
+    }
+  };
+  
   const fetchDatosSolicitud = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -66,7 +112,6 @@ const DetalleTarea = () => {
       });
   
       if (!responsDatosSolicitud.ok) {
-        // Puedes revisar el contenido de la respuesta en caso de error
         const errorData = await responsDatosSolicitud.json();
         console.error('Error del servidor:', errorData);
         throw new Error(`Error al obtener los datos de la solicitud: ${errorData.detail || 'Respuesta no válida'}`);
@@ -77,11 +122,29 @@ const DetalleTarea = () => {
       setNombreServicio(dataSolicitud.nombreServicio);
       setEstado(dataSolicitud.estado);
       setValoracion(dataSolicitud.valoracion);
+
+      const userId = await AsyncStorage.getItem('userId');
+      console.log("Comparando:");
+      console.log("userId (string):", userId);
+      console.log("dataSolicitud.cliente (number):", dataSolicitud.cliente);
+      console.log("dataSolicitud.cliente.toString():", dataSolicitud.cliente.toString());
+      console.log("Resultado comparación (cliente):", userId === dataSolicitud.cliente.toString());
+    
+      if (userId === dataSolicitud.cliente.toString()) {
+        console.log("Soy el CLIENTE");
+        setRol('cliente');
+        return;
+      }
+      if (userId === dataSolicitud.proveedor_id.toString()) {
+        console.log("Soy el TRABAJADOR");
+        setRol('trabajador');
+        return;
+      }
     } catch (error) {
       console.error('Error al cargar los datos de la solicitud', error);
     }
   };
- 
+
   const fetchUsuario = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -122,6 +185,37 @@ const DetalleTarea = () => {
 
       const idSolicitud = route.params.idSolicitud;
 
+      const response = await fetch(`${API_URL}/cancelar-changuita/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          solicitud_id:idSolicitud
+        }),
+      });
+
+      if (!response.ok) throw new Error('Error al cancelar la changuita');
+
+      console.log("Changuita cancelada correctamente");
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error al cancelar la changuita:', error);
+      setMessage('Error al cancelar la changuita.');
+      setVisible(true);
+    }
+  };
+
+
+
+  const finalizarSolicitud = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) throw new Error('No se encontró el token de acceso');
+
+      const idSolicitud = route.params.idSolicitud;
+
       const response = await fetch(`${API_URL}/finalizar-changuita/`, {
         method: 'POST',
         headers: {
@@ -133,16 +227,17 @@ const DetalleTarea = () => {
         }),
       });
 
-      if (!response.ok) throw new Error('Error al actualizar la solicitud');
+      if (!response.ok) throw new Error('Error al finalizar la changuita');
 
-      console.log("Solicitud actualizada correctamente");
-      navigation.navigate('Home');
+      console.log("Changuita finalizada correctamente");
+      navigation.navigate('CalificarTarea', { idSolicitud });
     } catch (error) {
-      console.error('Error al actualizar la solicitud:', error);
-      setMessage('Error al actualizar la solicitud.');
+      console.error('Error al finalizar la changuita:', error);
+      setMessage('Error al finalizar la changuita.');
       setVisible(true);
     }
   };
+
   const logout = async () => {
     try {
      setState({ token: "" });
@@ -239,23 +334,129 @@ const DetalleTarea = () => {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* Botones */}
-      {!(serviceData.estado === 'F' || serviceData.estado === 'C' || serviceData.estado === 'Finalizado' || serviceData.estado === 'Cancelado') && (
-  <View style={ EstilosDetalleTarea.buttonContainer}>
-        <TouchableOpacity 
-          style={ EstilosDetalleTarea.nextButton} 
-          onPress={() => navigation.navigate('CalificarTarea', { idSolicitud })}
+<Modal
+  transparent={true}
+  visible={mostrarModal}
+  animationType="fade"
+  onRequestClose={() => setMostrarModal(false)}
+>
+  <View style={{
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}>
+    <View style={{
+      width: '90%',
+      backgroundColor: '#fff',
+      borderRadius: 12,
+      padding: 20,
+    }}>
+      <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 15 }}>
+        ¿Por qué querés cancelar la changuita?
+      </Text>
+
+      {motivosCancelacion.map((motivo, index) => (
+        <TouchableOpacity
+          key={index}
+          onPress={() => setMotivoSeleccionado(motivo)}
+          style={{
+            paddingVertical: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
         >
-          <Text style={ EstilosDetalleTarea.nextButtonText}>Finalizar changuita</Text>
+          <Ionicons
+            name={motivoSeleccionado === motivo ? 'radio-button-on' : 'radio-button-off'}
+            size={20}
+            color="#197278"
+            style={{ marginRight: 10 }}
+          />
+          <Text style={{ fontSize: 16 }}>{motivo}</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={ EstilosDetalleTarea.prevButton} 
-          onPress={cancelarSolicitud}
+      ))}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 }}>
+        <TouchableOpacity onPress={() => setMostrarModal(false)} style={{ marginRight: 15 }}>
+          <Text style={{ color: '#888' }}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          disabled={!motivoSeleccionado}
+          onPress={() => {
+            console.log('Changuita cancelada por:', motivoSeleccionado);
+            cancelarSolicitud();
+            setMostrarModal(false);
+            setMotivoSeleccionado('');
+          }}
         >
-          <Text style={ EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+          <Text style={{
+            color: motivoSeleccionado ? '#2E7D32' : '#ccc',
+            fontWeight: 'bold'
+          }}>
+            Confirmar
+          </Text>
         </TouchableOpacity>
       </View>
+    </View>
+  </View>
+</Modal>
+
+
+{rol === 'trabajador' && estado === 'PA' && (
+  <View style={EstilosDetalleTarea.buttonContainer}>
+    
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.nextButton} 
+      onPress={aceptarChanguita}
+    >
+      <Text style={EstilosDetalleTarea.nextButtonText}>Aceptar changuita</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.prevButton} 
+      onPress={() => setMostrarModal(true)}
+    >
+      <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+    </TouchableOpacity>
+    
+  </View>
+)}
+
+{/* Botón si el estado es Iniciado y sos trabajador */}
+{rol === 'trabajador' && estado === 'I' && (
+  <View style={EstilosDetalleTarea.buttonContainer}>
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.prevButton} 
+    onPress={() => setMostrarModal(true)}
+    >
+      <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+    </TouchableOpacity>
+  </View>
+)}
+
+
+{rol === 'cliente' && !(estado === 'F' || estado === 'C' || estado === 'Finalizado' || estado === 'Cancelado') && (
+  <View style={EstilosDetalleTarea.buttonContainer}>
+    
+    {/* Mostrar solo si el estado NO es PA */}
+    {estado !== 'PA' && estado !== 'Pendiente Aceptacion' && (
+      <TouchableOpacity 
+        style={EstilosDetalleTarea.nextButton} 
+        onPress={() =>  finalizarSolicitud()}
+      >
+        <Text style={EstilosDetalleTarea.nextButtonText}>Finalizar changuita</Text>
+      </TouchableOpacity>
     )}
+
+    {/* Mostrar botón de cancelar en cualquier otro caso válido */}
+    <TouchableOpacity 
+      style={EstilosDetalleTarea.prevButton} 
+      onPress={() => setMostrarModal(true)}
+    >
+      <Text style={EstilosDetalleTarea.prevButtonText}>Cancelar changuita</Text>
+    </TouchableOpacity>
+  </View>
+)}
       {/* Barra de navegación inferior */}
       <BarraNavegacionInferior/>
     </SafeAreaView>
