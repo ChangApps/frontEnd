@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert,Modal } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert,Modal, Linking} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,6 +12,7 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import { AuthContext } from '../../autenticacion/auth';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -50,6 +51,7 @@ const PerfilUsuario: React.FC = () => {
     telefono: string;
     direccion: Direccion;
     fotoPerfil: string | null;
+    is_staff:boolean;
   }
 
 
@@ -74,6 +76,10 @@ const PerfilUsuario: React.FC = () => {
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
   useEffect(() => {
@@ -152,13 +158,13 @@ const PerfilUsuario: React.FC = () => {
         </View>
 
         {/* Menú Desplegable */}
-        {mostrarDesplegable && (
-          <View style={EstilosPerfilUsuario.desplegable}>
-            <TouchableOpacity onPress={logout} style={EstilosPerfilUsuario.opcionDesplegable}>
-              <Text style={EstilosPerfilUsuario.textoDesplegable}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
+        
         {/* Barra de pestañas */}
         <BarraPestanasPerfil/>
 

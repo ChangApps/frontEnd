@@ -10,6 +10,7 @@ import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 
 const PerfilProveedor = () => {
 
@@ -47,6 +48,10 @@ const PerfilProveedor = () => {
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
+
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -317,6 +322,9 @@ const PerfilProveedor = () => {
   };
 
   return (
+    <TouchableWithoutFeedback onPress={() => {
+        if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
     <SafeAreaView style={EstilosPerfilProveedor.contenedor}>
        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
       {/* Encabezado con opciones de menú */}
@@ -331,13 +339,12 @@ const PerfilProveedor = () => {
       </View>
 
             {/* Menú Desplegable */}
-            {mostrarDesplegable && (
-        <View style={EstilosPerfilProveedor.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosPerfilProveedor.opcionDesplegable}>
-            <Text style={EstilosPerfilProveedor.textoDesplegable}>Cerrar sesión</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            <MenuDesplegable
+              visible={mostrarDesplegable}
+              usuario={state.usuario}
+              onLogout={logout}
+              onRedirectAdmin={redirectAdmin}
+            />
 
 
 {/* Información del Usuario */}
@@ -430,6 +437,7 @@ const PerfilProveedor = () => {
        <BarraNavegacionInferior/>
       </ScrollView>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

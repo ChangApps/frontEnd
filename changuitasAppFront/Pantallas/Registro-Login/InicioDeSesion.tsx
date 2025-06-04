@@ -44,9 +44,17 @@ const InicioDeSesion = () => {
   
       setState({
         token: data.access,
+        usuario:{
+          id:data.id,
+          is_staff:data.is_staff,
+        }
     });
       // Almacena el token en AsyncStorage
-      await AsyncStorage.setItem('@auth', JSON.stringify({ token: data.access }));
+      await AsyncStorage.setItem('@auth', JSON.stringify({ token: data.access,
+        usuario:{
+          id:data.id,
+          is_staff:data.is_staff,
+        } }));
       console.log('Token guardado:', data.access);
   
       // Almacena los tokens y el userId en AsyncStorage

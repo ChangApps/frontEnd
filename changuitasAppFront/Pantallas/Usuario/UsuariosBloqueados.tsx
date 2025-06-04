@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList,Image,TouchableWithoutFeedback} from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList,Image,TouchableWithoutFeedback, Linking} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -11,6 +11,11 @@ import { ActivityIndicator } from 'react-native';
 import EstilosUsuariosBloqueados from './estilos/EstilosUsuariosBloqueados';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+
+const redirectAdmin = () => {
+  Linking.openURL('http://127.0.0.1:8000/admin/');
+};
 
 const UsuariosBloqueados = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -130,13 +135,12 @@ const UsuariosBloqueados = () => {
         </View>
 
           {/* Menú Desplegable */}
-            {mostrarDesplegable && (
-          <View style={EstilosUsuariosBloqueados.desplegable}>
-            <TouchableOpacity onPress={logout} style={EstilosUsuariosBloqueados.opcionDesplegable}>
-              <Text style={EstilosUsuariosBloqueados.textoDesplegable}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+           <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
 
       {/* Barra de pestañas */}
       <BarraPestanasPerfil/>

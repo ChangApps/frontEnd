@@ -12,7 +12,8 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
-
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import { Snackbar } from 'react-native-paper';
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -25,10 +26,45 @@ const PantallaHome = () => {
      'Ushuaia'
       
   ];
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const redirectAdmin = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
   };
+
+  const verificarTrabajosPendientes = async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/historial/proveedor/${userId}/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      console.warn("No se pudieron verificar trabajos pendientes");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.message === "No se encontraron solicitudes para este usuario donde sea proveedor") {
+      return; // No hacemos nada si no es proveedor o no hay solicitudes
+    }
+
+    // En caso de que data sea un arreglo de solicitudes, verifico trabajos pendientes
+    if (Array.isArray(data)) {
+      const trabajosPendientes = data.some((solicitud: any) => solicitud.estado === "PA");
+      if (trabajosPendientes && !snackbarVisible) {
+        setSnackbarVisible(true);
+        console.log("Trabajo pendiente detectado: ", data);
+      }
+    }
+
+  } catch (error) {
+    console.error("Error al verificar trabajos pendientes:", error);
+  }
+};
 
   const fetchUsuarioLogueado = async () => {
     try {
@@ -52,7 +88,10 @@ const PantallaHome = () => {
       if (!response.ok) throw new Error('Error al obtener el usuario');
   
       const data = await response.json();
-      setUsuario(data);
+      //setUsuario(data);//local
+      await verificarTrabajosPendientes(data.id, accessToken);
+    
+
     } catch (error) {
       console.error('Error al obtener usuario logueado:', error);
     }
@@ -155,20 +194,12 @@ const PantallaHome = () => {
         </View>
 
         {/* Menú Desplegable */}
-        {mostrarDesplegable && (
-          <View style={EstilosHome.desplegable}>
-            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-            </TouchableOpacity>
-            {usuario && usuario.is_staff && ( //Si el usuario es staff, renderizo el boton para el panel Administrador de Django
-              <TouchableOpacity style={EstilosHome.opcionDesplegable} onPress={redirectAdmin}>
-                <Text style={EstilosHome.textoDesplegable}>Admin</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-              <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
 
         {/* Contenido Principal */}
         <View style={EstilosHome.contenidoPrincipal}>
@@ -184,6 +215,29 @@ const PantallaHome = () => {
         </View>
 
         <BarraNavegacionInferior/>
+          <Snackbar
+              visible={snackbarVisible}
+              onDismiss={() => setSnackbarVisible(false)}  // Ocultar el Snackbar cuando se cierre
+              duration={Snackbar.DURATION_LONG} 
+              action={{
+                label: 'Tocá para ver ',
+                onPress: () => {
+                  setSnackbarVisible(false);
+                  navigation.navigate("Historial2");
+                },
+              }}
+              style={{
+              position: 'absolute',
+              top: -150,
+              left: 0,
+              right: 0,
+              zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
+              }}
+              >
+              <Text style ={{color:"white"}}>
+              Tenés una solicitud de trabajo pendiente
+              </Text> 
+            </Snackbar>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

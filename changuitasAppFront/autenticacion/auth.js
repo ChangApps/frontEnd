@@ -6,19 +6,19 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
     const [state, setState] = useState({
         token: "",
+        usuario:null,
     });
 
     useEffect(() => {
         const loadFromAsyncStorage = async () => {
-            let data = await AsyncStorage.getItem("@auth");
-            const as = JSON.parse(data);
-            console.log("Datos cargados desde AsyncStorage: ", as);
-            if (as && as.token) {
-                setState({ token: as.token });
+            const data = await AsyncStorage.getItem("@auth");
+            const parsed = JSON.parse(data);
+            if (parsed?.token) {
+            setState({ token: parsed.token, usuario: parsed.usuario });
             }
         };
         loadFromAsyncStorage();
-    }, []);
+        }, []);
 
     return (
         <AuthContext.Provider value={[state, setState]}>
