@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList, Linking, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { Snackbar } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import API_URL from '../../auxiliares/API_URL';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosHistorial2 from './estilos/EstilosHistorial2';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -71,6 +72,10 @@ const Historial2 = () => {
     nombreServicio: string;
     cliente_nombre: string;
   }
+
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -215,6 +220,9 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
 };
 
   return (
+    <TouchableWithoutFeedback onPress={() => {
+          if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+    }}>
     <SafeAreaView style={EstilosHistorial2.contenedor}>
       {/* Encabezado con opciones de menú */}
       <View style={EstilosHistorial2.encabezado}>
@@ -225,13 +233,12 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
       </View>
 
         {/* Menú Desplegable */}
-       {mostrarDesplegable && (
-        <View style={EstilosHistorial2.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosHistorial2.opcionDesplegable}>
-            <Text style={EstilosHistorial2.textoDesplegable}>Cerrar sesión</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
          
          {/* Barra de pestañas */}
          <View style={EstilosHistorial2.barraPestanas}>
@@ -342,6 +349,7 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
       {/* Barra de navegación inferior */}
       <BarraNavegacionInferior/>
     </SafeAreaView>
+  </TouchableWithoutFeedback>
   );
 };
 export default Historial2;

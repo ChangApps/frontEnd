@@ -125,29 +125,6 @@ const EstilosPerfilUsuario = StyleSheet.create({
       fontSize: 12,
       color: 'gray',
     },
-    desplegable: {
-      position: 'absolute',
-      top: 70,
-      right: 20,
-      width: 150,
-      backgroundColor: '#ffffff',
-      borderRadius: 16,
-      paddingVertical: 10,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 2 },
-      elevation: 5,
-      zIndex: 10,
-    },
-    opcionDesplegable: {
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-    },
-    textoDesplegable: {
-      fontSize: 16,
-      color: '#333333',
-    },
      // Estilos para el modal
      modalContainer: {
       flex: 1,

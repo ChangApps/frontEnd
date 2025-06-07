@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect} from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList, TouchableWithoutFeedback, Linking } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { Snackbar } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import API_URL from '../../auxiliares/API_URL';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -70,6 +71,10 @@ const Historial1 = () => {
     nombreServicio: string;
     cliente_nombre: string;
   }
+
+  const redirectAdmin = () => {
+  Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -233,13 +238,12 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         </View>
 
         {/* Menú Desplegable */}
-        {mostrarDesplegable && (
-          <View style={EstilosHistorial1.desplegable}>
-            <TouchableOpacity onPress={logout} style={EstilosHistorial1.opcionDesplegable}>
-              <Text style={EstilosHistorial1.textoDesplegable}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+         <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
 
           {/* Barra de pestañas */}
           <View style={EstilosHistorial1.barraPestanas}>

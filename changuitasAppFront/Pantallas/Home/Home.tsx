@@ -12,13 +12,18 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import API_URL from '../../auxiliares/API_URL';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
-
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import { Snackbar } from 'react-native-paper';
 
 const PantallaHome = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [usuario, setUsuario] = useState<any>(null);
   const [state,setState] = useContext(AuthContext);
+  const [trabajosNotificados, setTrabajosNotificados] = useState<any[]>([]);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [trabajoActual, setTrabajoActual] = useState<any | null>(null);
+
   const caracteristicas = [
     '+30 servicios',
      'Confiable',
@@ -29,6 +34,128 @@ const PantallaHome = () => {
   const redirectAdmin = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
   };
+
+  const onDismissSnackbar = () => {
+  setSnackbarVisible(false);
+
+  // Después de un pequeño delay, limpiar `trabajoActual` para permitir mostrar el siguiente
+  setTimeout(() => {
+    setTrabajoActual(null);
+  }, 300); // tiempo suficiente para evitar solapamiento visual
+};
+
+  const guardarTrabajosNotificados = async (ids: string[]) => {
+  try {
+    await AsyncStorage.setItem('trabajosNotificados', JSON.stringify(ids));
+  } catch (error) {
+    console.error("Error al guardar trabajos notificados:", error);
+  }
+};
+
+const obtenerTrabajosNotificados = async (): Promise<string[]> => {
+  try {
+    const data = await AsyncStorage.getItem('trabajosNotificados');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error al obtener trabajos notificados:", error);
+    return [];
+  }
+};
+
+  const verificarTrabajosPendientes = async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/historial/proveedor/${userId}/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      console.warn("No se pudieron verificar trabajos pendientes");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.message === "No se encontraron solicitudes para este usuario donde sea proveedor") {
+      return; // No hacemos nada si no es proveedor o no hay solicitudes
+    }
+
+    // En caso de que data sea un arreglo de solicitudes, verifico trabajos pendientes
+     if (Array.isArray(data)) {
+      const trabajosNotificados = await obtenerTrabajosNotificados();
+
+      // Filtrar trabajos nuevos (pendientes y no notificados aún)
+      const trabajosNuevos = data.filter((solicitud: any) => 
+        solicitud.estado === "PA" && !trabajosNotificados.includes(String(solicitud.id))
+      );
+
+      if (trabajosNuevos.length > 0) {
+       const nuevosIds = trabajosNuevos.map((solicitud: any) => String(solicitud.id));
+       await guardarTrabajosNotificados([...trabajosNotificados, ...nuevosIds]);
+
+       setTrabajosNotificados(trabajosNuevos); // Cola de solicitudes
+       console.log("Trabajo nuevo pendiente detectado:", trabajosNuevos);
+      }
+    }
+
+  } catch (error) {
+    console.error("Error al verificar trabajos pendientes:", error);
+  }
+};
+
+  const guardarTrabajosNotificadosCliente = async (ids: string[]) => {
+  try {
+    await AsyncStorage.setItem('solicitudesAceptadasNotificadas', JSON.stringify(ids));
+  } catch (error) {
+    console.error("Error al guardar solicitudes aceptadas:", error);
+  }
+};
+
+const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
+  try {
+    const data = await AsyncStorage.getItem('solicitudesAceptadasNotificadas');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error al obtener solicitudes aceptadas:", error);
+    return [];
+  }
+};
+
+  const verificarSolicitudesAceptadas = async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      console.warn("No se pudieron verificar solicitudes aceptadas del cliente");
+      return;
+    }
+
+    const data = await response.json();
+    if (!Array.isArray(data)) return;
+
+    const trabajosNotificadosCliente = await obtenerTrabajosNotificadosCliente();
+
+    const solicitudesAceptadas = data.filter((solicitud: any) =>
+      solicitud.estado === "I" && !trabajosNotificadosCliente.includes(String(solicitud.id))
+    );
+
+    if (solicitudesAceptadas.length > 0) {
+      const nuevosIds = solicitudesAceptadas.map((solicitud: any) => String(solicitud.id));
+      await guardarTrabajosNotificadosCliente([...trabajosNotificadosCliente, ...nuevosIds]);
+
+      setTrabajosNotificados(prev => [...prev, ...solicitudesAceptadas]); // Se acumulan
+    }
+
+  } catch (error) {
+    console.error("Error al verificar solicitudes aceptadas:", error);
+  }
+};
 
   const fetchUsuarioLogueado = async () => {
     try {
@@ -52,7 +179,10 @@ const PantallaHome = () => {
       if (!response.ok) throw new Error('Error al obtener el usuario');
   
       const data = await response.json();
-      setUsuario(data);
+      //setUsuario(data);//local
+      await verificarTrabajosPendientes(data.id, accessToken); //proveedor
+      await verificarSolicitudesAceptadas(data.id, accessToken); // cliente
+
     } catch (error) {
       console.error('Error al obtener usuario logueado:', error);
     }
@@ -67,6 +197,13 @@ const PantallaHome = () => {
   };
 
   useEffect(() => {
+    if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
+    const siguiente = trabajosNotificados[0];
+    setTrabajoActual(siguiente);
+    setTrabajosNotificados(prev => prev.slice(1)); // eliminar el primero
+    setSnackbarVisible(true); // mostrarlo
+  }
+
     const fetchAccessToken = async () => {
       try {
         const storedAccessToken = await AsyncStorage.getItem('accessToken');
@@ -122,7 +259,7 @@ const PantallaHome = () => {
       }
     }, 60000); // Cada 1 minuto
     return () => clearInterval(intervalId);
-  }, []);
+  }, [snackbarVisible, trabajosNotificados, trabajoActual]);
 
   const logout = async () => {
     try {
@@ -155,20 +292,12 @@ const PantallaHome = () => {
         </View>
 
         {/* Menú Desplegable */}
-        {mostrarDesplegable && (
-          <View style={EstilosHome.desplegable}>
-            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-            </TouchableOpacity>
-            {usuario && usuario.is_staff && ( //Si el usuario es staff, renderizo el boton para el panel Administrador de Django
-              <TouchableOpacity style={EstilosHome.opcionDesplegable} onPress={redirectAdmin}>
-                <Text style={EstilosHome.textoDesplegable}>Admin</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity style={EstilosHome.opcionDesplegable}>
-              <Text onPress={logout} style={EstilosHome.textoDesplegable}>Cerrar sesión</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
 
         {/* Contenido Principal */}
         <View style={EstilosHome.contenidoPrincipal}>
@@ -184,6 +313,33 @@ const PantallaHome = () => {
         </View>
 
         <BarraNavegacionInferior/>
+          <Snackbar
+              visible={snackbarVisible}
+              onDismiss={onDismissSnackbar}  // Ocultar el Snackbar cuando se cierre
+              duration={Snackbar.DURATION_SHORT} 
+              action={{
+                label: 'Tocá para ver ',
+                onPress: () => {
+                  setSnackbarVisible(false);
+                  navigation.navigate("Historial2");
+                },
+              }}
+              style={{
+              position: 'absolute',
+              top: -150,
+              left: 0,
+              right: 0,
+              zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
+              }}
+              >
+              {trabajoActual && (
+              <Text style ={{color:"white"}}>
+                {trabajoActual.estado === "PA"
+                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`}
+              </Text>
+            )}
+            </Snackbar>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

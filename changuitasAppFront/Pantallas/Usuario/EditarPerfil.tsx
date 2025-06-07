@@ -1,5 +1,5 @@
 import React, { useState,useEffect, useContext } from 'react';
-import { View, Text, SafeAreaView,TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback} from 'react-native';
+import { View, Text, SafeAreaView,TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -15,6 +15,7 @@ import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import { ImageCropperWeb } from '../../auxiliares/ImageCropperWeb';
 import { guardarCambios } from './auxiliar/guardarCambios';
+import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
@@ -37,7 +38,7 @@ const EditarPerfil = () => {
   const [mostrarDatosContacto, setMostrarDatosContacto] = useState(true);
   const [mostrarDireccion, setMostrarDireccion] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
-
+  
    const datosOriginales: { [key: string]: any } = {
     first_name: '',
     last_name: '',
@@ -68,6 +69,10 @@ const EditarPerfil = () => {
       barrio: '',
     }
   });
+
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -162,13 +167,12 @@ const EditarPerfil = () => {
 
   
           {/* Menú Desplegable */}
-          {mostrarDesplegable && (
-        <View style={EstilosEditarPerfil.desplegable}>
-          <TouchableOpacity onPress={logout} style={EstilosEditarPerfil.opcionDesplegable}>
-            <Text style={EstilosEditarPerfil.textoDesplegable}>Cerrar sesión</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+          <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
 
 
      {/* Barra de pestañas */}
