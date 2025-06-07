@@ -104,6 +104,59 @@ const obtenerTrabajosNotificados = async (): Promise<string[]> => {
   }
 };
 
+  const guardarTrabajosNotificadosCliente = async (ids: string[]) => {
+  try {
+    await AsyncStorage.setItem('solicitudesAceptadasNotificadas', JSON.stringify(ids));
+  } catch (error) {
+    console.error("Error al guardar solicitudes aceptadas:", error);
+  }
+};
+
+const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
+  try {
+    const data = await AsyncStorage.getItem('solicitudesAceptadasNotificadas');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error al obtener solicitudes aceptadas:", error);
+    return [];
+  }
+};
+
+  const verificarSolicitudesAceptadas = async (userId: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      console.warn("No se pudieron verificar solicitudes aceptadas del cliente");
+      return;
+    }
+
+    const data = await response.json();
+    if (!Array.isArray(data)) return;
+
+    const trabajosNotificadosCliente = await obtenerTrabajosNotificadosCliente();
+
+    const solicitudesAceptadas = data.filter((solicitud: any) =>
+      solicitud.estado === "I" && !trabajosNotificadosCliente.includes(String(solicitud.id))
+    );
+
+    if (solicitudesAceptadas.length > 0) {
+      const nuevosIds = solicitudesAceptadas.map((solicitud: any) => String(solicitud.id));
+      await guardarTrabajosNotificadosCliente([...trabajosNotificadosCliente, ...nuevosIds]);
+
+      setTrabajosNotificados(prev => [...prev, ...solicitudesAceptadas]); // Se acumulan
+    }
+
+  } catch (error) {
+    console.error("Error al verificar solicitudes aceptadas:", error);
+  }
+};
+
   const fetchUsuarioLogueado = async () => {
     try {
         // 1. Obtengo el userId y el token desde AsyncStorage
@@ -127,8 +180,8 @@ const obtenerTrabajosNotificados = async (): Promise<string[]> => {
   
       const data = await response.json();
       //setUsuario(data);//local
-      await verificarTrabajosPendientes(data.id, accessToken);
-    
+      await verificarTrabajosPendientes(data.id, accessToken); //proveedor
+      await verificarSolicitudesAceptadas(data.id, accessToken); // cliente
 
     } catch (error) {
       console.error('Error al obtener usuario logueado:', error);
@@ -279,11 +332,13 @@ const obtenerTrabajosNotificados = async (): Promise<string[]> => {
               zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
               }}
               >
+              {trabajoActual && (
               <Text style ={{color:"white"}}>
-               {trabajoActual
-                  ? `${trabajoActual.cliente_nombre} solicitó el servicio de ${trabajoActual.nombreServicio}`
-                  : "Tenés una solicitud de trabajo pendiente"}
-              </Text> 
+                {trabajoActual.estado === "PA"
+                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`}
+              </Text>
+            )}
             </Snackbar>
       </SafeAreaView>
     </TouchableWithoutFeedback>
