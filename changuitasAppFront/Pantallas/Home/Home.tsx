@@ -20,17 +20,47 @@ const PantallaHome = () => {
   const [accessToken, setAccessToken] = useState('');
   const [usuario, setUsuario] = useState<any>(null);
   const [state,setState] = useContext(AuthContext);
+  const [trabajosNotificados, setTrabajosNotificados] = useState<any[]>([]);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [trabajoActual, setTrabajoActual] = useState<any | null>(null);
+
   const caracteristicas = [
     '+30 servicios',
      'Confiable',
      'Ushuaia'
       
   ];
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const redirectAdmin = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
   };
+
+  const onDismissSnackbar = () => {
+  setSnackbarVisible(false);
+
+  // Después de un pequeño delay, limpiar `trabajoActual` para permitir mostrar el siguiente
+  setTimeout(() => {
+    setTrabajoActual(null);
+  }, 300); // tiempo suficiente para evitar solapamiento visual
+};
+
+  const guardarTrabajosNotificados = async (ids: string[]) => {
+  try {
+    await AsyncStorage.setItem('trabajosNotificados', JSON.stringify(ids));
+  } catch (error) {
+    console.error("Error al guardar trabajos notificados:", error);
+  }
+};
+
+const obtenerTrabajosNotificados = async (): Promise<string[]> => {
+  try {
+    const data = await AsyncStorage.getItem('trabajosNotificados');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error al obtener trabajos notificados:", error);
+    return [];
+  }
+};
 
   const verificarTrabajosPendientes = async (userId: string, token: string) => {
   try {
@@ -47,17 +77,25 @@ const PantallaHome = () => {
     }
 
     const data = await response.json();
-
     if (data.message === "No se encontraron solicitudes para este usuario donde sea proveedor") {
       return; // No hacemos nada si no es proveedor o no hay solicitudes
     }
 
     // En caso de que data sea un arreglo de solicitudes, verifico trabajos pendientes
-    if (Array.isArray(data)) {
-      const trabajosPendientes = data.some((solicitud: any) => solicitud.estado === "PA");
-      if (trabajosPendientes && !snackbarVisible) {
-        setSnackbarVisible(true);
-        console.log("Trabajo pendiente detectado: ", data);
+     if (Array.isArray(data)) {
+      const trabajosNotificados = await obtenerTrabajosNotificados();
+
+      // Filtrar trabajos nuevos (pendientes y no notificados aún)
+      const trabajosNuevos = data.filter((solicitud: any) => 
+        solicitud.estado === "PA" && !trabajosNotificados.includes(String(solicitud.id))
+      );
+
+      if (trabajosNuevos.length > 0) {
+       const nuevosIds = trabajosNuevos.map((solicitud: any) => String(solicitud.id));
+       await guardarTrabajosNotificados([...trabajosNotificados, ...nuevosIds]);
+
+       setTrabajosNotificados(trabajosNuevos); // Cola de solicitudes
+       console.log("Trabajo nuevo pendiente detectado:", trabajosNuevos);
       }
     }
 
@@ -106,6 +144,13 @@ const PantallaHome = () => {
   };
 
   useEffect(() => {
+    if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
+    const siguiente = trabajosNotificados[0];
+    setTrabajoActual(siguiente);
+    setTrabajosNotificados(prev => prev.slice(1)); // eliminar el primero
+    setSnackbarVisible(true); // mostrarlo
+  }
+
     const fetchAccessToken = async () => {
       try {
         const storedAccessToken = await AsyncStorage.getItem('accessToken');
@@ -161,7 +206,7 @@ const PantallaHome = () => {
       }
     }, 60000); // Cada 1 minuto
     return () => clearInterval(intervalId);
-  }, []);
+  }, [snackbarVisible, trabajosNotificados, trabajoActual]);
 
   const logout = async () => {
     try {
@@ -217,8 +262,8 @@ const PantallaHome = () => {
         <BarraNavegacionInferior/>
           <Snackbar
               visible={snackbarVisible}
-              onDismiss={() => setSnackbarVisible(false)}  // Ocultar el Snackbar cuando se cierre
-              duration={Snackbar.DURATION_LONG} 
+              onDismiss={onDismissSnackbar}  // Ocultar el Snackbar cuando se cierre
+              duration={Snackbar.DURATION_SHORT} 
               action={{
                 label: 'Tocá para ver ',
                 onPress: () => {
@@ -235,7 +280,9 @@ const PantallaHome = () => {
               }}
               >
               <Text style ={{color:"white"}}>
-              Tenés una solicitud de trabajo pendiente
+               {trabajoActual
+                  ? `${trabajoActual.cliente_nombre} solicitó el servicio de ${trabajoActual.nombreServicio}`
+                  : "Tenés una solicitud de trabajo pendiente"}
               </Text> 
             </Snackbar>
       </SafeAreaView>
