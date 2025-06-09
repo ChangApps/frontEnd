@@ -197,13 +197,6 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
   };
 
   useEffect(() => {
-    if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
-    const siguiente = trabajosNotificados[0];
-    setTrabajoActual(siguiente);
-    setTrabajosNotificados(prev => prev.slice(1)); // eliminar el primero
-    setSnackbarVisible(true); // mostrarlo
-  }
-
     const fetchAccessToken = async () => {
       try {
         const storedAccessToken = await AsyncStorage.getItem('accessToken');
@@ -259,7 +252,16 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
       }
     }, 60000); // Cada 1 minuto
     return () => clearInterval(intervalId);
-  }, [snackbarVisible, trabajosNotificados, trabajoActual]);
+  }, []);
+
+  useEffect(() => {
+  if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
+    const siguiente = trabajosNotificados[0];
+    setTrabajoActual(siguiente);
+    setTrabajosNotificados(prev => prev.slice(1));
+    setSnackbarVisible(true);
+  }
+}, [trabajosNotificados, snackbarVisible, trabajoActual]);
 
   const logout = async () => {
     try {
