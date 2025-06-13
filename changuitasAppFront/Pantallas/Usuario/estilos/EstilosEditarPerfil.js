@@ -163,19 +163,6 @@ const EstilosEditarPerfil = StyleSheet.create({
     iconoOjo: {
       padding: 10,
     },
-       // Estilos para el modal
-   modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
-  },
-  imagenModal: {
-    width: 200,   // Ajusta el tamaño de la imagen en el modal
-    height: 200,  
-    borderRadius: 100,  // Garantiza que la imagen sea circular
-    resizeMode: 'cover',  // Mantiene la proporción de la imagen
-  },
   //Modal del recortador
   modalOverlay: {
     flex: 1,

@@ -16,6 +16,8 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import { ImageCropperWeb } from '../../auxiliares/ImageCropperWeb';
 import { guardarCambios } from './auxiliar/guardarCambios';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import CustomModal from '../../componentes/CustomModal';
+import estilosModal from '../../componentes/estilosModal';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
@@ -224,21 +226,17 @@ const EditarPerfil = () => {
 
         </View>
 
-            <Modal
-            visible={modalVisible}
-            animationType="fade"
-            transparent={true}
-            onRequestClose={handleCloseModal}
-          >
-            <TouchableWithoutFeedback onPress={handleCloseModal}>
-              <View style={EstilosEditarPerfil.modalContainer}>
-                <Image 
-                  source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-                  style={EstilosEditarPerfil.imagenModal} 
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
+           
+      <CustomModal
+        visible={modalVisible}
+        onClose={handleCloseModal}
+        containerStyle={estilosModal.modalContainer}
+      >
+        <Image
+           source={{ uri: imageUri || 'https://place-hold.it/400x600' }}
+          style={estilosModal.imagenModal}
+        />
+      </CustomModal>
 
 
               {/* Formulario de datos personales */}
