@@ -17,7 +17,7 @@ const EstilosPerfilUsuario = StyleSheet.create({
     },
     contenedor: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: '#1A202B',
       paddingBottom: 60,
     },
     encabezado: {
@@ -26,12 +26,12 @@ const EstilosPerfilUsuario = StyleSheet.create({
       alignItems: 'center',
       paddingHorizontal: 20,
       paddingVertical: 10,
-      backgroundColor: 'white',
       marginTop: 50,
     },
     textoEncabezado: {
       fontSize: 24,
       fontWeight: '600',
+      color: '#F2F2F2',
     },
     barraPestanas: {
       flexDirection: 'row',
@@ -43,7 +43,7 @@ const EstilosPerfilUsuario = StyleSheet.create({
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderBottomWidth: 2,
-      borderBottomColor: '#197278',
+      borderBottomColor: '#FFAE17',
     },
     pestanaInactiva: {
       paddingVertical: 10,
@@ -51,15 +51,15 @@ const EstilosPerfilUsuario = StyleSheet.create({
     },
     textoPestanaActiva: {
       fontSize: 16,
-      color: '#197278',
+      color: '#FFAE17',
     },
     textoPestanaInactiva: {
       fontSize: 16,
-      color: '#666',
+      color: '#B3B3B3',
     },
     seccionUsuario: {
       alignItems: 'center',
-      marginVertical: 20,
+      marginVertical: 16,
     },
     imagenUsuario: {
       width: 160,
@@ -71,6 +71,7 @@ const EstilosPerfilUsuario = StyleSheet.create({
     nombreCompleto: {
       fontSize: 22,
       fontWeight: 'bold',
+      color: '#F2F2F2',
     },
     rolUsuario: {
       fontSize: 16,
@@ -79,7 +80,7 @@ const EstilosPerfilUsuario = StyleSheet.create({
     datosExtras: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginVertical: 10,
+      marginVertical: 8,
     },
     datoItem: {
       alignItems: 'center',
@@ -87,23 +88,30 @@ const EstilosPerfilUsuario = StyleSheet.create({
     datoNumero: {
       fontSize: 18,
       fontWeight: 'bold',
+      color: '#F2F2F2',
     },
     datoLabel: {
       fontSize: 14,
-      color: '#666',
+      color: '#B3B3B3',
     },
     tituloDatosPersonales: {
       fontSize: 18,
-      color: '#197278',
+      color: '#FFAE17',
       textAlign: 'center',
-      marginVertical: 10,
+      marginVertical: 8,
     },
     datosPersonales: {
-      paddingHorizontal: 20,
+      paddingHorizontal: 16,
+    },
+    datosPersonalesBox: {
+      padding: 6,
+      margin: 6,
+      borderRadius: 8,
+      backgroundColor: '#333237',
     },
     infoUsuario: {
       fontSize: 16,
-      color: '#333',
+      color: '#B3B3B3',
       marginBottom: 5,
     },
     barraNavegacion: {

@@ -9,7 +9,7 @@ import { Platform} from "react-native";
 const EstilosInicioDeSesion = StyleSheet.create({
     areaSegura: {
         flex: 1,
-        backgroundColor: "#B7B7B7",
+        backgroundColor: "#1A202B",
         alignItems: "center",
         justifyContent: "center",
       },
@@ -50,8 +50,8 @@ const EstilosInicioDeSesion = StyleSheet.create({
         marginBottom: 8,
       },
       entrada: {
-        backgroundColor: "#fff",
-        borderRadius: 25,
+        backgroundColor: "#333237",
+        borderRadius: 15,
         padding: 15,
         fontSize: 16,
         marginBottom: 20,
@@ -62,8 +62,8 @@ const EstilosInicioDeSesion = StyleSheet.create({
         alignItems: "center",
       },
       entradaContrasena: {
-        backgroundColor: "#fff",
-        borderRadius: 25,
+        backgroundColor: "#333237",
+        borderRadius: 15,
         padding: 15,
         fontSize: 16,
         flex: 1,
@@ -79,10 +79,11 @@ const EstilosInicioDeSesion = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 20,
+        marginTop: 70,
       },
       textoBoton: {
-        color: "#fff",
-        fontSize: 18,
+        color: "#1A202B",
+        fontSize: 20,
         fontWeight: "600",
       },
       textoPie: {
@@ -93,8 +94,8 @@ const EstilosInicioDeSesion = StyleSheet.create({
         fontSize: 12,
       },
       textoRegistrarse: {
-        fontSize: 14,
-        color: "#197278",
+        fontSize: 16,
+        color: "#FFAE17",
         textDecorationLine: "underline",
         textAlign: "center",
         marginVertical: 8,

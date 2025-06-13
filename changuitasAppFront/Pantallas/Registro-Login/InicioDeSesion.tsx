@@ -94,25 +94,25 @@ const InicioDeSesion = () => {
         )}
         {/* Campos de entrada */}
         <View style={EstilosInicioDeSesion.contenedorEntrada}>
-          <Text style={EstilosInicioDeSesion.etiqueta}>Nombre de usuario</Text>
           <TextInput
-            placeholder="changuitas1"
+            placeholder="Usuario"
             placeholderTextColor="#666"
             style={EstilosInicioDeSesion.entrada}
             value={username}
             onChangeText={setusername}
           />
 
-          <Text style={EstilosInicioDeSesion.etiqueta}>Contraseña</Text>
           <View style={EstilosInicioDeSesion.contenedorEntradaContrasena}>
+            
             <TextInput
-              placeholder="***************"
+              placeholder="Contraseña"
               placeholderTextColor="#666"
               secureTextEntry={!mostrarContrasena}
               style={EstilosInicioDeSesion.entradaContrasena}
               value={password}
               onChangeText={setPassword}
             />
+            
             <TouchableOpacity
               style={EstilosInicioDeSesion.iconoOjo}
               onPress={() => setMostrarContrasena(!mostrarContrasena)}
@@ -126,11 +126,17 @@ const InicioDeSesion = () => {
           </View>
         </View>
 
+        {/* Botón de registrarse */}
+      <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
+          <Text style={EstilosInicioDeSesion.textoRegistrarse}>
+            ¿No tienes una cuenta? Regístrate
+          </Text>
+        </TouchableOpacity>
 
         {/* Botón de ingresar */}
         <TouchableOpacity onPress={login}>
           <LinearGradient
-            colors={["#197278", "#9BCDC8"]}
+            colors={["#FFAE17", "#FFAE17"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={EstilosInicioDeSesion.degradadoBoton}
@@ -139,17 +145,6 @@ const InicioDeSesion = () => {
           </LinearGradient>
         </TouchableOpacity>
 
-      {/* Botón ayuda */}
-    <TouchableOpacity onPress={() => navigation.navigate('PantallaAyuda')}>
-          <Text style={EstilosInicioDeSesion.textoRegistrarse}>Ayuda</Text>
-        </TouchableOpacity>
-
-      {/* Botón de registrarse */}
-      <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
-          <Text style={EstilosInicioDeSesion.textoRegistrarse}>
-            ¿No tienes una cuenta? Regístrate
-          </Text>
-        </TouchableOpacity>
 
     {/* Botón de recuperar nombre de usuario */}
     <TouchableOpacity onPress={() => navigation.navigate('RecuperarNombreUsuario')}>
@@ -159,6 +154,11 @@ const InicioDeSesion = () => {
    {/* Botón de recuperar contraseña */}
     <TouchableOpacity onPress={() => navigation.navigate('RecuperarContrasena1')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi contraseña</Text>
+        </TouchableOpacity>
+
+    {/* Botón ayuda */}
+    <TouchableOpacity onPress={() => navigation.navigate('PantallaAyuda')}>
+          <Text style={EstilosInicioDeSesion.textoRegistrarse}>Ayuda</Text>
         </TouchableOpacity>
 
  </View>

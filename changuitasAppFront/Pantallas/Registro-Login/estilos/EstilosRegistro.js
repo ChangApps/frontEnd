@@ -21,7 +21,7 @@ const  EstilosRegistro = StyleSheet.create({
       marginRight: 10,
     },
     titulo: {
-      fontSize: 20,
+      fontSize: 24,
       color: '#fff',
       fontWeight: '500',
       justifyContent: 'flex-end',
@@ -33,13 +33,13 @@ const  EstilosRegistro = StyleSheet.create({
       marginBottom: 16,
     },
     etiqueta: {
-      color: '#fff',
+      color: '#F2F2F2',
       marginBottom: 8,
       fontSize: 16,
     },
     entradaTexto: {
-      backgroundColor: '#fff',
-      borderRadius: 25,
+      backgroundColor: '#333237',
+      borderRadius: 15,
       padding: 15,
       fontSize: 16,
       color: '#000',
@@ -47,8 +47,8 @@ const  EstilosRegistro = StyleSheet.create({
     contenedorContraseña: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#fff',
-      borderRadius: 25,
+      backgroundColor: '#333237',
+      borderRadius: 15,
       paddingHorizontal: 15,
     },
     entradaContraseña: {
@@ -66,8 +66,8 @@ const  EstilosRegistro = StyleSheet.create({
       alignItems: 'center',
     },
     textoBotonRegistro: {
-      color: '#fff',
-      fontSize: 16,
+      color: '#1A202B',
+      fontSize: 20,
       fontWeight: '600',
     },
     errorContainer: {

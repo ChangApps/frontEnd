@@ -174,7 +174,7 @@ const Registro = () => {
   };
   
   return (
-    <LinearGradient colors={['#B7B7B7', '#B7B7B7']} style={EstilosRegistro.degradado}>
+    <LinearGradient colors={['#1A202B', '#1A202B']} style={EstilosRegistro.degradado}>
       <SafeAreaView style={EstilosRegistro.areaSegura}>
         <ScrollView>
           <View style={EstilosRegistro.contenedor}>
@@ -197,7 +197,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Nombre de usuario</Text>
                 <TextInput
                   placeholder="Username"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={username}
                   onChangeText={setUsername}
@@ -207,7 +207,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Nombre</Text>
                 <TextInput
                   placeholder="Nombre"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={firstName}
                   onChangeText={setFirstName}
@@ -217,7 +217,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Apellido</Text>
                 <TextInput
                   placeholder="Apellido"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={lastName}
                   onChangeText={setLastName}
@@ -227,7 +227,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Fecha de nacimiento</Text>
                 <TextInput
                   placeholder="aaaa-mm-dd"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={fechaNacimiento}
                   onChangeText={setFechaNacimiento}
@@ -237,7 +237,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>DNI</Text>
                 <TextInput
                   placeholder="12345678"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={documento}
                   onChangeText={setDocumento}
@@ -248,7 +248,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Teléfono</Text>
                 <TextInput
                   placeholder="2901245599"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={telefono}
                   onChangeText={setTelefono}
@@ -259,7 +259,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Calle</Text>
                 <TextInput
                   placeholder="San Martín"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={calle}
                   onChangeText={setCalle}
@@ -269,7 +269,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Altura</Text>
                 <TextInput
                   placeholder="456"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={altura}
                   onChangeText={setAltura}
@@ -280,7 +280,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Piso (opcional)</Text>
                 <TextInput
                   placeholder="1"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={piso}
                   onChangeText={setPiso}
@@ -291,7 +291,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Nro. dpto. (opcional)</Text>
                 <TextInput
                   placeholder="A"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={nroDepto}
                   onChangeText={setNroDepto}
@@ -301,7 +301,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Barrio</Text>
                 <TextInput
                   placeholder="Centro"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={barrio}
                   onChangeText={setBarrio}
@@ -311,7 +311,7 @@ const Registro = () => {
                 <Text style={EstilosRegistro.etiqueta}>Correo electrónico</Text>
                 <TextInput
                   placeholder="changuitas@app.com"
-                  placeholderTextColor="#666"
+                  placeholderTextColor="#B3B3B3"
                   style={EstilosRegistro.entradaTexto}
                   value={email}
                   onChangeText={setEmail}
@@ -324,7 +324,7 @@ const Registro = () => {
                 <View style={EstilosRegistro.contenedorContraseña}>
                   <TextInput
                     placeholder="************"
-                    placeholderTextColor="#666"
+                    placeholderTextColor="#B3B3B3"
                     style={EstilosRegistro.entradaContraseña}
                     secureTextEntry={!mostrarContraseña}
                     value={password}
@@ -340,7 +340,7 @@ const Registro = () => {
                 <View style={EstilosRegistro.contenedorContraseña}>
                   <TextInput
                     placeholder="************"
-                    placeholderTextColor="#666"
+                    placeholderTextColor="#B3B3B3"
                     style={EstilosRegistro.entradaContraseña}
                     secureTextEntry={!mostrarConfirmarContraseña}
                     value={confirmarPassword}
@@ -353,7 +353,7 @@ const Registro = () => {
               </View>
               <TouchableOpacity onPress={handleRegistro}>
               <LinearGradient
-                colors={['#197278', '#9BCDC8']}
+                colors={['#FFAE17', '#FFAE17']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={EstilosRegistro.botonDegradado}

@@ -287,7 +287,7 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
         <View style={EstilosHome.encabezado}>
           <Text style={EstilosHome.textoInicio}>Inicio</Text>
           <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+            <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
           </TouchableOpacity>
         </View>
 

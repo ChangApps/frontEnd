@@ -153,7 +153,7 @@ const PerfilUsuario: React.FC = () => {
         <View style={EstilosPerfilUsuario.encabezado}>
           <Text style={EstilosPerfilUsuario.textoEncabezado}>Perfil</Text>
           <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+            <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
           </TouchableOpacity>
         </View>
 
@@ -223,16 +223,28 @@ const PerfilUsuario: React.FC = () => {
         {/* Datos Personales */}
         <Text style={EstilosPerfilUsuario.tituloDatosPersonales}>DATOS PERSONALES</Text>
         <View style={EstilosPerfilUsuario.datosPersonales}>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>Nombre: {usuario?.first_name}</Text>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
+            <Text style={EstilosPerfilUsuario.infoUsuario}>Nombre: {usuario?.first_name}</Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
+            <Text style={EstilosPerfilUsuario.infoUsuario}>Apellido: {usuario?.last_name}</Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
+            <Text style={EstilosPerfilUsuario.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
           <Text style={EstilosPerfilUsuario.infoUsuario}>Correo Electrónico: {usuario?.email}</Text>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>Teléfono: {usuario?.telefono}</Text>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>
-            Dirección: {usuario?.direccion.calle}, {usuario?.direccion.altura}{' '}
-            {usuario?.direccion.piso ? `Piso ${usuario?.direccion.piso}` : ''}{' '}
-            {usuario?.direccion.nroDepto ? `Depto ${usuario?.direccion.nroDepto}` : ''}, {usuario?.direccion.barrio}
-          </Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
+            <Text style={EstilosPerfilUsuario.infoUsuario}>Teléfono: {usuario?.telefono}</Text>
+          </View>
+          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
+            <Text style={EstilosPerfilUsuario.infoUsuario}>
+              Dirección: {usuario?.direccion.calle} {usuario?.direccion.altura}{''}
+              {usuario?.direccion.piso ? `Piso ${usuario?.direccion.piso}` : ''}{''}
+              {usuario?.direccion.nroDepto ? `Depto ${usuario?.direccion.nroDepto}` : ''}, {usuario?.direccion.barrio}
+            </Text>
+          </View>
         </View>
       <BarraNavegacionInferior/>
       </SafeAreaView>

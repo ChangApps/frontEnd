@@ -23,22 +23,22 @@ const BarraNavegacionInferior = () => {
   ]}
 >
       <TouchableOpacity onPress={() => navigation.navigate('Home')} style={estilos.iconoNavegacion}>
-        <Ionicons name="home-outline" size={24} color="gray" />
+        <Ionicons name="home-outline" size={24} color="#F2F2F2" />
         <Text style={estilos.textoNavegacion}>Inicio</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
-        <Ionicons name="search-outline" size={24} color="gray" />
+        <Ionicons name="search-outline" size={24} color="#F2F2F2" />
         <Text style={estilos.textoNavegacion}>Buscar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
-        <Ionicons name="grid-outline" size={24} color="gray" />
+        <Ionicons name="grid-outline" size={24} color="#F2F2F2" />
         <Text style={estilos.textoNavegacion}>Historial</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={estilos.iconoNavegacion}>
-        <Ionicons name="person-outline" size={24} color="gray" />
+        <Ionicons name="person-outline" size={24} color="#F2F2F2" />
         <Text style={estilos.textoNavegacion}>Perfil</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -54,7 +54,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#1A202B',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     elevation: 10,
@@ -69,7 +69,7 @@ const estilos = StyleSheet.create({
   },
   textoNavegacion: {
     fontSize: 12,
-    color: 'gray',
+    color: '#F2F2F2',
     marginTop: 2,
   },
 });
