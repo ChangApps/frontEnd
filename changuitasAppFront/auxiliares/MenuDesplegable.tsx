@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface Props {
   visible: boolean;
-  usuario: Usuario | null; 
+  usuario: Usuario | null;
   onLogout: () => void;
   onRedirectAdmin: () => void;
 }
@@ -22,9 +22,6 @@ const MenuDesplegable: React.FC<Props> = ({
 
   return (
     <View style={styles.desplegable}>
-      <TouchableOpacity style={styles.opcionDesplegable}>
-      </TouchableOpacity>
-
       {usuario?.is_staff && (
         <TouchableOpacity style={styles.opcionDesplegable} onPress={onRedirectAdmin}>
           <Text style={styles.textoDesplegable}>Admin</Text>
