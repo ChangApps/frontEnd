@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert,Modal, Linking} from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator,Modal, Linking} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,6 +13,7 @@ import API_URL from '../../auxiliares/API_URL';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -21,7 +22,8 @@ const PerfilUsuario: React.FC = () => {
   const [usuarioId, setUsuarioId] = useState("");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [state,setState] = useContext(AuthContext);
 
@@ -64,7 +66,6 @@ const PerfilUsuario: React.FC = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
         console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
     } finally {
     console.log("Intentando ir al iniciar sesion ");
     navigation.reset({
@@ -121,7 +122,8 @@ const PerfilUsuario: React.FC = () => {
   
     } catch (error: any) {
       console.error('Error al cargar datos del usuario:', error);
-      setError('No se pudo cargar el perfil del usuario');
+      setMessage('Error al cargar datos del usuario');
+      setVisible(true);
     } finally {
       setLoading(false);
     }
@@ -136,13 +138,7 @@ const PerfilUsuario: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <View style={EstilosPerfilUsuario.errorContainer}>
-        <Text style={EstilosPerfilUsuario.errorText}>{error}</Text>
-      </View>
-    );
-  }
+
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -219,7 +215,13 @@ const PerfilUsuario: React.FC = () => {
           </TouchableOpacity>
           
         </View>
-  
+
+         <CustomSnackbar
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
+        />
+
         {/* Datos Personales */}
         <Text style={EstilosPerfilUsuario.tituloDatosPersonales}>DATOS PERSONALES</Text>
         <View style={EstilosPerfilUsuario.datosPersonales}>

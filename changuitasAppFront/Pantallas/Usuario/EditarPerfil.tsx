@@ -31,7 +31,6 @@ const EditarPerfil = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
    const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
    const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
    const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
