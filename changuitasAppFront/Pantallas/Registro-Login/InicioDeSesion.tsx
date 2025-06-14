@@ -66,8 +66,7 @@ const InicioDeSesion = () => {
       setusername('');
       setPassword('');
   
-      // Navega a la pantalla principal (Home)
-      navigation.navigate('Home');
+      // Navega a la pantalla principal (Home) (automaticamente)
   
     } catch (error: any) {
       if (error.response && error.response.status === 400) {

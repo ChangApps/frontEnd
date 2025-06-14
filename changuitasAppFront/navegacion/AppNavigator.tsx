@@ -244,11 +244,6 @@ export default function AppNavigator() {
         </>
       ) : (
         <>
-         <Stack.Screen 
-            name="Home" 
-            component={Home} 
-            options={{ headerShown: false }}  
-          />
           <Stack.Screen
             name="InicioDeSesion"
             component={InicioDeSesion}
