@@ -9,9 +9,12 @@ import { Platform} from "react-native";
 const EstilosInicioDeSesion = StyleSheet.create({
     areaSegura: {
         flex: 1,
-        backgroundColor: "#1A202B",
+        backgroundColor: "#191A2E",
         alignItems: "center",
         justifyContent: "center",
+      },
+      degradado: {
+      flex: 1,
       },
       contenedor: {
         width: "90%",
@@ -95,7 +98,7 @@ const EstilosInicioDeSesion = StyleSheet.create({
       },
       textoRegistrarse: {
         fontSize: 16,
-        color: "#FFAE17",
+        color: "#FC6A30",
         textDecorationLine: "underline",
         textAlign: "center",
         marginVertical: 8,

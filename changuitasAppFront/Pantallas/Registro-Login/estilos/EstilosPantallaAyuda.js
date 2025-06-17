@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosPantallaAyuda = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: '#1A202B',
+    backgroundColor: '#191A2E',
   },
   encabezado: {
     flexDirection: 'row',
@@ -26,7 +26,7 @@ const EstilosPantallaAyuda = StyleSheet.create({
   },
   tituloAyuda: {
     fontSize: 18,
-    color: '#FFAE17',
+    color: '#FC6A30',
     textAlign: 'center',
     marginVertical: 10,
   },
@@ -36,13 +36,21 @@ const EstilosPantallaAyuda = StyleSheet.create({
   },
   tituloPregunta: {
     fontSize: 16,
-    color: '#FFAE17',
+    color: '#FC6A30',
     marginBottom: 5,
   },
   infoPregunta: {
     fontSize: 16,
     color: '#B3B3B3',
     marginBottom: 5,
+  },
+  contenidoResponsivo: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  contenidoWeb: {
+    maxWidth: 700,
+    alignSelf: 'center',
   },
 });
 

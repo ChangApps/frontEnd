@@ -10,6 +10,9 @@ const EstilosRecuperarNombreUsuario = StyleSheet.create({
       paddingHorizontal: 20,
       paddingTop: 70,
     },
+    degradado: {
+      flex: 1,
+    },
     titulo: {
       fontSize: 24,
       fontWeight: 'bold',
@@ -25,7 +28,7 @@ const EstilosRecuperarNombreUsuario = StyleSheet.create({
     },
     instruccion: {
       fontSize: 14,
-      color: '#333',
+      color: '#F2F2F2',
       marginBottom: 15,
     },
     entrada: {
@@ -52,6 +55,13 @@ const EstilosRecuperarNombreUsuario = StyleSheet.create({
       fontSize: 16,
       fontWeight: '600',
       marginRight: 5,
+    },
+    contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
     },
   });
   export default EstilosRecuperarNombreUsuario;    

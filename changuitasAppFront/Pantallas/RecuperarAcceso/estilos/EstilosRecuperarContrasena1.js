@@ -11,6 +11,9 @@ const EstilosRecuperarContrasena1= StyleSheet.create({
       paddingHorizontal: 20,
       paddingTop: 70,
     },
+    degradado: {
+      flex: 1,
+    },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -26,7 +29,7 @@ const EstilosRecuperarContrasena1= StyleSheet.create({
     },
     instruccion: {
       fontSize: 14,
-      color: '#333',
+      color: '#F2F2F2',
       marginBottom: 15,
     },
     entrada: {
@@ -53,6 +56,13 @@ const EstilosRecuperarContrasena1= StyleSheet.create({
       fontSize: 16,
       fontWeight: '600',
       marginRight: 5,
+    },
+    contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
     },
   });
   export default EstilosRecuperarContrasena1;

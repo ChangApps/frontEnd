@@ -9,6 +9,10 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosInicioDeSesion from './estilos/EstilosInicioDeSesion';
 import API_URL from "../../auxiliares/API_URL";
 import { AuthContext } from "../../autenticacion/auth";
+import Input from "../../componentes/inputs/Input";
+import PasswordInput from "../../componentes/inputs/PasswordInput";
+import { Button } from "../../componentes/Buttons";
+import Colors from "../../assets/Colors";
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -18,7 +22,7 @@ const InicioDeSesion = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { width } = useWindowDimensions();
   const [state, setState] = useContext(AuthContext);
- 
+
 
   const login = async () => {
     // Verifica si los campos están vacíos o contienen solo espacios
@@ -94,36 +98,18 @@ const InicioDeSesion = () => {
         )}
         {/* Campos de entrada */}
         <View style={EstilosInicioDeSesion.contenedorEntrada}>
-          <TextInput
+          <Input
             placeholder="Usuario"
-            placeholderTextColor="#666"
-            style={EstilosInicioDeSesion.entrada}
             value={username}
             onChangeText={setusername}
           />
 
-          <View style={EstilosInicioDeSesion.contenedorEntradaContrasena}>
-            
-            <TextInput
-              placeholder="Contraseña"
-              placeholderTextColor="#666"
-              secureTextEntry={!mostrarContrasena}
-              style={EstilosInicioDeSesion.entradaContrasena}
-              value={password}
-              onChangeText={setPassword}
-            />
-            
-            <TouchableOpacity
-              style={EstilosInicioDeSesion.iconoOjo}
-              onPress={() => setMostrarContrasena(!mostrarContrasena)}
-            >
-              <Ionicons
-                name={mostrarContrasena ? "eye-outline" : "eye-off-outline"}
-                size={20}
-                color="#666"
-              />
-            </TouchableOpacity>
-          </View>
+          <PasswordInput
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+          />
+
         </View>
 
         {/* Botón de registrarse */}
@@ -134,16 +120,14 @@ const InicioDeSesion = () => {
         </TouchableOpacity>
 
         {/* Botón de ingresar */}
-        <TouchableOpacity onPress={login}>
-          <LinearGradient
-            colors={["#FFAE17", "#FFAE17"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={EstilosInicioDeSesion.degradadoBoton}
-          >
-            <Text style={EstilosInicioDeSesion.textoBoton}>Ingresar</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <Button
+          titulo="Ingresar"
+          onPress={login}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
 
 
     {/* Botón de recuperar nombre de usuario */}

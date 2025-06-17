@@ -30,7 +30,7 @@ const  EstilosRegistro = StyleSheet.create({
       marginTop: 10,
     },
     campo: {
-      marginBottom: 16,
+      marginBottom: 0,
     },
     etiqueta: {
       color: '#F2F2F2',
@@ -79,6 +79,13 @@ const  EstilosRegistro = StyleSheet.create({
       color: '#A94442',
       fontSize: 14,
       textAlign: 'center',
+    },
+    contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
     },
   });
   export default EstilosRegistro;  
