@@ -109,13 +109,13 @@ const { width } = useWindowDimensions();
     
         {/* Botón de enviar */}
         <Button
-                  titulo="Enviar"
-                  onPress={enviarCodigo}
-                  textSize={20}
-                  textColor={Colors.fondo}
-                  padding={15}
-                  borderRadius={25}
-                />
+          titulo="Enviar"
+          onPress={enviarCodigo}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
       </View>
       </View>
     </LinearGradient>
