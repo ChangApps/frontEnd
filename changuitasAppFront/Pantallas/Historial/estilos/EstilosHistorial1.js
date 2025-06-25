@@ -45,10 +45,12 @@ const EstilosHistorial1 = StyleSheet.create({
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#2a2b45',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
+    marginLeft:5,
+    marginRight:5,
   },
   image: {
     width: 50,
@@ -69,10 +71,10 @@ const EstilosHistorial1 = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#fd6b2f',
     marginRight: 8, // espacio entre nombre y cartel rojo
   },
-     estadoCriticoContainer: {
+    estadoCriticoContainer: {
     backgroundColor: '#ff4d4d', // rojo claro
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -84,10 +86,18 @@ const EstilosHistorial1 = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  estadoNormal: {
+    estadoNormalContainer: {
+    backgroundColor: 'gray', // rojo claro
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderRadius: 5,
     marginTop: 4,
-    fontStyle: 'italic',
-    color: '#555',
+    alignSelf: 'flex-start',
+  },
+  estadoNormalText: {
+    marginTop: 4,
+    fontWeight: 'bold',
+    color: 'white',
   },
   category: {
     fontSize: 14,
@@ -167,7 +177,7 @@ const EstilosHistorial1 = StyleSheet.create({
   },
   fecha: {
     fontSize: 12,
-    color: '#666',
+    color: 'white',
     marginTop: 2,
   },
   noResultsContainer: {
