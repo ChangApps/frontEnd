@@ -350,7 +350,7 @@ const PerfilProveedor = () => {
 {/* Información del Usuario */}
 <View style={EstilosPerfilProveedor.seccionUsuario}>
   <Pressable onPress={handleImagePress}>
-    <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenModal} />
+    <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica} />
   </Pressable>
   <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
 </View>
