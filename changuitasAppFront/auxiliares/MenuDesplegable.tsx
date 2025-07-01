@@ -1,5 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import type { RootStackParamList } from '../navegacion/AppNavigator';
 
 interface Props {
   visible: boolean;
@@ -18,6 +21,8 @@ const MenuDesplegable: React.FC<Props> = ({
   onLogout,
   onRedirectAdmin,
 }) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  
   if (!visible) return null;
 
   return (
@@ -27,10 +32,13 @@ const MenuDesplegable: React.FC<Props> = ({
           <Text style={styles.textoDesplegable}>Admin</Text>
         </TouchableOpacity>
       )}
-
+      <TouchableOpacity style={styles.opcionDesplegable} onPress={() => navigation.navigate('PantallaAyuda')}>
+        <Text style={styles.textoDesplegable}>Ayuda</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.opcionDesplegable} onPress={onLogout}>
         <Text style={styles.textoDesplegable}>Cerrar sesión</Text>
       </TouchableOpacity>
+      
     </View>
   );
 };
@@ -39,25 +47,26 @@ const styles = StyleSheet.create({
   desplegable: {
     position: 'absolute',
     top: 70,
-    right: 20,
-    width: 150,
-    backgroundColor: '#ffffff',
+    right: 18,
+    width: 160,
+    backgroundColor: '#191a2e',
     borderRadius: 16,
     paddingVertical: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     zIndex: 10,
   },
   opcionDesplegable: {
-    paddingVertical: 6,
+    backgroundColor: '#2a2b45',
+    marginVertical: 4,
+    marginHorizontal: 10,
+    paddingVertical: 10,
     paddingHorizontal: 15,
+    borderRadius: 12,
+    elevation: 2,
   },
   textoDesplegable: {
     fontSize: 16,
-    color: '#333333',
+    color: 'white',
   },
 });
 
