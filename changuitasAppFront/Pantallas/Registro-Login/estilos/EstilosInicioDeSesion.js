@@ -9,7 +9,7 @@ import { Platform} from "react-native";
 const EstilosInicioDeSesion = StyleSheet.create({
     areaSegura: {
         flex: 1,
-        backgroundColor: "#191A2E",
+
         alignItems: "center",
         justifyContent: "center",
       },

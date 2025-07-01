@@ -3,7 +3,9 @@ import { StyleSheet } from 'react-native';
 const EstilosPantallaAyuda = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: '#191A2E',
+  },
+  degradado: {
+    flex: 1,
   },
   encabezado: {
     flexDirection: 'row',

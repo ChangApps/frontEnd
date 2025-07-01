@@ -6,6 +6,8 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import EstilosPantallaAyuda from './estilos/EstilosPantallaAyuda';
 import { Platform, useWindowDimensions } from 'react-native';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import { LinearGradient } from 'expo-linear-gradient';
+import Colors from '../../assets/Colors';
 
 const PantallaAyuda = () => {
 
@@ -14,6 +16,7 @@ const PantallaAyuda = () => {
   const { width } = useWindowDimensions();
 
   return (
+    <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosPantallaAyuda.degradado}>
     <SafeAreaView style={EstilosPantallaAyuda.contenedor}>
     <ScrollView>
       <View style={[EstilosPantallaAyuda.contenidoResponsivo, width > 600 && EstilosPantallaAyuda.contenidoWeb]}>
@@ -47,6 +50,7 @@ const PantallaAyuda = () => {
       </View>
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 

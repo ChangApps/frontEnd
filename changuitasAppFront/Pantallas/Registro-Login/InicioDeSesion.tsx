@@ -84,6 +84,7 @@ const InicioDeSesion = () => {
   };
   
   return (
+    <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosInicioDeSesion.degradado}>
     <SafeAreaView style={EstilosInicioDeSesion.areaSegura}>
       <View style={[EstilosInicioDeSesion.contenedor, width > 600 && EstilosInicioDeSesion.contenedorWeb]}>
         <View style={EstilosInicioDeSesion.encabezado}>
@@ -147,6 +148,7 @@ const InicioDeSesion = () => {
 
  </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 
