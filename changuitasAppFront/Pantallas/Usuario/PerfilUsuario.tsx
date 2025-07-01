@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Alert,Modal, Linking} from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator,Modal, Linking} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,6 +13,11 @@ import API_URL from '../../auxiliares/API_URL';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
+import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
+import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfilUsuario';
+import ResumenServiciosUsuario from '../../componentes/perfilesUsuarios/ResumenServiciosUsuarios';
+import DatosPersonalesUsuario from '../../componentes/perfilesUsuarios/DatosPersonales';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -21,7 +26,8 @@ const PerfilUsuario: React.FC = () => {
   const [usuarioId, setUsuarioId] = useState("");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [state,setState] = useContext(AuthContext);
 
@@ -64,7 +70,6 @@ const PerfilUsuario: React.FC = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
         console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
     } finally {
     console.log("Intentando ir al iniciar sesion ");
     navigation.reset({
@@ -121,7 +126,8 @@ const PerfilUsuario: React.FC = () => {
   
     } catch (error: any) {
       console.error('Error al cargar datos del usuario:', error);
-      setError('No se pudo cargar el perfil del usuario');
+      setMessage('Error al cargar datos del usuario');
+      setVisible(true);
     } finally {
       setLoading(false);
     }
@@ -136,117 +142,30 @@ const PerfilUsuario: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <View style={EstilosPerfilUsuario.errorContainer}>
-        <Text style={EstilosPerfilUsuario.errorText}>{error}</Text>
-      </View>
-    );
-  }
-
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
+    <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
       <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
-        {/* Encabezado con opciones de menú */}
-        <View style={EstilosPerfilUsuario.encabezado}>
-          <Text style={EstilosPerfilUsuario.textoEncabezado}>Perfil</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Menú Desplegable */}
-        <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
-        
-        {/* Barra de pestañas */}
-        <BarraPestanasPerfil/>
-
-          {/* Información del Usuario */}
-          <View style={EstilosPerfilUsuario.seccionUsuario}>
-          <TouchableOpacity onPress={handleImagePress}>
-            <Image 
-              source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-              style={EstilosPerfilUsuario.imagenUsuario} 
-            />
-          </TouchableOpacity>
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
+        <BarraPestanasPerfil />
+        <View style={EstilosPerfilUsuario.seccionUsuario}>
+          <ImagenPerfilUsuario
+            imageUri={imageUri}
+            modalVisible={modalVisible}
+            onImagePress={handleImagePress}
+            onCloseModal={handleCloseModal}
+          />
           <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
         </View>
-        
-        <Modal
-          visible={modalVisible}
-          animationType="fade"
-          transparent={true}
-          onRequestClose={handleCloseModal}
-        >
-          <TouchableWithoutFeedback onPress={handleCloseModal}>
-            <View style={EstilosPerfilUsuario.modalContainer}>
-              <Image 
-                source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-                style={EstilosPerfilUsuario.imagenModal} 
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-
-        {/* Datos adicionales */}
-        <View style={EstilosPerfilUsuario.datosExtras}>
-          <View style={EstilosPerfilUsuario.datoItem}>
-          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
-          {/*Esta parte convierte (o "castea") el objeto usuario al tipo any.
-  El tipo any en TypeScript desactiva las verificaciones de tipo, permitiendo acceder a cualquier propiedad sin que TypeScript marque un error de momento temporal*/}
-            <Text style={EstilosPerfilUsuario.datoLabel}>Contrató</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datoItem}>
-          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
-            <Text style={EstilosPerfilUsuario.datoLabel}>Trabajó</Text>
-          </View>
-          <TouchableOpacity 
-            onPress={() => {
-              navigation.navigate("Resenias", { idUsuario: usuarioId });
-            }}
-          >
-          <View style={EstilosPerfilUsuario.datoItem}>
-          <Text style={EstilosPerfilUsuario.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
-            <Text style={EstilosPerfilUsuario.datoLabel}>Puntaje</Text>
-          </View>
-          </TouchableOpacity>
-          
-        </View>
-  
-        {/* Datos Personales */}
-        <Text style={EstilosPerfilUsuario.tituloDatosPersonales}>DATOS PERSONALES</Text>
-        <View style={EstilosPerfilUsuario.datosPersonales}>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-            <Text style={EstilosPerfilUsuario.infoUsuario}>Nombre: {usuario?.first_name}</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-            <Text style={EstilosPerfilUsuario.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-            <Text style={EstilosPerfilUsuario.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-          <Text style={EstilosPerfilUsuario.infoUsuario}>Correo Electrónico: {usuario?.email}</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-            <Text style={EstilosPerfilUsuario.infoUsuario}>Teléfono: {usuario?.telefono}</Text>
-          </View>
-          <View style={EstilosPerfilUsuario.datosPersonalesBox}>
-            <Text style={EstilosPerfilUsuario.infoUsuario}>
-              Dirección: {usuario?.direccion.calle} {usuario?.direccion.altura}{''}
-              {usuario?.direccion.piso ? `Piso ${usuario?.direccion.piso}` : ''}{''}
-              {usuario?.direccion.nroDepto ? `Depto ${usuario?.direccion.nroDepto}` : ''}, {usuario?.direccion.barrio}
-            </Text>
-          </View>
-        </View>
-      <BarraNavegacionInferior/>
+        <ResumenServiciosUsuario
+          usuarioId={usuarioId}
+          contratados={(usuario as any)?.cantServiciosContratados ?? 0}
+          trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
+          puntaje={(usuario as any)?.puntaje ?? 0}
+        />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+        {usuario && <DatosPersonalesUsuario usuario={usuario} />}
+        <BarraNavegacionInferior />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

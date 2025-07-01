@@ -185,6 +185,7 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
 
     } catch (error) {
       console.error('Error al obtener usuario logueado:', error);
+       logout(); 
     }
   };
   
@@ -206,6 +207,7 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
         }
       } catch (error) {
         console.error("Error al obtener el accessToken desde AsyncStorage:", error);
+          logout(); 
       }
     };
   
@@ -270,7 +272,6 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     }  catch (error: any) {
         console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
     } finally {
     console.log("Intentando ir al iniciar sesion ");
     navigation.reset({

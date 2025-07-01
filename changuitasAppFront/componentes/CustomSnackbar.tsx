@@ -15,7 +15,7 @@ const CustomSnackbar = ({ visible, setVisible, message }: Props) => {
       duration={Snackbar.DURATION_SHORT}
       style={{
         position: 'absolute',
-        bottom: 20,
+        bottom: 100,  
         left: 0,
         right: 0,
         zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos

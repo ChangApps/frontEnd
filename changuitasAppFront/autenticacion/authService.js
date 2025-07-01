@@ -53,8 +53,6 @@ export const cerrarSesion = async () => {
 
     if (response.ok) {
       console.log('Sesión cerrada correctamente');
-     // await AsyncStorage.removeItem('accessToken');
-     // await AsyncStorage.removeItem('refreshToken');
       
       await AsyncStorage.clear();
     } else {
@@ -64,6 +62,7 @@ export const cerrarSesion = async () => {
     }
   } catch (error) {
     console.error('Error al realizar la solicitud de logout:', error);
+    await AsyncStorage.clear();
     throw error;
   }
 };
