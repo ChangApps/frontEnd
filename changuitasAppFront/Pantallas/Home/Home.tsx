@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking} from 'react-native';
+import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions} from 'react-native';
 import { Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -281,14 +281,17 @@ const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
     }
   };
 
+const { width } = useWindowDimensions();
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView style={EstilosHome.contenedor}>
+        <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]}></View>
         {/* Encabezado */}
         <View style={EstilosHome.encabezado}>
-          <Text style={EstilosHome.textoInicio}>Inicio</Text>
+          <Text style={EstilosHome.textoInicio}>ChangApp</Text>
           <TouchableOpacity onPress={toggleDesplegable}>
             <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
           </TouchableOpacity>

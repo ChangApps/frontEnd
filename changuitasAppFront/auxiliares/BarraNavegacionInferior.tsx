@@ -12,16 +12,16 @@ const BarraNavegacionInferior = () => {
 
   return (
    <SafeAreaView
-  edges={['bottom']}
-  style={[
-    estilos.barraNavegacion,
-    {
-      height: alturaFinal,
-      paddingBottom: insets.bottom,
-       bottom: Platform.OS === 'android' ? -insets.bottom - 0 : 0,
-    },
-  ]}
->
+        edges={['bottom']}
+        style={[
+          estilos.barraNavegacion,
+          {
+            height: alturaFinal,
+            paddingBottom: insets.bottom,
+            bottom: Platform.OS === 'android' ? -insets.bottom - 0 : 0,
+          },
+        ]}
+      >
       <TouchableOpacity onPress={() => navigation.navigate('Home')} style={estilos.iconoNavegacion}>
         <Ionicons name="home-outline" size={24} color="#F2F2F2" />
         <Text style={estilos.textoNavegacion}>Inicio</Text>
@@ -54,7 +54,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#1A202B',
+    backgroundColor: '#191A2E',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     elevation: 10,

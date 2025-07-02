@@ -11,7 +11,7 @@ const EncabezadoPerfil: React.FC<Props> = ({ onToggleMenu }) => (
   <View style={estilos.encabezado}>
     <Text style={estilos.textoEncabezado}>Perfil</Text>
     <TouchableOpacity onPress={onToggleMenu}>
-      <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+      <Ionicons name="ellipsis-horizontal" size={24} color="white" />
     </TouchableOpacity>
   </View>
 );

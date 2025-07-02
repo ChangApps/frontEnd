@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosHome = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: '#1A202B',
+    backgroundColor: '#191A2E',
   },
   encabezado: {
     flexDirection: 'row',
@@ -66,5 +66,12 @@ const EstilosHome = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
+    },
 });
 export default EstilosHome;  

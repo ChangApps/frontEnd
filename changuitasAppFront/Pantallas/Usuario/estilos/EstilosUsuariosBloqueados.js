@@ -2,8 +2,7 @@ import { StyleSheet } from 'react-native';
 const  EstilosUsuariosBloqueados = StyleSheet.create({
     contenedor: {
       flex: 1,
-      backgroundColor: 'white',
-      paddingTop:43,
+      backgroundColor: '#191A2E',
     },
     header: {
       flexDirection: 'row',

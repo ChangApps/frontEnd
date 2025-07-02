@@ -7,7 +7,7 @@ export const COLORES_APP = {
   ...Colors,
   
   // Colores específicos para las pantallas de perfil y tareas
-  primario: '#197278',
+  primario: '#FC6A30',
   gris: '#666',
   grisClaro: '#ddd',
   grisBackground: '#f0f0f0',
@@ -65,7 +65,7 @@ const EstilosCompartidos = StyleSheet.create({
   // Contenedores principales
   contenedor: {
     flex: 1,
-    backgroundColor: COLORES_APP.blanco,
+    backgroundColor: COLORES_APP.fondo,
   },
   contenedorConMargenInferior: {
     flex: 1,
@@ -95,6 +95,7 @@ const EstilosCompartidos = StyleSheet.create({
   textoEncabezado: {
     fontSize: FUENTES.encabezado,
     fontWeight: '600',
+    color: COLORES_APP.blancoTexto,
   },
   
   // Sistema de pestañas
@@ -120,7 +121,7 @@ const EstilosCompartidos = StyleSheet.create({
   },
   textoPestanaInactiva: {
     fontSize: FUENTES.normal,
-    color: COLORES_APP.gris,
+    color: COLORES_APP.blancoTexto,
   },
   
   // Sección de usuario - imagen pequeña (80x80)
@@ -148,6 +149,7 @@ const EstilosCompartidos = StyleSheet.create({
   nombreCompleto: {
     fontSize: FUENTES.titulo,
     fontWeight: 'bold',
+    color: COLORES_APP.blancoTexto,
   },
   rolUsuario: {
     fontSize: FUENTES.normal,
@@ -166,10 +168,11 @@ const EstilosCompartidos = StyleSheet.create({
   datoNumero: {
     fontSize: FUENTES.grande,
     fontWeight: 'bold',
+    color: COLORES_APP.blancoTexto,
   },
   datoLabel: {
     fontSize: FUENTES.mediana,
-    color: COLORES_APP.gris,
+    color: COLORES_APP.grisTexto,
   },
   
   // Datos personales
@@ -184,7 +187,7 @@ const EstilosCompartidos = StyleSheet.create({
   },
   infoUsuario: {
     fontSize: FUENTES.normal,
-    color: COLORES_APP.negro,
+    color: COLORES_APP.blancoTexto,
     marginBottom: 5,
   },
   

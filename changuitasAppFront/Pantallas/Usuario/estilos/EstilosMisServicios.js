@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosMisServicios = StyleSheet.create({
     contenedor: {
       flex: 1,
-      backgroundColor: 'white',
-      paddingTop:43,
+      backgroundColor: '#191A2E',
     },
     header: {
       flexDirection: 'row',
@@ -115,11 +114,11 @@ const EstilosMisServicios = StyleSheet.create({
       paddingVertical: 20,
       paddingHorizontal: 20,
       borderWidth: 1,
-      borderColor: '#197278',
+      borderColor: '#FC6A30',
       borderRadius: 50,
     },
     textoBoton: {
-      color: '#197278',
+      color: '#FC6A30',
       fontSize: 16,
       fontWeight: '600',
       marginLeft: 5,

@@ -18,6 +18,9 @@ import { guardarCambios } from './auxiliar/guardarCambios';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 import CustomModal from '../../componentes/CustomModal';
 import estilosModal from '../../componentes/estilosModal';
+import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
+import Input from '../../componentes/inputs/Input';
+import PasswordInput from '../../componentes/inputs/PasswordInput';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
@@ -159,12 +162,9 @@ const EditarPerfil = () => {
       <SafeAreaView style={EstilosEditarPerfil.contenedor}>
         <ScrollView contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
           {/* Header con Perfil*/}
-          <View style={EstilosEditarPerfil.header}>
-            <Text style={EstilosEditarPerfil.textoEncabezado}>Perfil</Text>
-            <TouchableOpacity onPress={toggleDesplegable}>
-              <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
+        <BarraPestanasPerfil />
 
   
           {/* Menú Desplegable */}
@@ -175,9 +175,6 @@ const EditarPerfil = () => {
           onRedirectAdmin={redirectAdmin}
         />
 
-
-     {/* Barra de pestañas */}
-      <BarraPestanasPerfil/>
        {/* Sección para cambiar la foto */}
        <View style={EstilosEditarPerfil.seccionFoto}>
        <TouchableOpacity onPress={handleImagePress}>
@@ -248,17 +245,17 @@ const EditarPerfil = () => {
 {mostrarDatosContacto && (
   <>
     <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.email || datosOriginales.email || ''}
-      onChangeText={(valor) => manejarCambioCampo('email', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.email || datosOriginales.email || ''}
+            onChangeText={(valor) => manejarCambioCampo('email', valor)}
+          />
     <Text style={EstilosEditarPerfil.label}>Teléfono</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.telefono || datosOriginales.telefono || ''}
-      onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.telefono || datosOriginales.telefono || ''}
+            onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
+          />
   </>
 )}
 
@@ -268,35 +265,35 @@ const EditarPerfil = () => {
 {mostrarDireccion && (
   <>
     <Text style={EstilosEditarPerfil.label}>Calle</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
-      onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
+          />
     <Text style={EstilosEditarPerfil.label}>Altura</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
-      onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
+          />
     <Text style={EstilosEditarPerfil.label}>Número de Departamento</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
-      onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
+          />
     <Text style={EstilosEditarPerfil.label}>Piso</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
-      onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
+          />
     <Text style={EstilosEditarPerfil.label}>Barrio</Text>
-    <TextInput
-      style={EstilosEditarPerfil.input}
-      value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
-      onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
-    />
+    <Input
+            placeholder=" "
+            value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
+            onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
+          />
   </>
 )}
 
@@ -317,64 +314,30 @@ const EditarPerfil = () => {
               {showPasswordFields && (
               <>
                 <Text style={EstilosEditarPerfil.label}>Contraseña actual</Text>
-                <View style={EstilosEditarPerfil.contenedorEntradaContrasena}>
-                  <TextInput
-                    style={EstilosEditarPerfil.inputContrasena}
-                    secureTextEntry={!showOldPassword}
+
+                  <PasswordInput
+                    placeholder=" "
                     value={camposModificados.old_password}
                     onChangeText={(valor) => manejarCambioCampo('old_password', valor)}
                   />
-                  <TouchableOpacity 
-                    style={EstilosEditarPerfil.iconoOjo}
-                    onPress={() => setShowOldPassword(!showOldPassword)}
-                  >
-                    <Ionicons 
-                      name={showOldPassword ? "eye-outline" : "eye-off-outline"} 
-                      size={20} 
-                      color="#666" 
-                    />
-                  </TouchableOpacity>
-                </View>
 
                 <Text style={EstilosEditarPerfil.label}>Nueva contraseña</Text>
-                <View style={EstilosEditarPerfil.contenedorEntradaContrasena}>
-                  <TextInput
-                    style={EstilosEditarPerfil.inputContrasena}
-                    secureTextEntry={!showNewPassword}
+
+                  <PasswordInput
+                    placeholder=" "
                     value={camposModificados.password}
                     onChangeText={(valor) => manejarCambioCampo('password', valor)}
                   />
-                  <TouchableOpacity 
-                    style={EstilosEditarPerfil.iconoOjo}
-                    onPress={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    <Ionicons 
-                      name={showNewPassword ? "eye-outline" : "eye-off-outline"} 
-                      size={20} 
-                      color="#666" 
-                    />
-                  </TouchableOpacity>
-                </View>
+
 
                 <Text style={EstilosEditarPerfil.label}>Confirmar nueva contraseña</Text>
-                <View style={EstilosEditarPerfil.contenedorEntradaContrasena}>
-                  <TextInput
-                    style={EstilosEditarPerfil.inputContrasena}
-                    secureTextEntry={!showConfirmPassword}
+
+                  <PasswordInput
+                    placeholder=" "
                     value={camposModificados.password2}
                     onChangeText={(valor) => manejarCambioCampo('password2', valor)}
                   />
-                  <TouchableOpacity 
-                    style={EstilosEditarPerfil.iconoOjo}
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <Ionicons 
-                      name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
-                      size={20} 
-                      color="#666" 
-                    />
-                  </TouchableOpacity>
-                </View>
+                  
               </>
             )}
             </TouchableOpacity>
