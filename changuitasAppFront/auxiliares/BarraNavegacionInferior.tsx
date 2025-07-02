@@ -1,47 +1,63 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../navegacion/AppNavigator';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
+import ModalBuscar from '../componentes/ModalBuscar';
+import { RootStackParamList } from '../navegacion/AppNavigator';
+
 const BarraNavegacionInferior = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const insets = useSafeAreaInsets();
+  const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
+
   const alturaBase = Platform.OS === "web" ? 70 : 100;
   const alturaFinal = alturaBase + insets.bottom;
 
   return (
-   <SafeAreaView
+    <>
+      {/* Modal de búsqueda */}
+      <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} />
+
+      {/* Barra de navegación */}
+      <SafeAreaView
         edges={['bottom']}
         style={[
           estilos.barraNavegacion,
           {
             height: alturaFinal,
             paddingBottom: insets.bottom,
-            bottom: Platform.OS === 'android' ? -insets.bottom - 0 : 0,
+            bottom: Platform.OS === 'android' ? -insets.bottom : 0,
           },
         ]}
       >
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={estilos.iconoNavegacion}>
-        <Ionicons name="home-outline" size={24} color="#F2F2F2" />
-        <Text style={estilos.textoNavegacion}>Inicio</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={estilos.iconoNavegacion}>
+          <Ionicons name="home-outline" size={24} color="gray" />
+          <Text style={estilos.textoNavegacion}>Inicio</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}>
-        <Ionicons name="search-outline" size={24} color="#F2F2F2" />
-        <Text style={estilos.textoNavegacion}>Buscar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => setMostrarModalBuscar(true)} style={estilos.iconoNavegacion}>
+          <Ionicons name="search-outline" size={24} color="gray" />
+          <Text style={estilos.textoNavegacion}>Buscar</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
-        <Ionicons name="grid-outline" size={24} color="#F2F2F2" />
-        <Text style={estilos.textoNavegacion}>Historial</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Historial1')} style={estilos.iconoNavegacion}>
+          <Ionicons name="grid-outline" size={24} color="gray" />
+          <Text style={estilos.textoNavegacion}>Historial</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={estilos.iconoNavegacion}>
-        <Ionicons name="person-outline" size={24} color="#F2F2F2" />
-        <Text style={estilos.textoNavegacion}>Perfil</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity onPress={() => navigation.navigate('PerfilUsuario')} style={estilos.iconoNavegacion}>
+          <Ionicons name="person-outline" size={24} color="gray" />
+          <Text style={estilos.textoNavegacion}>Perfil</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </>
   );
 };
 

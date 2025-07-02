@@ -5,7 +5,7 @@ const EstilosModalBuscar = StyleSheet.create({
 modalContainer: {
   // En web usamos un ancho más angosto para una mejor visualización
   // En otras plataformas como Android se mantiene al 90% 
-  width: Platform.OS === 'web' ? '50%' : '90%',
+  width: Platform.OS === 'web' ? '70%' : '90%',
 
   // Solo para web aplicamos un ancho máximo y centramos el modal
   ...(Platform.OS === 'web'
@@ -18,7 +18,6 @@ modalContainer: {
   // Fondo y padding comunes a todas las plataformas
   backgroundColor: Colors.fondo,
   padding: 16,
-  borderRadius: 10,
 },
   botonCerrar: {
     alignSelf: 'flex-end',
@@ -30,13 +29,19 @@ modalContainer: {
 },
   tituloSeccion: {
     color: Colors.grisTexto,
-    marginTop: 12,
+    marginTop: -25,
+    fontSize: 14,
+  },
+    tituloRango: {
+    color: Colors.grisTexto,
+    marginTop: 10,
     fontSize: 14,
   },
   subtitulo: {
     color: Colors.naranja,
     fontWeight: 'bold',
     marginVertical: 6,
+    marginTop:25,
   },
   grid: {
     flexDirection: 'row',
