@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import CustomModal from './CustomModal'; 
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../navegacion/AppNavigator';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import EstilosModalBuscar from './EstilosModalBuscar';
 
@@ -14,9 +12,7 @@ interface Props {
 const ModalBuscar = ({ visible, onClose }: Props) => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
-
   const categorias = ['Electricista', 'Plomero', 'Carpintería', 'Pintor', 'Albañil', 'Zinguería', 'Gomería', 'Electrodomésticos', 'Calderista'];
   const horarios = ['Mañana', 'Tarde', 'Noche'];
 
@@ -24,11 +20,16 @@ const ModalBuscar = ({ visible, onClose }: Props) => {
     <CustomModal visible={visible} onClose={onClose}>
       <View style={EstilosModalBuscar.modalContainer}>
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-       <TouchableOpacity style={EstilosModalBuscar.botonCerrar} onPress={() =>onclose}>
+        <TouchableOpacity
+        style={EstilosModalBuscar.botonCerrar}
+        onPress={() => {
+          onClose(); 
+        }}
+      >
         <View style={EstilosModalBuscar.cuadroIcono}>
-            <AntDesign name="closesquareo" size={24} color="white" />
+          <AntDesign name="closesquareo" size={24} color="white" />
         </View>
-        </TouchableOpacity>
+      </TouchableOpacity>
 
           <Text style={EstilosModalBuscar.tituloSeccion}>Seleccione Categoría:</Text>
           <Text style={EstilosModalBuscar.subtitulo}>HOGAR</Text>
@@ -47,7 +48,7 @@ const ModalBuscar = ({ visible, onClose }: Props) => {
             ))}
           </View>
 
-          <Text style={EstilosModalBuscar.tituloSeccion}>Seleccione Rango Horario:</Text>
+          <Text style={EstilosModalBuscar.tituloRango}>Seleccione Rango Horario:</Text>
           <Text style={EstilosModalBuscar.subtitulo}>HORARIO</Text>
           <View style={EstilosModalBuscar.grid}>
             {horarios.map((horario) => (
