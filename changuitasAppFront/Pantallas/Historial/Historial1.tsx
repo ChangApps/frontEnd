@@ -12,6 +12,7 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 import ResultadoList from '../../componentes/ResultadoList';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -230,13 +231,13 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView style={EstilosHistorial1.contenedor}>
-        {/* Encabezado con opciones de menú */}
-        <View style={EstilosHistorial1.encabezado}>
-          <Text style={EstilosHistorial1.textoEncabezado}>Historial</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        {/* NavBar Superior */}
+                    <NavBarSuperior
+                      titulo="Historial"
+                      showBackButton={false}
+                      onBackPress={() => navigation.goBack()}
+                      rightButtonType="none"
+                    />
 
         {/* Menú Desplegable */}
          <MenuDesplegable
@@ -247,12 +248,12 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         />
 
           {/* Barra de pestañas */}
-          <View style={EstilosHistorial1.barraPestanas}>
-          <TouchableOpacity style={EstilosHistorial1.pestanaActiva} onPress={() => navigation.navigate('Historial1')}>
-            <Text style={EstilosHistorial1.textoPestanaActiva}>Servicios contratados</Text>
+          <View style={EstilosHistorial1.pasosWrapper}>
+          <TouchableOpacity style={EstilosHistorial1.pasoActivo} onPress={() => navigation.navigate('Historial1')}>
+            <Text style={EstilosHistorial1.pasoTextoActivo}>Servicios contratados</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={EstilosHistorial1.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
-            <Text style={EstilosHistorial1.textoPestanaInactiva}>Mis trabajos</Text>
+          <TouchableOpacity style={EstilosHistorial1.pasoInactivo} onPress={() => navigation.navigate('Historial2')}>
+            <Text style={EstilosHistorial1.pasoTextoInactivo}>Mis trabajos</Text>
           </TouchableOpacity>
         </View>
 

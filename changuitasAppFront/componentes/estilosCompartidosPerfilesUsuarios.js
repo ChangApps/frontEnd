@@ -72,6 +72,14 @@ const EstilosCompartidos = StyleSheet.create({
     backgroundColor: COLORES_APP.blanco,
     paddingBottom: DIMENSIONES.alturaNavegacion,
   },
+  contenedorPrueba: {
+        width: "90%",
+        padding: 20,
+        justifyContent: "center",
+      },
+      contenedorWeb: {
+        maxWidth: 500,
+      },
   
   // Encabezados
   encabezado: {

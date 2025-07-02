@@ -8,6 +8,10 @@ import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosAgregarServicio2 from './estilos/EstilosAgregarServicio2';
 import API_URL from '../../auxiliares/API_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CampoDescripcion from '../../componentes/inputs/CampoDescripcion';
+import { Button } from '../../componentes/Buttons';
+import Colors from '../../assets/Colors';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -154,7 +158,7 @@ const AgregarServicio2 = () => {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
-          body: JSON.stringify(datosServicio),
+          body: JSON.stringify({ dias: datosServicio }),
         });
   
         console.log('Respuesta de la API:', response);
@@ -163,7 +167,8 @@ const AgregarServicio2 = () => {
   
         if (!response.ok) {
           console.log('Respuesta no OK:', response.status, response.statusText);
-          console.error("Detalles del error:", data);  // Muestra los detalles
+          console.error("Detalles del error:", JSON.stringify(data, null, 2));
+          Alert.alert('Error del servidor', JSON.stringify(data, null, 2));
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
   
@@ -216,18 +221,28 @@ const AgregarServicio2 = () => {
     }
 
   return (
-    <View style={EstilosAgregarServicio2.contenedorPrincipal}>
-      <View style={EstilosAgregarServicio2.contenedorEncabezado}>
-        <Text style={EstilosAgregarServicio2.encabezado}>Agregar un servicio (2/2)</Text>
-      </View>
+    <View style={EstilosAgregarServicio2.container}>
+      {/* NavBar Superior */}
+                        <NavBarSuperior
+                          titulo="Agregar un servicio"
+                          showBackButton={true}
+                          onBackPress={() => navigation.goBack()}
+                          rightButtonType="none"
+                        />
       <ScrollView contentContainerStyle={EstilosAgregarServicio2.contenedorDesplazable}>
+        <View style={EstilosAgregarServicio2.pasosWrapper}>
+          <View style={EstilosAgregarServicio2.pasoInactivo}>
+            <Text style={EstilosAgregarServicio2.pasoTextoInactivo}>1. Seleccionar categoría</Text>
+          </View>
+          <View style={EstilosAgregarServicio2.pasoActivo}>
+            <Text style={EstilosAgregarServicio2.pasoTextoActivo}>2. Agregar detalles</Text>
+          </View>
+        </View>
         <Text style={EstilosAgregarServicio2.etiqueta}>Descripción del Servicio:</Text>
-        <TextInput
-          style={EstilosAgregarServicio2.campoDescripcion}
-          placeholder="Descripción"
+        <CampoDescripcion
           value={descripcion}
           onChangeText={setDescripcion}
-          multiline
+          placeholder="Descripción"
         />
 
         <View style={EstilosAgregarServicio2.encabezadoDias}>
@@ -273,12 +288,23 @@ const AgregarServicio2 = () => {
         ))}
 
         <View style={EstilosAgregarServicio2.contenedorBotones}>
-          <TouchableOpacity style={EstilosAgregarServicio2.botonSiguiente} onPress={manejarGuardar}>
-            <Text style={EstilosAgregarServicio2.textoBotonSiguiente}>Publicar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={EstilosAgregarServicio2.botonAtras} onPress={() => navigation.navigate('AgregarServicio1')}>
-            <Text style={EstilosAgregarServicio2.textoBotonAtras}>Atrás</Text>
-          </TouchableOpacity>
+          <Button
+            titulo="Publicar"
+            onPress={manejarGuardar}
+            textSize={18}
+            textColor={Colors.fondo}
+            padding={14}
+            borderRadius={25}
+          />
+          <Button
+            titulo="Atrás"
+            onPress={() => navigation.navigate('AgregarServicio1')}
+            backgroundColor="transparent"
+            textColor={Colors.naranja}
+            textSize={18}
+            padding={14}
+            borderRadius={25}
+          />
         </View>
       </ScrollView>
 
