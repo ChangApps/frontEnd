@@ -241,6 +241,11 @@ export default function AppNavigator() {
             component={Historial2}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="PantallaAyuda"
+            component={PantallaAyuda}
+            options={{ headerShown: false }}
+          />
         </>
       ) : (
         <>

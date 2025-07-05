@@ -12,6 +12,7 @@ import FormData from 'form-data';
 import {mostrarOpcionesSelectorImagen} from '../../auxiliares/seleccionImagen';
 import { ImageCropperWeb } from "../../auxiliares/ImageCropperWeb";
 
+
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   

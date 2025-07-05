@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosHistorial1 = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#191A2E',
   },
   encabezado: {
     flexDirection: 'row',
@@ -45,10 +45,12 @@ const EstilosHistorial1 = StyleSheet.create({
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#2a2b45',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
+    marginLeft:5,
+    marginRight:5,
   },
   image: {
     width: 50,
@@ -69,10 +71,10 @@ const EstilosHistorial1 = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#fd6b2f',
     marginRight: 8, // espacio entre nombre y cartel rojo
   },
-     estadoCriticoContainer: {
+    estadoCriticoContainer: {
     backgroundColor: '#ff4d4d', // rojo claro
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -84,10 +86,18 @@ const EstilosHistorial1 = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  estadoNormal: {
+    estadoNormalContainer: {
+    backgroundColor: 'gray', // rojo claro
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderRadius: 5,
     marginTop: 4,
-    fontStyle: 'italic',
-    color: '#555',
+    alignSelf: 'flex-start',
+  },
+  estadoNormalText: {
+    marginTop: 4,
+    fontWeight: 'bold',
+    color: 'white',
   },
   category: {
     fontSize: 14,
@@ -167,7 +177,7 @@ const EstilosHistorial1 = StyleSheet.create({
   },
   fecha: {
     fontSize: 12,
-    color: '#666',
+    color: 'white',
     marginTop: 2,
   },
   noResultsContainer: {
@@ -185,6 +195,41 @@ const EstilosHistorial1 = StyleSheet.create({
     color: 'grey',
     textAlign: 'center',
   },
+  pasoActivo: {
+  backgroundColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoInactivo: {
+  backgroundColor: 'transparent',
+  borderWidth: 1,
+  borderColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoTextoActivo: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasoTextoInactivo: {
+  color: '#FF6D3B',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasosWrapper: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  backgroundColor: '#1D233B',
+  borderRadius: 30,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  marginBottom: 20,
+  gap: 10,
+},
 });
 
 export default EstilosHistorial1;

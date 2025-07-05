@@ -70,7 +70,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#191A2E',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     elevation: 10,
@@ -85,7 +85,7 @@ const estilos = StyleSheet.create({
   },
   textoNavegacion: {
     fontSize: 12,
-    color: 'gray',
+    color: '#F2F2F2',
     marginTop: 2,
   },
 });

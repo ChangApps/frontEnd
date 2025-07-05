@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosHome = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#191A2E',
   },
   encabezado: {
     flexDirection: 'row',
@@ -12,12 +12,12 @@ const EstilosHome = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 15,
-    backgroundColor: 'white',
     marginTop: 50,
   },
   textoInicio: {
     fontSize: 24,
     fontWeight: '600',
+    color: '#F2F2F2',
   },
   menuPuntos: {
     fontSize: 24,
@@ -25,14 +25,14 @@ const EstilosHome = StyleSheet.create({
   },
   contenidoPrincipal: {
     flex: 1,
-    backgroundColor: '#4EAAA5',
+    backgroundColor: '#292929',
     paddingHorizontal: 20,
     paddingTop: 30,
   },
   tituloApp: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#FFAE17',
     marginBottom: 20,
     lineHeight: 40,
   },
@@ -40,13 +40,13 @@ const EstilosHome = StyleSheet.create({
     gap: 10,
   },
   cajaCaracteristica: {
-    backgroundColor: '#2A3A35',
+    backgroundColor: '#333237',
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 8,
   },
   textoCaracteristica: {
-    color: '#FFFFFF',
+    color: '#FFAE17',
     fontSize: 18,
     fontWeight: '500',
   },
@@ -66,5 +66,12 @@ const EstilosHome = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
+    },
 });
 export default EstilosHome;  

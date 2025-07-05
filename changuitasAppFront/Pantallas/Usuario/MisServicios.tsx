@@ -11,6 +11,7 @@ import EstilosMisServicios from './estilos/EstilosMisServicios';
 import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -161,20 +162,8 @@ const MisServicios = () => {
     }}>
       <SafeAreaView style={EstilosMisServicios.contenedor}>
         {/* Header con Perfil*/}
-        <View style={EstilosMisServicios.header}>
-          <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-
-          {/* Menú Desplegable */}
-        <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
       {/* Barra de pestañas */}
     <BarraPestanasPerfil/>
@@ -184,7 +173,7 @@ const MisServicios = () => {
           style={EstilosMisServicios.botonAgregarServicio} 
              onPress={() => navigation.navigate('AgregarServicio1')}
         >
-          <Ionicons name="add" size={20} color="#197278" />
+          <Ionicons name="add" size={20} color="#FC6A30" />
           <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
         </TouchableOpacity>
 

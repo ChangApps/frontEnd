@@ -1,173 +1,38 @@
 import { StyleSheet } from 'react-native';
+import EstilosCompartidos, { COLORES_APP, DIMENSIONES, FUENTES } from '../../../componentes/estilosCompartidosPerfilesUsuarios';
 
+// Estilos específicos para DetalleTarea que no están en los compartidos
+const estilosEspecificos = StyleSheet.create({
+  // Desplegable específico para DetalleTarea
+  desplegable: {
+    position: 'absolute',
+    top: 80,
+    right: 20,
+    width: 150,
+    backgroundColor: COLORES_APP.blanco,
+    borderRadius: DIMENSIONES.borderRadiusModal,
+    paddingVertical: 10,
+    shadowColor: COLORES_APP.sombra,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+    zIndex: DIMENSIONES.zIndexModal,
+  },
+  opcionDesplegable: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  textoDesplegable: {
+    fontSize: FUENTES.normal,
+    color: COLORES_APP.negro,
+  },
+});
+
+// Combinar estilos compartidos con específicos
 const EstilosDetalleTarea = StyleSheet.create({
-    contenedor: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    encabezado: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 15,
-      backgroundColor: 'white',
-      marginTop: 50,
-    },
-    textoEncabezado: {
-      fontSize: 24,
-      fontWeight: '600',
-    },
-    barraPestanas: {
-      flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
-      marginBottom: 20,
-    },
-    pestanaActiva: {
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderBottomWidth: 2,
-      borderBottomColor: '#197278',
-    },
-    pestanaInactiva: {
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-    },
-    textoPestanaActiva: {
-      fontSize: 16,
-      color: '#197278',
-    },
-    textoPestanaInactiva: {
-      fontSize: 16,
-      color: '#666',
-    },
-    seccionUsuario: {
-      alignItems: 'center',
-      marginVertical: 20,
-    },
-    imagenUsuario: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: '#f0f0f0',
-      marginBottom: 10,
-    },
-    nombreCompleto: {
-      fontSize: 22,
-      fontWeight: 'bold',
-    },
-    datosExtras: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginVertical: 10,
-    },
-    datoItem: {
-      alignItems: 'center',
-    },
-    datoNumero: {
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    datoLabel: {
-      fontSize: 14,
-      color: '#666',
-    },
-    tituloDatosPersonales: {
-      fontSize: 18,
-      color: '#197278',
-      textAlign: 'center',
-      marginVertical: 10,
-    },
-    datosPersonales: {
-      paddingHorizontal: 20,
-    },
-    infoUsuario: {
-      fontSize: 16,
-      color: '#333',
-      marginBottom: 5,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      paddingVertical: 20,
-    },
-    prevButton: {
-      borderWidth: 1,
-      borderColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 50,
-    },
-    prevButtonText: {
-      color: '#197278',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    nextButton: {
-      backgroundColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 50,
-    },
-    nextButtonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    barraNavegacion: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      height: 60,
-      backgroundColor: 'white',
-      borderTopWidth: 1,
-      borderTopColor: '#ddd',
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-    },
-    iconoNavegacion: {
-      alignItems: 'center',
-    },
-    textoNavegacion: {
-      fontSize: 12,
-      color: 'gray',
-    },
-    desplegable: {
-      position: 'absolute',
-      top: 80,
-      right: 20,
-      width: 150,
-      backgroundColor: '#ffffff',
-      borderRadius: 16,
-      paddingVertical: 10,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 2 },
-      elevation: 5,
-      zIndex: 10,
-    },
-    opcionDesplegable: {
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-    },
-    textoDesplegable: {
-      fontSize: 16,
-      color: '#333333',
-    },
-       modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
-      },
-      imagenModal: {
-        width: 200,   // Ajusta el tamaño de la imagen en el modal
-        height: 200,  
-        borderRadius: 100,  // Garantiza que la imagen sea circular
-        resizeMode: 'cover',  // Mantiene la proporción de la imagen
-      },
-  });
+  ...EstilosCompartidos,
+  ...estilosEspecificos,
+});
+
 export default EstilosDetalleTarea;

@@ -6,6 +6,13 @@ import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../auxiliares/API_URL";
 import EstilosVerificacion1Mail  from "./estilos/EstilosVerificacion1Mail";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
+import { Platform, useWindowDimensions } from 'react-native';
+import { Button } from "../../componentes/Buttons";
+import Colors from "../../assets/Colors";
+import Input from "../../componentes/inputs/Input";
+import { LinearGradient } from "expo-linear-gradient";
+import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 
 
 
@@ -91,32 +98,45 @@ const Verificacion1Mail = () => {
     }
   };
 
+const { width } = useWindowDimensions();
+
   return (
     <SafeAreaView style={EstilosVerificacion1Mail.areaSegura}>
+      <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion1Mail.degradado}>
       <View style={EstilosVerificacion1Mail.contenedor}>
-         <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosVerificacion1Mail.botonAtras}>
-        <Ionicons name="arrow-back" size={24} color="#197278" />
-      </TouchableOpacity>
-        <Text style={EstilosVerificacion1Mail.titulo}>Verificación</Text>
-        <Text style={EstilosVerificacion1Mail.subtitulo}>PASO 1</Text>
-        <Text style={EstilosVerificacion1Mail.instruccion}>Ingrese el código numérico que se ha enviado a su correo electrónico:</Text>
+        <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>
+        <NavBarSuperior
+                  titulo="Verificación"
+                  showBackButton={true}
+                  onBackPress={() => navigation.goBack()}
+                  rightButtonType="none"
+                />
 
-        {/* Campo de entrada de código */}
-        <TextInput
+        <PasoTituloIcono
+          iconName="mail-outline"
+          texto="PASO 1:"
+        />
+        <Text style={EstilosVerificacion1Mail.instruccion}>
+          Ingrese el código numérico que se ha enviado a su correo electrónico:
+        </Text>
+
+        {/* Campo de entrada */}
+        <Input
           placeholder="Código"
-          style={EstilosVerificacion1Mail.entrada}
           value={codigo}
           onChangeText={setCodigo}
-          keyboardType="number-pad"
         />
 
         {/* Botón para validar el código  onPress=validarCodigo */}
-        <TouchableOpacity
-          style={EstilosVerificacion1Mail.botonSiguiente}
-         onPress={validarCodigo}>
-          <Text style={EstilosVerificacion1Mail.textoBoton}>Siguiente</Text>
-          <Ionicons name="arrow-forward" size={20} color="#197278" />
-        </TouchableOpacity>
+        <Button
+          titulo="Siguiente"
+          onPress={validarCodigo}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
+
       </View>
 
 
@@ -129,6 +149,8 @@ const Verificacion1Mail = () => {
       >
         {message}
       </Snackbar>
+      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

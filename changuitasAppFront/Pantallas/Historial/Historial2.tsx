@@ -11,6 +11,8 @@ import API_URL from '../../auxiliares/API_URL';
 import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
 import EstilosHistorial2 from './estilos/EstilosHistorial2';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import ResultadoList from '../../componentes/ResultadoList';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -29,7 +31,6 @@ const Historial2 = () => {
     proveedorId: number;
     idSolicitud: number;
     fechaSolicitud: string;
-    estadoSolicitud: 'F' | 'C';
   }
   interface Direccion {
     calle: string;
@@ -67,7 +68,7 @@ const Historial2 = () => {
     proveedorServicio: number;
     cliente: number;
     notificacion: any; 
-    estado: string;
+    estado: 'F' | 'C';
     proveedor_id: number;
     nombreServicio: string;
     cliente_nombre: string;
@@ -224,13 +225,13 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
           if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
     <SafeAreaView style={EstilosHistorial2.contenedor}>
-      {/* Encabezado con opciones de menú */}
-      <View style={EstilosHistorial2.encabezado}>
-        <Text style={EstilosHistorial2.textoEncabezado}>Historial</Text>
-        <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+      {/* NavBar Superior */}
+                          <NavBarSuperior
+                            titulo="Historial"
+                            showBackButton={false}
+                            onBackPress={() => navigation.goBack()}
+                            rightButtonType="none"
+                          />
 
         {/* Menú Desplegable */}
         <MenuDesplegable
@@ -241,96 +242,24 @@ const fetchMultipleClientesData = async (clienteIds: number[]) => {
         />
          
          {/* Barra de pestañas */}
-         <View style={EstilosHistorial2.barraPestanas}>
-        <TouchableOpacity style={EstilosHistorial2.pestanaInactiva} onPress={() => navigation.navigate('Historial1')}>
-          <Text style={EstilosHistorial2.textoPestanaInactiva}>Servicios contratados</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={EstilosHistorial2.pestanaActiva} onPress={() => navigation.navigate('Historial2')}>
-          <Text style={EstilosHistorial2.textoPestanaActiva}>Mis trabajos</Text>
-        </TouchableOpacity>
-      </View>
-
-            {/* Elemento de resultado */}
- <FlatList
-  data={historial}
-  keyExtractor={(item) => item.id.toString()}
-  renderItem={({ item }) => {
-    const cliente = clientes.find(c => c.id === item.cliente);
-    const puntaje = cliente?.puntaje ? Math.round(cliente.puntaje) : 0;
-
-    const esEstadoCritico = item.estado === 'F' || item.estado === 'C';
-
-    const estadoLegible = {
-      'PA': 'Pendiente de Aceptación',
-      'I': 'Iniciado',
-      'F': 'Finalizado',
-      'C': 'Cancelado',
-    }[item.estado] || item.estado;
-
-    return (
-      <View style={EstilosHistorial2.resultItem}>
-        <Image
-          style={EstilosHistorial2.image}
-          source={{ uri: cliente?.fotoPerfil || 'https://via.placeholder.com/100' }}
-        />
-        <View style={EstilosHistorial2.resultDetails}>
-
-          {/* Nombre + Estado en una línea */}
-          <View style={EstilosHistorial2.nombreConEstadoContainer}>
-            <Text style={EstilosHistorial2.name}>
-              {`${cliente?.first_name || 'Nombre'} ${cliente?.last_name || ''}`}
-            </Text>
-
-            {esEstadoCritico ? (
-              <View style={EstilosHistorial2.estadoCriticoContainer}>
-                <Text style={EstilosHistorial2.estadoCriticoText}>{estadoLegible}</Text>
-              </View>
-            ) : (
-              <Text style={EstilosHistorial2.estadoNormal}>{estadoLegible}</Text>
-            )}
-          </View>
-
-          <Text style={EstilosHistorial2.fecha}>
-            Fecha: {item.fechaSolicitud}
-          </Text>
-
-          <View style={EstilosHistorial2.ratingStars}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <Ionicons
-                key={i}
-                name="star"
-                size={16}
-                color={i < puntaje ? "black" : "#CCCCCC"}
-              />
-            ))}
-          </View>
+          <View style={EstilosHistorial2.pasosWrapper}>
+          <TouchableOpacity style={EstilosHistorial2.pasoInactivo} onPress={() => navigation.navigate('Historial1')}>
+            <Text style={EstilosHistorial2.pasoTextoInactivo}>Servicios contratados</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={EstilosHistorial2.pasoActivo} onPress={() => navigation.navigate('Historial2')}>
+            <Text style={EstilosHistorial2.pasoTextoActivo}>Mis trabajos</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('DetalleTarea', {
-              id: cliente?.id?.toString() || 'No disponible',
-              idSolicitud: item.id.toString()
-            });
-          }}
-          style={EstilosHistorial2.arrowButton}
-        >
-          <Ionicons name="chevron-forward" size={20} color="#333" />
-        </TouchableOpacity>
-      </View>
-    );
-  }}
-  ListEmptyComponent={
-    <View style={EstilosHistorial2.noResultsContainer}>
-      <Image
-        source={require('./estilos/service.png')}
-        style={EstilosHistorial2.noResultsImage}
-        resizeMode="contain"
-      />
-      <Text style={EstilosHistorial2.mensajeNoUsuarios}>No haz realizado ningún trabajo.</Text>
-    </View>
-  }
-/>
+            {/* Elemento de resultado */}
+            <ResultadoList
+              historial={historial}
+              usuarios={clientes}
+              navigation={navigation}
+              claveUsuario="cliente"
+              mensajeVacio="No haz realizado ningún trabajo."
+            />
+
 <Snackbar
         visible={visible}
         onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
