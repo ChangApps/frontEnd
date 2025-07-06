@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
-import { Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AxiosError } from 'axios';
@@ -8,13 +7,16 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
-import API_URL from '../../auxiliares/API_URL';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 import { Snackbar } from 'react-native-paper';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../../services/notificacionesService';
+import{ obtenerCategorias } from '../../services/categoriaService';
+import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces';
+import { fetchUHistorial } from '../../services/historialService';
+import ResultadoList from '../../componentes/ResultadoList';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -35,57 +37,7 @@ const PantallaHome = () => {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [visible, setVisible] = useState(false);  
   const [message, setMessage] = useState(""); 
-  const [loading, setLoading] = useState<boolean>(true);
   
-  interface SolicitudHistorial {
-    id: number;
-    comentario: string | null;
-    fechaSolicitud: string;
-    fechaTrabajo: string;
-    fechaValoracion: string | null;
-    valoracion: number | null;
-    proveedorServicio: number;
-    cliente: number;
-    notificacion: any; 
-    estado: "PA" | "I" | "F" | "C";
-    proveedor_id: number;
-    nombreServicio: string;
-    cliente_nombre: string;
-  }
-
-    interface Solicitud {
-    proveedorId: number;
-    idSolicitud: number;
-    fechaSolicitud: string;
-  }
-
-    interface Direccion {
-    calle: string;
-    altura: number;
-    piso: number | null;
-    nroDepto: number | null;
-    barrio: string;
-  }
-
-     interface Proveedor {
-    id: number;
-    username: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    documento: number;
-    telefono: number;
-    fotoPerfil: string;
-    fechaNacimiento: string;
-    direccion: Direccion;
-    cantServiciosContratados: number | null;
-    cantServiciosTrabajados: number | null;
-    puntaje: number | null;
-    bloqueados: number[];
-    is_verified: boolean;
-  }
-
-   
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
@@ -110,10 +62,6 @@ const PantallaHome = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
- const capitalizarPrimeraLetra = (texto: string): string => {
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
-};
-
   const toggleDesplegable = () => setMostrarDesplegable(!mostrarDesplegable);
 
   const logout = async () => {
@@ -137,204 +85,12 @@ const PantallaHome = () => {
     }, 300);
   };
 
-
-const fetchUHistorial = async () => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    const userId = await AsyncStorage.getItem('userId');
-
-    if (!accessToken || !userId) {
-      throw new Error('No se encontró el token o el ID de usuario');
-    }
-      console.log("Intentado hacer fetchhistorial");
-    const responseHistorial = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (responseHistorial.status === 404) {
-      console.log("No se encontraron registros de historial (404)");
-      setHistorial([]);
-      setSolicitudesInfo([]);
-      setPersonasContratadas([]); 
-      return;
-    }
-
-    if (!responseHistorial.ok) {
-      throw new Error('Error en la respuesta del servidor');
-    }
-
-    const historialData = await responseHistorial.json();
-    if (historialData.length > 0) {
-      setHistorial(historialData);
-
-      const solicitudesData = historialData.map((item: any) => ({
-        proveedorId: item.proveedor_id,
-        idSolicitud: item.id,
-        fechaSolicitud: item.fechaSolicitud,
-      }));
-
-      setSolicitudesInfo(solicitudesData);
-
-      const proveedoresIds = solicitudesData.map((item: any) => item.proveedorId);
-      const proveedoresData = await fetchMultipleProveedoresData(proveedoresIds);
-
-      setProveedores(proveedoresData);
-
-      // Armamos personasContratadas
-      const personas = historialData
-        .slice(-5) // últimos 5 contratados
-        .map((item: any) => {
-          const proveedor = proveedoresData.find((p: any) => p.id === item.proveedor_id);
-          if (!proveedor) return null;
-          return {
-            id: proveedor.id,
-            nombre: `${proveedor.first_name} ${proveedor.last_name}`,
-            oficio: item.nombreServicio,
-          };
-        })
-        .filter((p:any) => p !== null);
-
-      setPersonasContratadas(personas as { id: number; nombre: string; oficio: string }[]);
-    } else {
-      throw new Error('El historial está vacío');
-    }
-  } catch (error) {
-    console.error('Error al cargar historial:', error);
-  }
-};
-
-const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    if (!accessToken) {
-      throw new Error('No se encontró el token de acceso');
-    }
-
-    if (proveedorIds.length === 0) {
-      throw new Error('No hay proveedores disponibles');
-    }
-
-          console.log("Intentado hacer fethcmultiples");
-    const proveedoresDataPromises = proveedorIds.map(id =>
-      fetch(`${API_URL}/usuarios/${id}/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      })
-    );
-
-    const proveedorResponses = await Promise.all(proveedoresDataPromises);
-
-    for (let i = 0; i < proveedorResponses.length; i++) {
-      if (!proveedorResponses[i].ok) {
-        throw new Error(`Error al obtener proveedor con ID ${proveedorIds[i]}`);
-      }
-    }
-
-    const proveedoresData = await Promise.all(proveedorResponses.map(res => res.json()));
-    return proveedoresData;
-  } catch (error: any) {
-    console.error('Error al cargar proveedores:', error.message);
-    setMessage('No se pudo cargar los datos de los proveedores');
-    setVisible(true);
-    return [];
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-const obtenerCategorias = async () => {
-  try {
-     const storedToken = await AsyncStorage.getItem('accessToken');
-    const res = await fetch(`${API_URL}/categorias/`, {
-       headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-    });
-    console.log("Obteniendo categorias");
-
-    if (!res.ok) throw new Error('Error al obtener las categorías');
-    const data = await res.json();
-
-    const categoriasFormateadas = data.map((cat: any) => ({
-      id: cat.id,
-      nombre: capitalizarPrimeraLetra(cat.nombre),
-    }));
-
-    setCategorias(categoriasFormateadas);
-  } catch (error) {
-    console.error('Error al cargar categorías:', error);
-  }
-};
-
-  const guardarTrabajosNotificados = async (ids: string[]) => {
-    await AsyncStorage.setItem('trabajosNotificados', JSON.stringify(ids));
-  };
-
-  const obtenerTrabajosNotificados = async (): Promise<string[]> => {
-    const data = await AsyncStorage.getItem('trabajosNotificados');
-    return data ? JSON.parse(data) : [];
-  };
-
-  const verificarTrabajosPendientes = async (userId: string, token: string) => {
-    const res = await fetch(`${API_URL}/historial/proveedor/${userId}/`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    if (!Array.isArray(data)) return;
-
-    const yaNotificados = await obtenerTrabajosNotificados();
-    const nuevos = data.filter(
-      (s: any) => s.estado === 'PA' && !yaNotificados.includes(String(s.id))
-    );
-    if (nuevos.length) {
-      await guardarTrabajosNotificados([...yaNotificados, ...nuevos.map((s) => String(s.id))]);
-      setTrabajosNotificados(nuevos);
-    }
-  };
-
-  const guardarTrabajosNotificadosCliente = async (ids: string[]) => {
-    await AsyncStorage.setItem('solicitudesAceptadasNotificadas', JSON.stringify(ids));
-  };
-
-  const obtenerTrabajosNotificadosCliente = async (): Promise<string[]> => {
-    const data = await AsyncStorage.getItem('solicitudesAceptadasNotificadas');
-    return data ? JSON.parse(data) : [];
-  };
-
-  const verificarSolicitudesAceptadas = async (userId: string, token: string) => {
-    const res = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    if (!Array.isArray(data)) return;
-
-    const yaNotificados = await obtenerTrabajosNotificadosCliente();
-    const nuevos = data.filter(
-      (s: any) => s.estado === 'I' && !yaNotificados.includes(String(s.id))
-    );
-    if (nuevos.length) {
-      await guardarTrabajosNotificadosCliente([
-        ...yaNotificados,
-        ...nuevos.map((s) => String(s.id)),
-      ]);
-      setTrabajosNotificados((prev) => [...prev, ...nuevos]);
-    }
-  };
-
   const fetchUsuarioLogueado = async () => {
     const userId = await AsyncStorage.getItem('userId');
     const token = await AsyncStorage.getItem('accessToken');
     if (!userId || !token) return logout();
-    await verificarTrabajosPendientes(userId, token);
-    await verificarSolicitudesAceptadas(userId, token);
+  await verificarTrabajosPendientes(userId,token, setTrabajosNotificados);
+  await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
   useEffect(() => {
@@ -344,8 +100,9 @@ const obtenerCategorias = async () => {
         console.log(storedToken);
         setAccessToken(storedToken);
         await fetchUsuarioLogueado();
-        await fetchUHistorial();
-         await obtenerCategorias();
+        await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
+       const resultado = await obtenerCategorias(); 
+      setCategorias(resultado);
       }
     };
     init();
@@ -416,19 +173,12 @@ const obtenerCategorias = async () => {
             {personasContratadas.length === 0 ? (
         <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
       ) : (
-        <FlatList
-          horizontal
-          data={personasContratadas}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingLeft: 16 }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View style={EstilosHome.cardPersona}>
-              <View style={EstilosHome.avatarPlaceholder} />
-              <Text style={EstilosHome.nombrePersona}>{item.nombre}</Text>
-              <Text style={EstilosHome.oficioPersona}>{item.oficio}</Text>
-            </View>
-          )}
+          <ResultadoList
+          historial={historial}
+          usuarios={proveedores}
+          navigation={navigation}
+          claveUsuario="proveedor_id"
+          mensajeVacio="No haz contratado ningún trabajo."
         />
       )}
 
