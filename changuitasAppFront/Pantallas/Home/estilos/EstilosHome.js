@@ -3,75 +3,110 @@ import { StyleSheet } from 'react-native';
 const EstilosHome = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: '#191A2E',
+    backgroundColor: '#0D0D2B',
+  },
+  contenidoResponsivo: {
+    // placeholder
+  },
+  contenidoWeb: {
+    // estilos web 
   },
   encabezado: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    marginTop: 50,
   },
   textoInicio: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#F2F2F2',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  contenidoPrincipal: {
-    flex: 1,
-    backgroundColor: '#292929',
-    paddingHorizontal: 20,
-    paddingTop: 30,
-  },
-  tituloApp: {
-    fontSize: 36,
+    color: '#FFFFFF',
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#FFAE17',
-    marginBottom: 20,
-    lineHeight: 40,
   },
-  contenedorCaracteristicas: {
-    gap: 10,
+  scrollContenido: {
+    paddingBottom: 100,
   },
-  cajaCaracteristica: {
-    backgroundColor: '#333237',
-    paddingVertical: 12,
+  barraBusqueda: {
+    flexDirection: 'row',
+    backgroundColor: '#1E1E3F',
+    marginHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
     paddingHorizontal: 15,
-    borderRadius: 8,
+    paddingVertical: 10,
+    marginBottom: 10,
   },
-  textoCaracteristica: {
-    color: '#FFAE17',
-    fontSize: 18,
+  inputBusqueda: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 16,
+  },
+  botonFiltro: {
+    marginLeft: 10,
+    backgroundColor: '#FF6A00',
+    padding: 8,
+    borderRadius: 20,
+  },
+  subtituloSeccion: {
+    color: '#FF6A00',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  cardPersona: {
+    backgroundColor: '#1E1E3F',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginRight: 10,
+    width: 120,
+  },
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#ccc',
+    marginBottom: 8,
+  },
+  nombrePersona: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  oficioPersona: {
+    color: '#ccc',
+    fontSize: 12,
+  },
+  cardCategoria: {
+    backgroundColor: '#1E1E3F',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 12,
+    width: '48%',
+  },
+  textoCategoria: {
+    color: '#fff',
+    marginLeft: 8,
+    fontSize: 14,
     fontWeight: '500',
   },
-  barraNavegacion: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+  contenidoPrincipal: {
+    // si se necesita más contenido despues
   },
-  iconoNavegacion: {
-    alignItems: 'center',
+  contenedorCaracteristicas: {
+    paddingHorizontal: 20,
   },
-  textoNavegacion: {
-    fontSize: 12,
-    color: 'gray',
+  cajaCaracteristica: {
+    marginBottom: 10,
   },
-  contenidoResponsivo: {
-      width: '100%',
-    },
-    contenidoWeb: {
-      maxWidth: 700,
-      alignSelf: 'center',
-    },
+  textoCaracteristica: {
+    color: '#fff',
+  },
 });
-export default EstilosHome;  
+
+export default EstilosHome;
