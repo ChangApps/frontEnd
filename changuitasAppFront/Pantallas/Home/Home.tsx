@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../auxiliares/MenuDesplegable';
 import { Snackbar } from 'react-native-paper';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -26,6 +27,84 @@ const PantallaHome = () => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [state, setState] = useContext(AuthContext);
   const [categorias, setCategorias] = useState<{ id: number; nombre: string }[]>([]);
+  const [personasContratadas, setPersonasContratadas] = useState<
+  { id: number; nombre: string; oficio: string }[]
+>([]);
+  const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
+  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
+  const [proveedores, setProveedores] = useState<Proveedor[]>([]);
+  const [visible, setVisible] = useState(false);  
+  const [message, setMessage] = useState(""); 
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  interface SolicitudHistorial {
+    id: number;
+    comentario: string | null;
+    fechaSolicitud: string;
+    fechaTrabajo: string;
+    fechaValoracion: string | null;
+    valoracion: number | null;
+    proveedorServicio: number;
+    cliente: number;
+    notificacion: any; 
+    estado: "PA" | "I" | "F" | "C";
+    proveedor_id: number;
+    nombreServicio: string;
+    cliente_nombre: string;
+  }
+
+    interface Solicitud {
+    proveedorId: number;
+    idSolicitud: number;
+    fechaSolicitud: string;
+  }
+
+    interface Direccion {
+    calle: string;
+    altura: number;
+    piso: number | null;
+    nroDepto: number | null;
+    barrio: string;
+  }
+
+     interface Proveedor {
+    id: number;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    documento: number;
+    telefono: number;
+    fotoPerfil: string;
+    fechaNacimiento: string;
+    direccion: Direccion;
+    cantServiciosContratados: number | null;
+    cantServiciosTrabajados: number | null;
+    puntaje: number | null;
+    bloqueados: number[];
+    is_verified: boolean;
+  }
+
+   
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
 
   const redirectAdmin = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
@@ -58,11 +137,118 @@ const PantallaHome = () => {
     }, 300);
   };
 
-  const personasContratadas = [
-    { id: 1, nombre: 'Juan Perez', oficio: 'Plomero' },
-    { id: 2, nombre: 'Ana López', oficio: 'Electricista' },
-    { id: 3, nombre: 'Carlos Díaz', oficio: 'Pintor' },
-  ];
+
+const fetchUHistorial = async () => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (!accessToken || !userId) {
+      throw new Error('No se encontró el token o el ID de usuario');
+    }
+      console.log("Intentado hacer fetchhistorial");
+    const responseHistorial = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (responseHistorial.status === 404) {
+      console.log("No se encontraron registros de historial (404)");
+      setHistorial([]);
+      setSolicitudesInfo([]);
+      setPersonasContratadas([]); 
+      return;
+    }
+
+    if (!responseHistorial.ok) {
+      throw new Error('Error en la respuesta del servidor');
+    }
+
+    const historialData = await responseHistorial.json();
+    if (historialData.length > 0) {
+      setHistorial(historialData);
+
+      const solicitudesData = historialData.map((item: any) => ({
+        proveedorId: item.proveedor_id,
+        idSolicitud: item.id,
+        fechaSolicitud: item.fechaSolicitud,
+      }));
+
+      setSolicitudesInfo(solicitudesData);
+
+      const proveedoresIds = solicitudesData.map((item: any) => item.proveedorId);
+      const proveedoresData = await fetchMultipleProveedoresData(proveedoresIds);
+
+      setProveedores(proveedoresData);
+
+      // Armamos personasContratadas
+      const personas = historialData
+        .slice(-5) // últimos 5 contratados
+        .map((item: any) => {
+          const proveedor = proveedoresData.find((p: any) => p.id === item.proveedor_id);
+          if (!proveedor) return null;
+          return {
+            id: proveedor.id,
+            nombre: `${proveedor.first_name} ${proveedor.last_name}`,
+            oficio: item.nombreServicio,
+          };
+        })
+        .filter((p:any) => p !== null);
+
+      setPersonasContratadas(personas as { id: number; nombre: string; oficio: string }[]);
+    } else {
+      throw new Error('El historial está vacío');
+    }
+  } catch (error) {
+    console.error('Error al cargar historial:', error);
+  }
+};
+
+const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    if (!accessToken) {
+      throw new Error('No se encontró el token de acceso');
+    }
+
+    if (proveedorIds.length === 0) {
+      throw new Error('No hay proveedores disponibles');
+    }
+
+          console.log("Intentado hacer fethcmultiples");
+    const proveedoresDataPromises = proveedorIds.map(id =>
+      fetch(`${API_URL}/usuarios/${id}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      })
+    );
+
+    const proveedorResponses = await Promise.all(proveedoresDataPromises);
+
+    for (let i = 0; i < proveedorResponses.length; i++) {
+      if (!proveedorResponses[i].ok) {
+        throw new Error(`Error al obtener proveedor con ID ${proveedorIds[i]}`);
+      }
+    }
+
+    const proveedoresData = await Promise.all(proveedorResponses.map(res => res.json()));
+    return proveedoresData;
+  } catch (error: any) {
+    console.error('Error al cargar proveedores:', error.message);
+    setMessage('No se pudo cargar los datos de los proveedores');
+    setVisible(true);
+    return [];
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 const obtenerCategorias = async () => {
   try {
@@ -158,6 +344,7 @@ const obtenerCategorias = async () => {
         console.log(storedToken);
         setAccessToken(storedToken);
         await fetchUsuarioLogueado();
+        await fetchUHistorial();
          await obtenerCategorias();
       }
     };
@@ -225,21 +412,25 @@ const obtenerCategorias = async () => {
           </View>
 
           {/* Últimas personas */}
-          <Text style={EstilosHome.subtituloSeccion}>Ultimas personas contratadas</Text>
-          <FlatList
-            horizontal
-            data={personasContratadas}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ paddingLeft: 16 }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={EstilosHome.cardPersona}>
-                <View style={EstilosHome.avatarPlaceholder} />
-                <Text style={EstilosHome.nombrePersona}>{item.nombre}</Text>
-                <Text style={EstilosHome.oficioPersona}>{item.oficio}</Text>
-              </View>
-            )}
-          />
+       <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
+            {personasContratadas.length === 0 ? (
+        <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
+      ) : (
+        <FlatList
+          horizontal
+          data={personasContratadas}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingLeft: 16 }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View style={EstilosHome.cardPersona}>
+              <View style={EstilosHome.avatarPlaceholder} />
+              <Text style={EstilosHome.nombrePersona}>{item.nombre}</Text>
+              <Text style={EstilosHome.oficioPersona}>{item.oficio}</Text>
+            </View>
+          )}
+        />
+      )}
 
           {/* Categorías */}
           <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
@@ -286,7 +477,11 @@ const obtenerCategorias = async () => {
           )}
         </Snackbar>
 
-        <BarraNavegacionInferior />
+          {/* NavBar Inferior */}
+                 <NavBarInferior
+                   activeScreen="Home" // O el screen activo correspondiente
+                   onNavigate={handleNavigation}
+                 />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

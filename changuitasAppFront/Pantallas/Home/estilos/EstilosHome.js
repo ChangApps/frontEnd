@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosHome = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: '#0D0D2B',
+    backgroundColor: Colors.fondo,
   },
   contenidoResponsivo: {
     // placeholder
@@ -20,9 +21,10 @@ const EstilosHome = StyleSheet.create({
     alignItems: 'center',
   },
   textoInicio: {
-    color: '#FFFFFF',
+    color: Colors.blancoTexto,
     fontSize: 20,
     fontWeight: 'bold',
+    marginTop:20,
   },
   scrollContenido: {
     paddingBottom: 100,
@@ -49,7 +51,8 @@ const EstilosHome = StyleSheet.create({
     borderRadius: 20,
   },
   subtituloSeccion: {
-    color: '#FF6A00',
+   // color: '#FF6A00',
+    color:Colors.naranja, 
     fontSize: 16,
     fontWeight: 'bold',
     marginHorizontal: 20,
@@ -107,6 +110,12 @@ const EstilosHome = StyleSheet.create({
   textoCaracteristica: {
     color: '#fff',
   },
+  mensajeVacio: {
+  fontSize: 16,
+  color: Colors.blancoTexto,
+  marginLeft: 20,
+  marginTop: 8,
+}
 });
 
 export default EstilosHome;
