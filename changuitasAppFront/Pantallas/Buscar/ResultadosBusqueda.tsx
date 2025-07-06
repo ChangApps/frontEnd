@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from "../../auxiliares/API_URL"; 
 import BarraNavegacionInferior from "../../auxiliares/BarraNavegacionInferior";
 import EstilosResultadosBusqueda from "./estilos/EstilosResultadosBusqueda";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 
 const ResultadosBusqueda = () => {
     const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
@@ -66,13 +67,13 @@ const ResultadosBusqueda = () => {
     return (
       <SafeAreaView style={EstilosResultadosBusqueda .safeArea}>
         <View style={EstilosResultadosBusqueda .container}>
-          {/* Botón de regreso y título */}
-          <View style={EstilosResultadosBusqueda .header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="arrow-back" size={24} color="#333" />
-            </TouchableOpacity>
-            <Text style={EstilosResultadosBusqueda .title}>Resultados</Text>
-          </View>
+          {/* NavBar Superior */}
+                      <NavBarSuperior
+                        titulo="Resultados"
+                        showBackButton={true}
+                        onBackPress={() => navigation.goBack()}
+                        rightButtonType="none"
+                      />
   
   
           {/* Mostrar mensaje de error si existe */}
@@ -108,7 +109,7 @@ const ResultadosBusqueda = () => {
                                             key={i}
                                             name="star"
                                             size={16}
-                                            color={i < item.puntaje ? "black" : "#CCCCCC"}
+                                            color={i < item.puntaje ? "#FC6A30" : "#CCCCCC"}
                                         />
                                     ))}
                                 </View>
@@ -117,7 +118,7 @@ const ResultadosBusqueda = () => {
                                onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
                                 style={EstilosResultadosBusqueda .arrowButton}
                             >
-                                <Ionicons name="chevron-forward" size={20} color="#333" />
+                                <Ionicons name="chevron-forward" size={20} color="#fff" />
                             </TouchableOpacity>
                         </View>
                     ))

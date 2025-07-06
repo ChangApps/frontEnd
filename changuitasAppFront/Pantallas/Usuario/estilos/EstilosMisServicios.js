@@ -133,7 +133,7 @@ const EstilosMisServicios = StyleSheet.create({
     servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#333237', borderRadius: 8, elevation: 2 },
     nombreServicio: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
     descripcion: { fontSize: 14, color: 'gray' },
-    horario: { fontSize: 12, color: '#197278' },
+    horario: { fontSize: 12, color: '#FC6A30' },
     sinServicios: { textAlign: 'center', marginTop: 20, color: 'grey', fontSize: 18 },
     
     botonEliminar: {

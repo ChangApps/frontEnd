@@ -43,6 +43,7 @@ const BarraNavegacionInferior = () => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => setMostrarModalBuscar(true)} style={estilos.iconoNavegacion}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('BuscarServicio1')} style={estilos.iconoNavegacion}> */}
           <Ionicons name="search-outline" size={24} color="gray" />
           <Text style={estilos.textoNavegacion}>Buscar</Text>
         </TouchableOpacity>
