@@ -78,7 +78,7 @@ const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeV
                     key={i}
                     name="star"
                     size={16}
-                    color={i < puntaje ? "black" : "#CCCCCC"}
+                    color={i < puntaje ? "#FC6A30" : "#CCCCCC"}
                   />
                 ))}
               </View>

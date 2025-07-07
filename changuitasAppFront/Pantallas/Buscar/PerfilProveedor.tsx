@@ -330,11 +330,11 @@ const PerfilProveedor = () => {
       {/* Encabezado con opciones de menú */}
       <View style={EstilosPerfilProveedor.encabezado}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={EstilosPerfilProveedor.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
         <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+          <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
         </TouchableOpacity>
       </View>
 

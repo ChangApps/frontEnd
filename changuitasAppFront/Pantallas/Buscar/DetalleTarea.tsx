@@ -171,13 +171,13 @@ const DetalleTarea = () => {
     <SafeAreaView style={EstilosDetalleTarea.contenedor}>
       <View style={EstilosDetalleTarea.encabezado}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={EstilosDetalleTarea.textoEncabezado}>
           Detalle de la tarea
         </Text>
         <TouchableOpacity onPress={logout}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+          <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
         </TouchableOpacity>
       </View>
 

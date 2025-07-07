@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosResultadosBusqueda = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#191A2E',
       },
       container: {
         flex: 1,
@@ -24,7 +24,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#333237',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -47,7 +47,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#ffffff',
   },
   category: {
     fontSize: 14,
