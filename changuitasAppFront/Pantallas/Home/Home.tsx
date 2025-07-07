@@ -16,7 +16,8 @@ import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../.
 import{ obtenerCategorias } from '../../services/categoriaService';
 import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces';
 import { fetchUHistorial } from '../../services/historialService';
-import ResultadoList from '../../componentes/ResultadoList';
+import ResultadoListSimple from '../../componentes/ResultadoListSimple';
+import Colors from '../../assets/Colors';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -173,12 +174,15 @@ const PantallaHome = () => {
             {personasContratadas.length === 0 ? (
         <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
       ) : (
-          <ResultadoList
+          <ResultadoListSimple
           historial={historial}
           usuarios={proveedores}
           navigation={navigation}
           claveUsuario="proveedor_id"
-          mensajeVacio="No haz contratado ningún trabajo."
+          estiloCard={EstilosHome.cardPersona}
+          estiloAvatar={EstilosHome.avatarPlaceholder
+          }
+          estiloNombre={EstilosHome.nombrePersona}
         />
       )}
 
@@ -191,7 +195,7 @@ const PantallaHome = () => {
             columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
             renderItem={({ item }) => (
               <TouchableOpacity style={EstilosHome.cardCategoria}>
-                <Ionicons name="image" size={20} color="#FF6A00" />
+               <Ionicons name="image" size={20} color={Colors.naranja} />
                 <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
               </TouchableOpacity>
             )}

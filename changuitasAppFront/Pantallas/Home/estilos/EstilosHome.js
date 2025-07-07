@@ -41,12 +41,12 @@ const EstilosHome = StyleSheet.create({
   },
   inputBusqueda: {
     flex: 1,
-    color: '#fff',
+    color: Colors.blancoTexto,
     fontSize: 16,
   },
   botonFiltro: {
     marginLeft: 10,
-    backgroundColor: '#FF6A00',
+    backgroundColor: Colors.naranja,
     padding: 8,
     borderRadius: 20,
   },
@@ -63,21 +63,24 @@ const EstilosHome = StyleSheet.create({
     backgroundColor: '#1E1E3F',
     padding: 12,
     borderRadius: 10,
-    alignItems: 'center',
-    marginRight: 10,
-    width: 120,
+    marginLeft: 20,
+    width: 200, 
+    flexDirection: 'row', 
+    alignItems: 'center',  
   },
   avatarPlaceholder: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: '#ccc',
-    marginBottom: 8,
+    marginRight: 10, 
   },
   nombrePersona: {
-    color: '#fff',
+    color: Colors.blancoTexto,
     fontWeight: 'bold',
     fontSize: 14,
+    marginLeft: 0,  
+    marginTop: 0,   
   },
   oficioPersona: {
     color: '#ccc',
@@ -93,7 +96,7 @@ const EstilosHome = StyleSheet.create({
     width: '48%',
   },
   textoCategoria: {
-    color: '#fff',
+    color: Colors.blancoTexto,
     marginLeft: 8,
     fontSize: 14,
     fontWeight: '500',
@@ -108,7 +111,7 @@ const EstilosHome = StyleSheet.create({
     marginBottom: 10,
   },
   textoCaracteristica: {
-    color: '#fff',
+    color: Colors.blancoTexto,
   },
   mensajeVacio: {
   fontSize: 16,
