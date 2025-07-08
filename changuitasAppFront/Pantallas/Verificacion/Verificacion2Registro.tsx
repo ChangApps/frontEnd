@@ -5,12 +5,13 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { AuthContext } from '../../autenticacion/auth';
 import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
-import {mostrarOpcionesSelectorImagen} from '../../auxiliares/seleccionImagen';
-import { ImageCropperWeb } from "../../auxiliares/ImageCropperWeb";
+import {mostrarOpcionesSelectorImagen} from '../../utils/seleccionImagen';
+import { ImageCropperWeb } from "../../componentes/ImageCropperWeb";
+
 
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

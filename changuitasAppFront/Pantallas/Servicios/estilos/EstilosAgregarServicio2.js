@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
 
 const EstilosAgregarServicio2 = StyleSheet.create({
-    contenedorPrincipal: {
-        flex: 1,
-        backgroundColor: 'white',
-        marginTop: 40,
-      },
+    container: {
+    flex: 1,
+    backgroundColor: '#0B0F2F',
+    paddingTop: 50,
+  },
       contenedorEncabezado: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#197278', // Color de fondo de la barra
+        backgroundColor: '#FC6A30', // Color de fondo de la barra
         paddingHorizontal: 15,
         paddingVertical: 10,
       },
@@ -134,7 +134,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
       },
       pickerContainer: {
         borderWidth: 1, // Borde alrededor del contenedor
-        borderColor: '#197278', // Color del borde
+        borderColor: '#FC6A30', // Color del borde
         borderRadius: 8, // Bordes redondeados
         backgroundColor: 'white', // Fondo blanco
         shadowColor: '#000', // Color de la sombra
@@ -143,6 +143,41 @@ const EstilosAgregarServicio2 = StyleSheet.create({
         shadowRadius: 4, // Radio de la sombra
         elevation: 4, // Elevación para Android
       },
+      pasosWrapper: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  backgroundColor: '#1D233B',
+  borderRadius: 30,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  marginVertical: 15,
+  gap: 10,
+},
+pasoActivo: {
+  backgroundColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoInactivo: {
+  backgroundColor: 'transparent',
+  borderWidth: 1,
+  borderColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoTextoActivo: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasoTextoInactivo: {
+  color: '#FF6D3B',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
     });
 
 export default EstilosAgregarServicio2;

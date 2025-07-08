@@ -1,70 +1,124 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosHome = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.fondo,
+  },
+  contenidoResponsivo: {
+    // placeholder
+  },
+  contenidoWeb: {
+    // estilos web 
   },
   encabezado: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
   },
   textoInicio: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  contenidoPrincipal: {
-    flex: 1,
-    backgroundColor: '#4EAAA5',
-    paddingHorizontal: 20,
-    paddingTop: 30,
-  },
-  tituloApp: {
-    fontSize: 36,
+    color: Colors.blancoTexto,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 20,
-    lineHeight: 40,
+    marginTop:20,
   },
-  contenedorCaracteristicas: {
-    gap: 10,
+  scrollContenido: {
+    paddingBottom: 100,
   },
-  cajaCaracteristica: {
-    backgroundColor: '#2A3A35',
-    paddingVertical: 12,
+  barraBusqueda: {
+    flexDirection: 'row',
+    backgroundColor: '#1E1E3F',
+    marginHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
     paddingHorizontal: 15,
-    borderRadius: 8,
+    paddingVertical: 10,
+    marginBottom: 10,
   },
-  textoCaracteristica: {
-    color: '#FFFFFF',
-    fontSize: 18,
+  inputBusqueda: {
+    flex: 1,
+    color: Colors.blancoTexto,
+    fontSize: 16,
+  },
+  botonFiltro: {
+    marginLeft: 10,
+    backgroundColor: Colors.naranja,
+    padding: 8,
+    borderRadius: 20,
+  },
+  subtituloSeccion: {
+   // color: '#FF6A00',
+    color:Colors.naranja, 
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  cardPersona: {
+    backgroundColor: '#1E1E3F',
+    padding: 12,
+    borderRadius: 10,
+    marginLeft: 20,
+    width: 200, 
+    flexDirection: 'row', 
+    alignItems: 'center',  
+  },
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#ccc',
+    marginRight: 10, 
+  },
+  nombrePersona: {
+    color: Colors.blancoTexto,
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginLeft: 0,  
+    marginTop: 0,   
+  },
+  oficioPersona: {
+    color: '#ccc',
+    fontSize: 12,
+  },
+  cardCategoria: {
+    backgroundColor: '#1E1E3F',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 12,
+    width: '48%',
+  },
+  textoCategoria: {
+    color: Colors.blancoTexto,
+    marginLeft: 8,
+    fontSize: 14,
     fontWeight: '500',
   },
-  barraNavegacion: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+  contenidoPrincipal: {
+    // si se necesita más contenido despues
   },
-  iconoNavegacion: {
-    alignItems: 'center',
+  contenedorCaracteristicas: {
+    paddingHorizontal: 20,
   },
-  textoNavegacion: {
-    fontSize: 12,
-    color: 'gray',
+  cajaCaracteristica: {
+    marginBottom: 10,
   },
+  textoCaracteristica: {
+    color: Colors.blancoTexto,
+  },
+  mensajeVacio: {
+  fontSize: 16,
+  color: Colors.blancoTexto,
+  marginLeft: 20,
+  marginTop: 8,
+}
 });
-export default EstilosHome;  
+
+export default EstilosHome;

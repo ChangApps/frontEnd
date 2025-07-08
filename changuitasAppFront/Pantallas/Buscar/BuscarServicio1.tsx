@@ -4,7 +4,7 @@ import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-na
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import  EstilosBuscarServicio1 from '../Buscar/estilos/EstilosBuscarServicio1';
 const BuscarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

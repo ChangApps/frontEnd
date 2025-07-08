@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosHistorial2 = StyleSheet.create({
   contenedor: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#191A2E',
   },
   encabezado: {
     flexDirection: 'row',
@@ -179,6 +179,41 @@ estadoCriticoText: {
     color: 'grey',
     textAlign: 'center',
   },
+    pasoActivo: {
+  backgroundColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoInactivo: {
+  backgroundColor: 'transparent',
+  borderWidth: 1,
+  borderColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoTextoActivo: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasoTextoInactivo: {
+  color: '#FF6D3B',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasosWrapper: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  backgroundColor: '#1D233B',
+  borderRadius: 30,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  marginBottom: 20,
+  gap: 10,
+},
 });
 
 export default EstilosHistorial2;

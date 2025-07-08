@@ -1,7 +1,7 @@
 import { Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import  API_URL  from '../../../auxiliares/API_URL';
+import  API_URL  from '../../../utils/API_URL';
 import FormData from 'form-data';
 
 export const guardarCambios = async (

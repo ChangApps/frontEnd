@@ -5,12 +5,12 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Snackbar } from 'react-native-paper';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 
 const PerfilProveedor = () => {
 
@@ -330,11 +330,11 @@ const PerfilProveedor = () => {
       {/* Encabezado con opciones de menú */}
       <View style={EstilosPerfilProveedor.encabezado}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={EstilosPerfilProveedor.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
         <TouchableOpacity onPress={toggleDesplegable}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+          <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
         </TouchableOpacity>
       </View>
 
@@ -350,7 +350,7 @@ const PerfilProveedor = () => {
 {/* Información del Usuario */}
 <View style={EstilosPerfilProveedor.seccionUsuario}>
   <Pressable onPress={handleImagePress}>
-    <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenModal} />
+    <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica} />
   </Pressable>
   <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
 </View>

@@ -7,8 +7,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosInicioDeSesion from './estilos/EstilosInicioDeSesion';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { AuthContext } from "../../autenticacion/auth";
+import Input from "../../componentes/inputs/Input";
+import PasswordInput from "../../componentes/inputs/PasswordInput";
+import { Button } from "../../componentes/Buttons";
+import Colors from "../../assets/Colors";
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -18,7 +22,7 @@ const InicioDeSesion = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { width } = useWindowDimensions();
   const [state, setState] = useContext(AuthContext);
- 
+
 
   const login = async () => {
     // Verifica si los campos están vacíos o contienen solo espacios
@@ -79,6 +83,7 @@ const InicioDeSesion = () => {
   };
   
   return (
+    <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosInicioDeSesion.degradado}>
     <SafeAreaView style={EstilosInicioDeSesion.areaSegura}>
       <View style={[EstilosInicioDeSesion.contenedor, width > 600 && EstilosInicioDeSesion.contenedorWeb]}>
         <View style={EstilosInicioDeSesion.encabezado}>
@@ -93,62 +98,37 @@ const InicioDeSesion = () => {
         )}
         {/* Campos de entrada */}
         <View style={EstilosInicioDeSesion.contenedorEntrada}>
-          <Text style={EstilosInicioDeSesion.etiqueta}>Nombre de usuario</Text>
-          <TextInput
-            placeholder="changuitas1"
-            placeholderTextColor="#666"
-            style={EstilosInicioDeSesion.entrada}
+          <Input
+            placeholder="Usuario"
             value={username}
             onChangeText={setusername}
           />
 
-          <Text style={EstilosInicioDeSesion.etiqueta}>Contraseña</Text>
-          <View style={EstilosInicioDeSesion.contenedorEntradaContrasena}>
-            <TextInput
-              placeholder="***************"
-              placeholderTextColor="#666"
-              secureTextEntry={!mostrarContrasena}
-              style={EstilosInicioDeSesion.entradaContrasena}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TouchableOpacity
-              style={EstilosInicioDeSesion.iconoOjo}
-              onPress={() => setMostrarContrasena(!mostrarContrasena)}
-            >
-              <Ionicons
-                name={mostrarContrasena ? "eye-outline" : "eye-off-outline"}
-                size={20}
-                color="#666"
-              />
-            </TouchableOpacity>
-          </View>
+          <PasswordInput
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+          />
+
         </View>
 
-
-        {/* Botón de ingresar */}
-        <TouchableOpacity onPress={login}>
-          <LinearGradient
-            colors={["#197278", "#9BCDC8"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={EstilosInicioDeSesion.degradadoBoton}
-          >
-            <Text style={EstilosInicioDeSesion.textoBoton}>Ingresar</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
-      {/* Botón ayuda */}
-    <TouchableOpacity onPress={() => navigation.navigate('PantallaAyuda')}>
-          <Text style={EstilosInicioDeSesion.textoRegistrarse}>Ayuda</Text>
-        </TouchableOpacity>
-
-      {/* Botón de registrarse */}
+        {/* Botón de registrarse */}
       <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>
             ¿No tienes una cuenta? Regístrate
           </Text>
         </TouchableOpacity>
+
+        {/* Botón de ingresar */}
+        <Button
+          titulo="Ingresar"
+          onPress={login}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
+
 
     {/* Botón de recuperar nombre de usuario */}
     <TouchableOpacity onPress={() => navigation.navigate('RecuperarNombreUsuario')}>
@@ -160,8 +140,14 @@ const InicioDeSesion = () => {
           <Text style={EstilosInicioDeSesion.textoRegistrarse}>Olvidé mi contraseña</Text>
         </TouchableOpacity>
 
+    {/* Botón ayuda */}
+    <TouchableOpacity onPress={() => navigation.navigate('PantallaAyuda')}>
+          <Text style={EstilosInicioDeSesion.textoRegistrarse}>Ayuda</Text>
+        </TouchableOpacity>
+
  </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 

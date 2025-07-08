@@ -4,14 +4,15 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import { ActivityIndicator } from 'react-native';
 import EstilosUsuariosBloqueados from './estilos/EstilosUsuariosBloqueados';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
-import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
+import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
+import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 
 const redirectAdmin = () => {
   Linking.openURL('http://127.0.0.1:8000/admin/');
@@ -127,20 +128,8 @@ const UsuariosBloqueados = () => {
     }}>
       <SafeAreaView style={EstilosUsuariosBloqueados.contenedor}>
         {/* Header con Perfil*/}
-        <View style={EstilosUsuariosBloqueados.header}>
-          <Text style={EstilosUsuariosBloqueados.textoEncabezado}>Perfil</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-
-          {/* Menú Desplegable */}
-           <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
       {/* Barra de pestañas */}
       <BarraPestanasPerfil/>

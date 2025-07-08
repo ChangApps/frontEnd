@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosMisServicios = StyleSheet.create({
     contenedor: {
       flex: 1,
-      backgroundColor: 'white',
-      paddingTop:43,
+      backgroundColor: '#191A2E',
     },
     header: {
       flexDirection: 'row',
@@ -111,15 +110,16 @@ const EstilosMisServicios = StyleSheet.create({
       justifyContent: 'center',
       width: '80%',
       alignSelf: 'center',
-      marginTop: 20, 
+      marginTop: 10,
+      marginBottom: 20, 
       paddingVertical: 20,
       paddingHorizontal: 20,
       borderWidth: 1,
-      borderColor: '#197278',
+      borderColor: '#FC6A30',
       borderRadius: 50,
     },
     textoBoton: {
-      color: '#197278',
+      color: '#FC6A30',
       fontSize: 16,
       fontWeight: '600',
       marginLeft: 5,
@@ -130,10 +130,10 @@ const EstilosMisServicios = StyleSheet.create({
       color: 'gray' 
     },
     listaServicios: { paddingHorizontal: 16 },
-    servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#fff', borderRadius: 8, elevation: 2 },
-    nombreServicio: { fontSize: 16, fontWeight: 'bold' },
+    servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#333237', borderRadius: 8, elevation: 2 },
+    nombreServicio: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
     descripcion: { fontSize: 14, color: 'gray' },
-    horario: { fontSize: 12, color: '#197278' },
+    horario: { fontSize: 12, color: '#FC6A30' },
     sinServicios: { textAlign: 'center', marginTop: 20, color: 'grey', fontSize: 18 },
     
     botonEliminar: {

@@ -10,6 +10,9 @@ const EstilosVerificacion1Mail = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 70,
   },
+  degradado: {
+      flex: 1,
+    },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -31,10 +34,10 @@ const EstilosVerificacion1Mail = StyleSheet.create({
     marginBottom: 5,
   },
   instruccion: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 15,
-  },
+      fontSize: 14,
+      color: '#F2F2F2',
+      marginBottom: 15,
+    },
   entrada: {
     borderWidth: 1,
     borderColor: '#197278',
@@ -60,5 +63,12 @@ const EstilosVerificacion1Mail = StyleSheet.create({
     fontWeight: '600',
     marginRight: 5,
   },
+  contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
+    },
 });
 export default EstilosVerificacion1Mail;  

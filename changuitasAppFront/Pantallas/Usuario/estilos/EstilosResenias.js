@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosResenias = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#191A2E',
     },
     container: {
         flex: 1,
@@ -27,7 +27,7 @@ const EstilosResenias = StyleSheet.create({
         marginLeft: 30,  // Asegura que el toggle se alinee a la derecha
     },
     reseniaItem: {
-        backgroundColor: '#FFF',
+        backgroundColor: '#333237',
         padding: 15,
         borderRadius: 10,
         marginBottom: 20,
@@ -44,7 +44,7 @@ const EstilosResenias = StyleSheet.create({
     categoria: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#333',
+        color: '#ffffff',
         marginBottom: 5, // Espacio entre comentario y fecha
     },
     fecha: {
@@ -63,7 +63,7 @@ const EstilosResenias = StyleSheet.create({
     },
     valoracion: {
         fontSize: 14,
-        color: '#333',
+        color: '#ffffff',
         marginBottom: 10, // Espacio debajo de la valoración
     },
     barraNavegacion: {

@@ -4,11 +4,11 @@ import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navig
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { Picker } from '@react-native-picker/picker';
 import { Snackbar } from 'react-native-paper';
 import EstilosBuscarServicio2 from './estilos/EstilosBuscarServicio2';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 
 const BuscarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

@@ -4,8 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import EstilosRecuperarNombreUsuario from "./estilos/EstilosRecuperarNombreUsuario";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
+import { Platform, useWindowDimensions } from 'react-native';
+import { Button } from "../../componentes/Buttons";
+import Colors from "../../assets/Colors";
+import Input from "../../componentes/inputs/Input";
+import { LinearGradient } from "expo-linear-gradient";
 
 const RecuperarNombreUsuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -53,28 +59,32 @@ const RecuperarNombreUsuario = () => {
     }
   };
 
+const { width } = useWindowDimensions();
+
   return (
+    
     <SafeAreaView style={EstilosRecuperarNombreUsuario.areaSegura}>
+      <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarNombreUsuario.degradado}>
       <View style={EstilosRecuperarNombreUsuario.contenedor}>
-        {/* Título de la pantalla */}
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", top: 30, left: 20,marginTop:45 }}>
-                <Ionicons name="arrow-back" size={24} color="#197278" />
-                </TouchableOpacity>
-        <Text style={EstilosRecuperarNombreUsuario.titulo}>Recuperar usuario</Text>
+        <View style={[EstilosRecuperarNombreUsuario.contenidoResponsivo, width > 600 && EstilosRecuperarNombreUsuario.contenidoWeb]}>
+        {/* NavBar Superior */}
+        <NavBarSuperior
+          titulo="Recuperar usuario"
+          showBackButton={true}
+          onBackPress={() => navigation.goBack()}
+          rightButtonType="none"
+        />
 
         {/* Paso de verificación */}
         <Text style={EstilosRecuperarNombreUsuario.instruccion}>
-          Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu nombre de usuario.
+          Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu usuario.
         </Text>
 
         {/* Campo de entrada */}
-        <TextInput
+        <Input
           placeholder="Correo electrónico"
-          style={EstilosRecuperarNombreUsuario.entrada}
-          keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
-          autoCapitalize="none"
         />
 
         {/* Snackbar para mostrar mensajes */}
@@ -92,13 +102,17 @@ const RecuperarNombreUsuario = () => {
 </Snackbar>
 
         {/* Botón de enviar */}
-        <TouchableOpacity 
-          style={EstilosRecuperarNombreUsuario.botonSiguiente} 
-          onPress={enviarSolicitud}
-        >
-          <Text style={EstilosRecuperarNombreUsuario.textoBoton}>Enviar</Text>
-        </TouchableOpacity>
+        <Button
+                  titulo="Enviar"
+                  onPress={enviarSolicitud}
+                  textSize={20}
+                  textColor={Colors.fondo}
+                  padding={15}
+                  borderRadius={25}
+                />
       </View>
+      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

@@ -11,6 +11,9 @@ const EstilosVerificacion2 = StyleSheet.create({
     paddingTop: 50,
     alignItems: 'flex-start',
   },
+  degradado: {
+      flex: 1,
+    },
   botonAtras: {
     marginRight: 10,
     padding: 5,
@@ -28,7 +31,7 @@ const EstilosVerificacion2 = StyleSheet.create({
   },
   textoPaso: {
     fontSize: 16,
-    color: '#197278',
+    color: '#FC6A30',
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -37,6 +40,11 @@ const EstilosVerificacion2 = StyleSheet.create({
     color: '#333',
     marginBottom: 20,
   },
+  instruccion: {
+      fontSize: 14,
+      color: '#F2F2F2',
+      marginBottom: 15,
+    },
   contenedorImagenPerfil: {
     width: 150,
     height: 150,
@@ -47,7 +55,7 @@ const EstilosVerificacion2 = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 15,
     borderWidth: 5, 
-    borderColor: '#5A9EA2',
+    borderColor: '#FC6A30',
     marginTop:10,
   },
   imagenPerfil: {
@@ -57,7 +65,7 @@ const EstilosVerificacion2 = StyleSheet.create({
   },
   textoOpcion: {
     fontSize: 16,
-    color: '#197278',
+    color: '#FC6A30',
     marginBottom: 10,
     textDecorationLine: 'underline',
   },
@@ -67,12 +75,12 @@ const EstilosVerificacion2 = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: '#197278',
+    borderColor: '#FC6A30',
     alignItems: 'center',
     alignSelf: 'center',
   },
   textoBoton: {
-    color: '#197278',
+    color: '#FC6A30',
     fontSize: 18,
     fontWeight: '600',
   },
@@ -105,6 +113,13 @@ const EstilosVerificacion2 = StyleSheet.create({
       shadowRadius: 4,
       elevation: 5,
       maxWidth: "90%",
+    },
+    contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
     },
 })
 export default EstilosVerificacion2;  

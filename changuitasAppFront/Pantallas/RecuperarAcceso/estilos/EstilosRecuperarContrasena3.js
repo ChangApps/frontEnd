@@ -10,6 +10,9 @@ const EstilosRecuperarContrasena3 = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 70,
   },
+  degradado: {
+      flex: 1,
+    },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -76,5 +79,12 @@ const EstilosRecuperarContrasena3 = StyleSheet.create({
     fontWeight: '600',
     marginRight: 5,
   },
+  contenidoResponsivo: {
+      width: '100%',
+    },
+    contenidoWeb: {
+      maxWidth: 700,
+      alignSelf: 'center',
+    },
 });
 export default EstilosRecuperarContrasena3;  

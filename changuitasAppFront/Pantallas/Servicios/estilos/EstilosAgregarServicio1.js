@@ -2,91 +2,114 @@ import { StyleSheet } from 'react-native';
 
 const EstilosAgregarServicio1 = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: 'white',
-      marginTop: 40,
-    },
-    headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#197278',
-      padding: 15,
-    },
-    backButton: {
-      marginRight: 10,
-    },
-    headerText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'white',
-    },
-    scrollContainer: {
-      paddingHorizontal: 20,
-      paddingBottom: 80,
-    },
-    categoryTitle: {
-      fontSize: 16,
-      color: '#197278',
-      fontWeight: '600',
-      marginTop: 20,
-    },
-    optionContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginVertical: 5,
-    },
-    optionText: {
-      fontSize: 16,
-      color: 'black',
-      marginLeft: 8,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      paddingVertical: 20,
-    },
-    nextButton: {
-      backgroundColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 30,
-      borderRadius: 50,
-    },
-    nextButtonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    cancelButton: {
-      borderWidth: 1,
-      borderColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 30,
-      borderRadius: 50,
-    },
-    cancelButtonText: {
-      color: '#197278',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    barraNavegacion: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      height: 60,
-      backgroundColor: 'white',
-      borderTopWidth: 1,
-      borderTopColor: '#ddd',
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-    },
-    iconoNavegacion: {
-      alignItems: 'center',
-    },
-    textoNavegacion: {
-      fontSize: 12,
-      color: 'gray',
-    },
-  });
+    flex: 1,
+    backgroundColor: '#0B0F2F',
+    paddingTop: 50,
+  },
+  title: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
+  },
+  scrollContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 100,
+  },
+  selectorBoton: {
+    backgroundColor: '#FF6D3B',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 15,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  selectorTexto: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  categoriaContenedor: {
+    marginBottom: 25,
+  },
+  categoriaTitulo: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  chipsContenedor: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  chip: {
+    borderColor: '#FF6D3B',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  chipSeleccionado: {
+    backgroundColor: '#FF6D3B',
+  },
+  chipTexto: {
+    color: '#FF6D3B',
+    fontWeight: '600',
+  },
+  chipTextoSeleccionado: {
+    color: '#FFF',
+  },
+  botonesContenedor: {
+  paddingHorizontal: 20,
+  paddingBottom: 20,
+  backgroundColor: '#0B0F2F',
+  gap: 10,
+},
+pasosContenedor: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginBottom: 20,
+  gap: 10,
+},
+pasoActivo: {
+  backgroundColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoInactivo: {
+  backgroundColor: 'transparent',
+  borderWidth: 1,
+  borderColor: '#FF6D3B',
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+  borderRadius: 20,
+},
+pasoTextoActivo: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasoTextoInactivo: {
+  color: '#FF6D3B',
+  fontWeight: 'bold',
+  fontSize: 14,
+},
+pasosWrapper: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  backgroundColor: '#1D233B',
+  borderRadius: 30,
+  paddingVertical: 8,
+  paddingHorizontal: 12,
+  marginBottom: 20,
+  gap: 10,
+},
+});
+
 
 export default EstilosAgregarServicio1;

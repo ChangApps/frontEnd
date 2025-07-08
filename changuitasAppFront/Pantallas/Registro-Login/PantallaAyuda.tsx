@@ -4,21 +4,29 @@ import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import EstilosPantallaAyuda from './estilos/EstilosPantallaAyuda';
+import { Platform, useWindowDimensions } from 'react-native';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import { LinearGradient } from 'expo-linear-gradient';
+import Colors from '../../assets/Colors';
 
 const PantallaAyuda = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  const { width } = useWindowDimensions();
+
   return (
+    <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosPantallaAyuda.degradado}>
     <SafeAreaView style={EstilosPantallaAyuda.contenedor}>
     <ScrollView>
-      {/* Encabezado */}
-      <View style={EstilosPantallaAyuda.encabezado}>
-        <Text style={EstilosPantallaAyuda.textoInicio}>Ayuda</Text>
-        <TouchableOpacity>
-          <Text onPress={() => navigation.goBack()} style={EstilosPantallaAyuda.menuPuntos}>X</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={[EstilosPantallaAyuda.contenidoResponsivo, width > 600 && EstilosPantallaAyuda.contenidoWeb]}>
+      {/* NavBar Superior */}
+        <NavBarSuperior
+          titulo="Ayuda"
+          showBackButton={true}
+          onBackPress={() => navigation.goBack()}
+          rightButtonType="none"
+        />
 
       {/* Datos Personales */}
       <Text style={EstilosPantallaAyuda.tituloAyuda}>MANUAL DE USUARIO</Text>
@@ -39,8 +47,10 @@ const PantallaAyuda = () => {
         <Text style={EstilosPantallaAyuda.tituloPregunta}>-¿Puedo contactarme con los desarrolladores?</Text>
         <Text style={EstilosPantallaAyuda.infoPregunta}>Sí. Si tenés dudas, sugerencias o encontrás algún problema, podés escribirnos directamente por correo electrónico a: [correo@ejemplo.com].</Text>
       </View>
+      </View>
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 };
 

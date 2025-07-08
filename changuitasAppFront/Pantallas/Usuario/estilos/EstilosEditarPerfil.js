@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 const EstilosEditarPerfil = StyleSheet.create({
     contenedor: {
       flex: 1,
-      backgroundColor: 'white',
-      paddingTop:43,
+      backgroundColor: '#191A2E',
     },
     header: {
       flexDirection: 'row',
@@ -12,7 +11,7 @@ const EstilosEditarPerfil = StyleSheet.create({
       alignItems: 'center',
       paddingHorizontal: 20,
       paddingVertical: 15,
-      backgroundColor: 'white',
+      backgroundColor: '191A2E',
       marginTop: 5,
     },
     textoEncabezado: {
@@ -69,7 +68,7 @@ const EstilosEditarPerfil = StyleSheet.create({
       fontWeight: 'bold',
       marginTop: 20,
       marginBottom: 10,
-      color: '#333',
+      color: '#F2F2F2',
     },
     imagenUsuario: {
       width: 120,
@@ -78,7 +77,7 @@ const EstilosEditarPerfil = StyleSheet.create({
       backgroundColor: '#f0f0f0',
     },
     cambiarFotoTexto: {
-      color: '#197278',
+      color: '#FC6A30',
       marginTop: 10,
     },
     formulario: {
@@ -118,7 +117,7 @@ const EstilosEditarPerfil = StyleSheet.create({
       color: 'gray',
     },
     botonGuardarCambios: {
-      backgroundColor: '#197278',
+      backgroundColor: '#FC6A30',
       paddingVertical: 12,
       borderRadius: 50,
       alignItems: 'center',
@@ -127,7 +126,7 @@ const EstilosEditarPerfil = StyleSheet.create({
       marginTop: 32, 
     },
     textoBotonGuardar: {
-      color: 'white',
+      color: '#191A2E',
       fontSize: 16,
       fontWeight: 'bold',
     },

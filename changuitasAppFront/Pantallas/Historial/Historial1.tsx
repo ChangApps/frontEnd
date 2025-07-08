@@ -7,10 +7,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-import API_URL from '../../auxiliares/API_URL';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import API_URL from '../../utils/API_URL';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
+import ResultadoList from '../../componentes/ResultadoList';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -66,7 +68,7 @@ const Historial1 = () => {
     proveedorServicio: number;
     cliente: number;
     notificacion: any; 
-    estado: string;
+    estado: "PA" | "I" | "F" | "C";
     proveedor_id: number;
     nombreServicio: string;
     cliente_nombre: string;
@@ -229,13 +231,13 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView style={EstilosHistorial1.contenedor}>
-        {/* Encabezado con opciones de menú */}
-        <View style={EstilosHistorial1.encabezado}>
-          <Text style={EstilosHistorial1.textoEncabezado}>Historial</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        {/* NavBar Superior */}
+                    <NavBarSuperior
+                      titulo="Historial"
+                      showBackButton={false}
+                      onBackPress={() => navigation.goBack()}
+                      rightButtonType="none"
+                    />
 
         {/* Menú Desplegable */}
          <MenuDesplegable
@@ -246,97 +248,24 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
         />
 
           {/* Barra de pestañas */}
-          <View style={EstilosHistorial1.barraPestanas}>
-          <TouchableOpacity style={EstilosHistorial1.pestanaActiva} onPress={() => navigation.navigate('Historial1')}>
-            <Text style={EstilosHistorial1.textoPestanaActiva}>Servicios contratados</Text>
+          <View style={EstilosHistorial1.pasosWrapper}>
+          <TouchableOpacity style={EstilosHistorial1.pasoActivo} onPress={() => navigation.navigate('Historial1')}>
+            <Text style={EstilosHistorial1.pasoTextoActivo}>Servicios contratados</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={EstilosHistorial1.pestanaInactiva} onPress={() => navigation.navigate('Historial2')}>
-            <Text style={EstilosHistorial1.textoPestanaInactiva}>Mis trabajos</Text>
+          <TouchableOpacity style={EstilosHistorial1.pasoInactivo} onPress={() => navigation.navigate('Historial2')}>
+            <Text style={EstilosHistorial1.pasoTextoInactivo}>Mis trabajos</Text>
           </TouchableOpacity>
         </View>
 
-
-<FlatList
-  data={historial}
-  keyExtractor={(item) => item.id.toString()}
-  renderItem={({ item }) => {
-    const proveedor = proveedores.find(p => p.id === item.proveedor_id);
-    const puntaje = proveedor?.puntaje ? Math.round(proveedor.puntaje) : 0;
-
-    const esEstadoCritico = item.estado === 'F' || item.estado === 'C';
-
-    const estadoLegible = {
-      'PA': 'Pendiente de Aceptación',
-      'I': 'Iniciado',
-      'F': 'Finalizado',
-      'C': 'Cancelado',
-    }[item.estado] || item.estado;
-
-    return (
-      <View style={EstilosHistorial1.resultItem}>
-        <Image
-          style={EstilosHistorial1.image}
-          source={{ uri: proveedor?.fotoPerfil || 'https://via.placeholder.com/100' }}
+        <ResultadoList
+          historial={historial}
+          usuarios={proveedores}
+          navigation={navigation}
+          claveUsuario="proveedor_id"
+          mensajeVacio="No haz contratado ningún trabajo."
         />
-        <View style={EstilosHistorial1.resultDetails}>
-          
-          {/* Nombre + Estado en la misma línea */}
-          <View style={EstilosHistorial1.nombreConEstadoContainer}>
-            <Text style={EstilosHistorial1.name}>
-              {`${proveedor?.first_name || 'Nombre'} ${proveedor?.last_name || ''}`}
-            </Text>
 
-            {esEstadoCritico ? (
-              <View style={EstilosHistorial1.estadoCriticoContainer}>
-                <Text style={EstilosHistorial1.estadoCriticoText}>{estadoLegible}</Text>
-              </View>
-            ) : (
-              <Text style={EstilosHistorial1.estadoNormal}>{estadoLegible}</Text>
-            )}
-          </View>
 
-          <Text style={EstilosHistorial1.fecha}>
-            Fecha: {item.fechaSolicitud}
-          </Text>
-
-          {/* Estrellas */}
-          <View style={EstilosHistorial1.ratingStars}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <Ionicons
-                key={i}
-                name="star"
-                size={16}
-                color={i < puntaje ? "black" : "#CCCCCC"}
-              />
-            ))}
-          </View>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('DetalleTarea', {
-              id: proveedor?.id.toString() || 'No disponible',
-              idSolicitud: item.id.toString()
-            });
-          }}
-          style={EstilosHistorial1.arrowButton}
-        >
-          <Ionicons name="chevron-forward" size={20} color="#333" />
-        </TouchableOpacity>
-      </View>
-    );
-  }}
-  ListEmptyComponent={
-    <View style={EstilosHistorial1.noResultsContainer}>
-      <Image
-        source={require('./estilos/service.png')}
-        style={EstilosHistorial1.noResultsImage}
-        resizeMode="contain"
-      />
-      <Text style={EstilosHistorial1.mensajeNoUsuarios}>No haz contratado ningún trabajo.</Text>
-    </View>
-  }
-/>
       <Snackbar
           visible={visible}
           onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre

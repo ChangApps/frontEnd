@@ -3,9 +3,16 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosRegistro from "./estilos/EstilosRegistro";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
+import Colors from "../../assets/Colors";
+import Input from "../../componentes/inputs/Input";
+import PasswordInput from "../../componentes/inputs/PasswordInput";
+import { Button } from "../../componentes/Buttons";
+import { Platform, useWindowDimensions } from 'react-native';
+
 
 const Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -173,17 +180,21 @@ const Registro = () => {
     }
   };
   
+const { width } = useWindowDimensions();
+
   return (
-    <LinearGradient colors={['#B7B7B7', '#B7B7B7']} style={EstilosRegistro.degradado}>
+    <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
       <SafeAreaView style={EstilosRegistro.areaSegura}>
         <ScrollView>
           <View style={EstilosRegistro.contenedor}>
-            <View style={EstilosRegistro.encabezado}>
-              <TouchableOpacity style={EstilosRegistro.botonAtras} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="#fff" />
-              </TouchableOpacity>
-              <Text style={EstilosRegistro.titulo}>Crear perfil</Text>
-            </View>
+            <View style={[EstilosRegistro.contenidoResponsivo, width > 600 && EstilosRegistro.contenidoWeb]}>
+            {/* NavBar Superior */}
+            <NavBarSuperior
+              titulo="Crear perfil"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
               {/* Mensaje de error */}
           {errorMessage && (
@@ -195,173 +206,127 @@ const Registro = () => {
             <View style={EstilosRegistro.formulario}>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Nombre de usuario</Text>
-                <TextInput
+                <Input
                   placeholder="Username"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={username}
                   onChangeText={setUsername}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Nombre</Text>
-                <TextInput
+                <Input
                   placeholder="Nombre"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={firstName}
                   onChangeText={setFirstName}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Apellido</Text>
-                <TextInput
+                <Input
                   placeholder="Apellido"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={lastName}
                   onChangeText={setLastName}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Fecha de nacimiento</Text>
-                <TextInput
+                <Input
                   placeholder="aaaa-mm-dd"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={fechaNacimiento}
                   onChangeText={setFechaNacimiento}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>DNI</Text>
-                <TextInput
+                <Input
                   placeholder="12345678"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={documento}
                   onChangeText={setDocumento}
-                  keyboardType="numeric"
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Teléfono</Text>
-                <TextInput
+                <Input
                   placeholder="2901245599"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={telefono}
                   onChangeText={setTelefono}
-                  keyboardType="phone-pad"
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Calle</Text>
-                <TextInput
+                <Input
                   placeholder="San Martín"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={calle}
                   onChangeText={setCalle}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Altura</Text>
-                <TextInput
+                <Input
                   placeholder="456"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={altura}
                   onChangeText={setAltura}
-                  keyboardType="numeric"
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Piso (opcional)</Text>
-                <TextInput
+                <Input
                   placeholder="1"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={piso}
                   onChangeText={setPiso}
-                  keyboardType="numeric"
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Nro. dpto. (opcional)</Text>
-                <TextInput
+                <Input
                   placeholder="A"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={nroDepto}
                   onChangeText={setNroDepto}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Barrio</Text>
-                <TextInput
+                <Input
                   placeholder="Centro"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={barrio}
                   onChangeText={setBarrio}
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Correo electrónico</Text>
-                <TextInput
+                <Input
                   placeholder="changuitas@app.com"
-                  placeholderTextColor="#666"
-                  style={EstilosRegistro.entradaTexto}
                   value={email}
                   onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
                 />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Contraseña</Text>
-                <View style={EstilosRegistro.contenedorContraseña}>
-                  <TextInput
-                    placeholder="************"
-                    placeholderTextColor="#666"
-                    style={EstilosRegistro.entradaContraseña}
-                    secureTextEntry={!mostrarContraseña}
-                    value={password}
-                    onChangeText={setPassword}
-                  />
-                  <TouchableOpacity onPress={() => setMostrarContraseña(!mostrarContraseña)}>
-                    <Ionicons name={mostrarContraseña ? "eye-outline" : "eye-off-outline"} size={24} color="#666" />
-                  </TouchableOpacity>
-                </View>
+                <PasswordInput
+                  placeholder="************"
+                  value={password}
+                  onChangeText={setPassword}
+                />
               </View>
               <View style={EstilosRegistro.campo}>
                 <Text style={EstilosRegistro.etiqueta}>Confirmar contraseña</Text>
-                <View style={EstilosRegistro.contenedorContraseña}>
-                  <TextInput
-                    placeholder="************"
-                    placeholderTextColor="#666"
-                    style={EstilosRegistro.entradaContraseña}
-                    secureTextEntry={!mostrarConfirmarContraseña}
-                    value={confirmarPassword}
-                    onChangeText={setConfirmarPassword}
-                  />
-                  <TouchableOpacity onPress={() => setMostrarConfirmarContraseña(!mostrarConfirmarContraseña)}>
-                    <Ionicons name={mostrarConfirmarContraseña ? "eye-outline" : "eye-off-outline"} size={24} color="#666" />
-                  </TouchableOpacity>
-                </View>
+                <PasswordInput
+                  placeholder="************"
+                  value={confirmarPassword}
+                  onChangeText={setConfirmarPassword}
+                />
               </View>
-              <TouchableOpacity onPress={handleRegistro}>
-              <LinearGradient
-                colors={['#197278', '#9BCDC8']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={EstilosRegistro.botonDegradado}
-              >
-                <Text style={EstilosRegistro.textoBotonRegistro}>Registrarse</Text>
-              </LinearGradient>
-              </TouchableOpacity>
+              {/* Botón de Registrarse */}
+                <Button
+                  titulo="Registrarse"
+                  onPress={handleRegistro}
+                  textSize={20}
+                  textColor={Colors.fondo}
+                  padding={15}
+                  borderRadius={25}
+                />
             </View>
+          </View>
           </View>
         </ScrollView>
       </SafeAreaView>

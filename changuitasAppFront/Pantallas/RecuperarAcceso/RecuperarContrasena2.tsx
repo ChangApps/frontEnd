@@ -4,8 +4,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Snackbar } from "react-native-paper";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena2 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena2";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
+import { Platform, useWindowDimensions } from 'react-native';
+import { Button } from "../../componentes/Buttons";
+import Colors from "../../assets/Colors";
+import Input from "../../componentes/inputs/Input";
+import { LinearGradient } from "expo-linear-gradient";
+import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 
 
 const RecuperarContrasena2 = () => {
@@ -88,26 +95,36 @@ const RecuperarContrasena2 = () => {
     }
   };
 
+const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosRecuperarContrasena2.areaSegura}>
+      <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena2.degradado}>
       <View style={EstilosRecuperarContrasena2.contenedor}>
-        {/* Título de la pantalla */}
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", top: 30, left: 20,marginTop:45 }}>
-        <Ionicons name="arrow-back" size={24} color="#197278" />
-        </TouchableOpacity>
-        <Text style={EstilosRecuperarContrasena2.titulo}>Recuperar contraseña</Text>
+        <View style={[EstilosRecuperarContrasena2.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena2.contenidoWeb]}>
+        {/* NavBar Superior */}
+        <NavBarSuperior
+          titulo="Recuperar contraseña"
+          showBackButton={true}
+          onBackPress={() => navigation.goBack()}
+          rightButtonType="none"
+        />
+
+        <PasoTituloIcono
+          iconName="mail-outline"
+          texto="PASO 2:"
+        />
 
         {/* Paso de verificación */}
-        <Text style={EstilosRecuperarContrasena2.instruccion}>Ingrese el código numérico que se ha enviado.</Text>
+        <Text style={EstilosRecuperarContrasena2.instruccion}>
+          Ingrese el código numérico que se ha enviado.
+        </Text>
 
         {/* Campo de entrada */}
-        <TextInput
+        <Input
           placeholder=" "
-          style={EstilosRecuperarContrasena2.entrada}
-          keyboardType="phone-pad"
-          value={codigo}  // Vinculamos el estado `codigo` con el campo de entrada
-          onChangeText={setCodigo}  // Actualiza el estado `codigo` con el valor ingresado
+          value={codigo}
+          onChangeText={setCodigo}
         />
 
         {/* Snackbar para mostrar mensajes */}
@@ -124,14 +141,18 @@ const RecuperarContrasena2 = () => {
           {message}
         </Snackbar>
 
-        {/* Botón de siguiente */}
-        <TouchableOpacity 
-          style={EstilosRecuperarContrasena2.botonSiguiente} 
-           onPress={validarCodigo} 
-        >
-          <Text style={EstilosRecuperarContrasena2.textoBoton}>Verificar código</Text>
-        </TouchableOpacity>
+        {/* Botón de enviar */}
+        <Button
+          titulo="Verificar código"
+          onPress={validarCodigo}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
       </View>
+      </View>
+    </LinearGradient>
     </SafeAreaView>
   );
 };

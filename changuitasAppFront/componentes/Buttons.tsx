@@ -23,7 +23,7 @@ interface ButtonProps {
 export function Button({
     titulo,
     onPress,
-    backgroundColor = Colors.naranja, // Color naranja como en tus imágenes
+    backgroundColor = Colors.naranja, 
     textColor = Colors.blancoTexto,
     textSize = 16,
     padding = 15,

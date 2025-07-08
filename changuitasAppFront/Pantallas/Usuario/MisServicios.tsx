@@ -4,13 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import EstilosMisServicios from './estilos/EstilosMisServicios';
-import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
+import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -161,20 +162,8 @@ const MisServicios = () => {
     }}>
       <SafeAreaView style={EstilosMisServicios.contenedor}>
         {/* Header con Perfil*/}
-        <View style={EstilosMisServicios.header}>
-          <Text style={EstilosMisServicios.textoEncabezado}>Perfil</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-
-          {/* Menú Desplegable */}
-        <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
       {/* Barra de pestañas */}
     <BarraPestanasPerfil/>
@@ -184,7 +173,7 @@ const MisServicios = () => {
           style={EstilosMisServicios.botonAgregarServicio} 
              onPress={() => navigation.navigate('AgregarServicio1')}
         >
-          <Ionicons name="add" size={20} color="#197278" />
+          <Ionicons name="add" size={20} color="#FC6A30" />
           <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
         </TouchableOpacity>
 

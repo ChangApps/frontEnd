@@ -5,11 +5,12 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar } from "react-native-paper";
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { AuthContext } from "../../autenticacion/auth";
 import {cerrarSesion} from '../../autenticacion/authService';
-import BarraNavegacionInferior from "../../auxiliares/BarraNavegacionInferior";
+import BarraNavegacionInferior from "../../utils/BarraNavegacionInferior";
 import EstilosResenias from "./estilos/EstilosResenias";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 
 const Resenias = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -104,7 +105,7 @@ const Resenias = () => {
                         key={i}
                         name="star"
                         size={16}
-                        color={i < item.valoracion ? "black" : "#CCCCCC"} // Estrella llena o vacía
+                        color={i < item.valoracion ? "FC6A30" : "#CCCCCC"} // Estrella llena o vacía
                     />
                 ))}
             </View>
@@ -114,20 +115,14 @@ const Resenias = () => {
     return (
         <SafeAreaView style={EstilosResenias.safeArea}>
             <View style={EstilosResenias.container}>
-                <View style={EstilosResenias.header}>
-                    <Ionicons
-                        name="arrow-back"
-                        size={24}
-                        color="#333"
-                        onPress={() => navigation.goBack()}
-                    />
-                    <Text style={EstilosResenias.title}>Reseñas</Text>
-                    <View style={EstilosResenias.toggleContainer}>
-                        <TouchableOpacity onPress={toggleDesplegable}>
-                            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                {/* NavBar Superior */}
+                          <NavBarSuperior
+                            titulo="Reseñas"
+                            showBackButton={true}
+                            onBackPress={() => { navigation.goBack(); }}
+                            rightButtonType="menu"
+                            onRightPress={() => { toggleDesplegable(); }}
+                          />
     
                 {/* Menú Desplegable */}
                 {mostrarDesplegable && (
