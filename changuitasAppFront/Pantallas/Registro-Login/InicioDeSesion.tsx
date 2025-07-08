@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosInicioDeSesion from './estilos/EstilosInicioDeSesion';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { AuthContext } from "../../autenticacion/auth";
 import Input from "../../componentes/inputs/Input";
 import PasswordInput from "../../componentes/inputs/PasswordInput";

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL  from '../auxiliares/API_URL';
-import { capitalizarPrimeraLetra } from '../auxiliares/utils';
+import API_URL  from '../utils/API_URL';
+import { capitalizarPrimeraLetra } from '../utils/utils';
 
 
 export const obtenerCategorias = async (): Promise<{ id: number; nombre: string }[]> => {

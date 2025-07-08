@@ -7,10 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-import API_URL from '../../auxiliares/API_URL';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import API_URL from '../../utils/API_URL';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 

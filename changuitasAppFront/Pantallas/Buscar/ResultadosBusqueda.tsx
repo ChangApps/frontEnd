@@ -4,8 +4,8 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL from "../../auxiliares/API_URL"; 
-import BarraNavegacionInferior from "../../auxiliares/BarraNavegacionInferior";
+import API_URL from "../../utils/API_URL"; 
+import BarraNavegacionInferior from "../../utils/BarraNavegacionInferior";
 import EstilosResultadosBusqueda from "./estilos/EstilosResultadosBusqueda";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 

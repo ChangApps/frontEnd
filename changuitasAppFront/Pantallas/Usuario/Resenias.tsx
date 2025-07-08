@@ -5,10 +5,10 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar } from "react-native-paper";
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import { AuthContext } from "../../autenticacion/auth";
 import {cerrarSesion} from '../../autenticacion/authService';
-import BarraNavegacionInferior from "../../auxiliares/BarraNavegacionInferior";
+import BarraNavegacionInferior from "../../utils/BarraNavegacionInferior";
 import EstilosResenias from "./estilos/EstilosResenias";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 

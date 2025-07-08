@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosRegistro from "./estilos/EstilosRegistro";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";

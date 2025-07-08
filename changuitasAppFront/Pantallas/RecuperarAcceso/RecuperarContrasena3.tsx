@@ -5,7 +5,7 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import axios from "axios";
 import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../..//navegacion/AppNavigator';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena3 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena3";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import { Platform, useWindowDimensions } from 'react-native';

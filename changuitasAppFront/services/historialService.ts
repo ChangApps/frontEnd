@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL from '../auxiliares/API_URL';
+import API_URL from '../utils/API_URL';
 import { Solicitud, SolicitudHistorial, Proveedor } from '../types/interfaces';
 
 interface PersonaContratada {
@@ -75,7 +75,6 @@ export const fetchUHistorial = async (
     if (!responseHistorial.ok) throw new Error('Error en la respuesta del servidor');
 
     const historialData = await responseHistorial.json();
-    console.log("historialData:", historialData);
 
     if (!Array.isArray(historialData)) {
       setHistorial([]);

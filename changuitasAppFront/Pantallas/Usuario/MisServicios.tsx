@@ -4,13 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import EstilosMisServicios from './estilos/EstilosMisServicios';
-import BarraPestanasPerfil from '../../auxiliares/BarraPestanasPerfil';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 
 const MisServicios = () => {

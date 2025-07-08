@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Snackbar } from "react-native-paper";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from "../../auxiliares/API_URL";
+import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena2 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena2";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import { Platform, useWindowDimensions } from 'react-native';

@@ -5,12 +5,12 @@ import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navig
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Snackbar } from 'react-native-paper';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 
 const PerfilProveedor = () => {
 

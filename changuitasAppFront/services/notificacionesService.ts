@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL  from '../auxiliares/API_URL';
+import API_URL  from '../utils/API_URL';
 
 export const guardarTrabajosNotificados = async (ids: string[]) => {
   await AsyncStorage.setItem('trabajosNotificados', JSON.stringify(ids));

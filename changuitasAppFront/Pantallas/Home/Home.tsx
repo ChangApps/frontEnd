@@ -9,7 +9,7 @@ import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { Snackbar } from 'react-native-paper';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../../services/notificacionesService';

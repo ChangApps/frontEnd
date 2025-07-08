@@ -7,8 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Snackbar } from 'react-native-paper';
 
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
-import BarraNavegacionInferior from '../../auxiliares/BarraNavegacionInferior';
-import API_URL from '../../auxiliares/API_URL';
+import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
+import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';

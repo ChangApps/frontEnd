@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import API_URL from '../../auxiliares/API_URL';
+import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { Button } from '../../componentes/Buttons';
@@ -13,7 +13,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import Colors from '../../assets/Colors';
 import { AuthContext } from '../../autenticacion/auth';
 import { cerrarSesion } from '../../autenticacion/authService';
-import MenuDesplegable from '../../auxiliares/MenuDesplegable';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 
 const CalificarTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
