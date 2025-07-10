@@ -18,6 +18,8 @@ import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces
 import { fetchUHistorial } from '../../services/historialService';
 import ResultadoListSimple from '../../componentes/ResultadoListSimple';
 import Colors from '../../assets/Colors';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import ModalBuscar from '../../componentes/ModalBuscar';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -36,8 +38,7 @@ const PantallaHome = () => {
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
-  const [visible, setVisible] = useState(false);  
-  const [message, setMessage] = useState(""); 
+  const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   
   const handleNavigation = (screen: string) => {
     switch (screen) {
@@ -165,7 +166,7 @@ const PantallaHome = () => {
               placeholderTextColor="#ccc"
             />
             <TouchableOpacity style={EstilosHome.botonFiltro}>
-              <Ionicons name="options" size={20} color="#fff" />
+             <FontAwesome6 name="magnifying-glass" size={20} color="black" />
             </TouchableOpacity>
           </View>
 
@@ -187,6 +188,8 @@ const PantallaHome = () => {
       )}
 
           {/* Categorías */}
+         {/* Modal de búsqueda */}
+      <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} />
           <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
           <FlatList
             data={categorias}
@@ -194,8 +197,11 @@ const PantallaHome = () => {
             numColumns={2}
             columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
             renderItem={({ item }) => (
-              <TouchableOpacity style={EstilosHome.cardCategoria}>
-               <Ionicons name="image" size={20} color={Colors.naranja} />
+                 <TouchableOpacity
+                style={EstilosHome.cardCategoria}
+                onPress={() => setMostrarModalBuscar(true)} 
+              >
+                <Ionicons name="image" size={20} color={Colors.naranja} />
                 <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
               </TouchableOpacity>
             )}

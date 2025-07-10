@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Linking, Alert, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,16 +11,11 @@ import { AuthContext } from '../../autenticacion/auth';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { Direccion } from '../../types/interfaces';
+import { redirectAdmin } from '../../utils/utils';
+import Colors from '../../assets/Colors';
 
 const PerfilProveedor = () => {
-
-  interface Direccion {
-    calle: string;
-    altura: number;
-    piso: number | null;
-    nroDepto: number | null;
-    barrio: string;
-  }
 
   interface Usuario {
     username: string;
@@ -48,10 +43,6 @@ const PerfilProveedor = () => {
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
-
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -115,7 +106,8 @@ const PerfilProveedor = () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
 
       if (!accessToken) {
-        Alert.alert("Error", "No hay token de autenticación.");
+        setMessage("Error");
+        setVisible(true);
         return;
       }
       const response = await fetch(`${API_URL}/iniciar-changuita/`, {
@@ -135,7 +127,7 @@ const PerfilProveedor = () => {
       console.log("ID de la solicitud recibido:", responseJson.id_solicitud);
 
       if (response.ok) {
-        Alert.alert("Éxito", "Proveedor servicio creado con éxito.");
+        console.log("Éxito", "Proveedor servicio creado con éxito.");
 
         const idSolicitud = responseJson.id_solicitud;
         console.log("ID solicitud detalle: ", idSolicitud);
@@ -143,7 +135,7 @@ const PerfilProveedor = () => {
         navigation.navigate('DetalleTarea', { id, idSolicitud });
 
       } else {
-        Alert.alert("Error", responseJson.error || "No se pudo enviar la solicitud.");
+        console.log("Error", responseJson.error || "No se pudo enviar la solicitud.");
         setMessage("Error. al enviar la solicitud.");
         setVisible(true);
       }
@@ -173,7 +165,7 @@ const PerfilProveedor = () => {
 
   }, [route.params]);
 
-  //Habria que ver para buscar el servicio es correspondiente al que se busca no lo solo agarrar el primero
+  //Busca el servicio es correspondiente al que se busca no lo solo agarrar el primero
   const fetchProveedorServicio = async () => {
     if (!isMounted) return;
     try {
@@ -212,8 +204,7 @@ const PerfilProveedor = () => {
       const proveedor = Array.isArray(dataProveedor) ? dataProveedor[0] : dataProveedor;
       setIdProveedorServicio(proveedor?.id);
     } catch (error) {
-      setMessage("Error. al enviar la solicitud.");
-      setVisible(true);
+       console.log('Error al cargar los datos del proveedor de servicio:', error); 
     }
   };
 
@@ -241,7 +232,7 @@ const PerfilProveedor = () => {
       });
 
       if (!responseUsuario.ok) {
-        throw new Error(`Error al obtener el usuario: ${responseUsuario.status}`);
+        console.log(`Error al obtener el usuario: ${responseUsuario.status}`);
       }
 
       // Procesa los datos del usuario
@@ -252,7 +243,6 @@ const PerfilProveedor = () => {
 
     } catch (error: any) {
       console.error('Error al cargar los datos del usuario:', error); // Detalles del error
-      setError('No se pudo cargar el perfil del usuario');
       setMessage("Error. No se pudo cargar el perfil.");
       setVisible(true);
     } finally {
@@ -309,10 +299,12 @@ const PerfilProveedor = () => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        Alert.alert("Éxito", "Usuario bloqueado con éxito.");
+        setMessage("Usuario bloqueado correctamente.");
+        setVisible(true);
         navigation.navigate('Home');
       } else {
-        Alert.alert("Error", data.error || "No se pudo bloquear al usuario.");
+        setMessage("No se pudo bloquear al usuario.");
+        setVisible(true);
       }
     } catch (error) {
       console.error("Error al bloquear usuario:", error);
@@ -350,11 +342,11 @@ const PerfilProveedor = () => {
           {/* Encabezado con opciones de menú */}
           <View style={EstilosPerfilProveedor.encabezado}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="arrow-back" size={24} color="#ffffff" />
+              <Ionicons name="arrow-back" size={24} color={Colors.blancoTexto} />
             </TouchableOpacity>
             <Text style={EstilosPerfilProveedor.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
             <TouchableOpacity onPress={toggleDesplegable}>
-              <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
+              <Ionicons name="ellipsis-horizontal" size={24} color={Colors.blancoTexto} />
             </TouchableOpacity>
           </View>
 
@@ -452,13 +444,12 @@ const PerfilProveedor = () => {
             <Text style={EstilosPerfilProveedor.infoUsuario}>Telefono: {usuario?.telefono}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
           </View>
-
+        </ScrollView>
           {/* Barra de navegación inferior */}
           <NavBarInferior
             activeScreen="PerfilProveedor" // O el screen activo correspondiente
             onNavigate={handleNavigation}
           />
-        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

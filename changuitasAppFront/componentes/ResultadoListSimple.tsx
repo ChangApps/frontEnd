@@ -66,9 +66,15 @@ const ResultadoListSimple = ({
 
           <TouchableOpacity
             onPress={() => {
+              /*
               navigation.navigate('DetalleTarea', {
                 id: usuario?.id?.toString() || 'No disponible',
                 idSolicitud: item.id.toString(),
+              });
+            }}
+              */
+                navigation.navigate('PerfilProveedor', {
+                id: usuario?.id?.toString() || 'No disponible',
               });
             }}
             style={{
