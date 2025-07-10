@@ -1,6 +1,5 @@
-import { SafeAreaView,Text, TextInput, TouchableOpacity, View, ScrollView, Alert } from "react-native";
+import { SafeAreaView,Text, View, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from '../../utils/API_URL';

@@ -1,13 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, Linking } from 'react-native';
-import { Checkbox } from 'react-native-paper'; 
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, ScrollView,Alert, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosAgregarServicio1 from './estilos/EstilosAgregarServicio1';
-import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
-import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { AuthContext } from '../../autenticacion/auth';
 import {cerrarSesion} from '../../autenticacion/authService';
 import { Button } from '../../componentes/Buttons';

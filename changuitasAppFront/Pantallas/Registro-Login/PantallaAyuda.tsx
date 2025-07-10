@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import EstilosPantallaAyuda from './estilos/EstilosPantallaAyuda';
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../assets/Colors';

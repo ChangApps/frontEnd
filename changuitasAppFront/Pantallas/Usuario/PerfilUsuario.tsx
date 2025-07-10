@@ -1,7 +1,5 @@
-
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator,Modal, Linking} from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, SafeAreaView, ActivityIndicator, Linking} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableWithoutFeedback} from 'react-native';

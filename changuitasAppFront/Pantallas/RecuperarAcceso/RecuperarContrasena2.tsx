@@ -1,19 +1,17 @@
-import { Alert, SafeAreaView,Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, SafeAreaView, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Snackbar } from "react-native-paper";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena2 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena2";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
-
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const RecuperarContrasena2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -28,7 +26,7 @@ const RecuperarContrasena2 = () => {
   // Mostrar los datos pasados desde la pantalla anterior
   useEffect(() => {
     console.log('Entrando al useEffect de contrasena2');
-    console.log('Email recibido:', email); 
+    console.log('Email recibido:', email);
   }, [email]);
 
 
@@ -39,17 +37,17 @@ const RecuperarContrasena2 = () => {
         Alert.alert("Error", "El email es requerido.");
         return;
       }
-  
+
       const response = await fetch(`${API_URL}/obtener-email-por-id/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }), 
+        body: JSON.stringify({ email: email }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         console.log("idObtenido: ", data.id);
-        navigation.navigate('RecuperarContrasena3', { id: data.id }); 
+        navigation.navigate('RecuperarContrasena3', { id: data.id });
       } else {
         Alert.alert("Error", "No se pudo obtener el ID.");
       }
@@ -60,9 +58,9 @@ const RecuperarContrasena2 = () => {
   };
 
   const validarCodigo = async () => {
-   
+
     const codigoInt = parseInt(codigo, 10);
-  
+
     // Verifica si el código es un número válido
     if (isNaN(codigoInt)) {
       Alert.alert("Error", "Por favor ingresa un código válido.");
@@ -70,12 +68,12 @@ const RecuperarContrasena2 = () => {
       setVisible(true);
       return;
     }
-  
+
     try {
       const response = await fetch(`${API_URL}/validar-codigo/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ codigo: codigoInt, email: email }), 
+        body: JSON.stringify({ codigo: codigoInt, email: email }),
       });
 
       const data = await response.json();
@@ -95,64 +93,57 @@ const RecuperarContrasena2 = () => {
     }
   };
 
-const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosRecuperarContrasena2.areaSegura}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena2.degradado}>
-      <View style={EstilosRecuperarContrasena2.contenedor}>
-        <View style={[EstilosRecuperarContrasena2.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena2.contenidoWeb]}>
-        {/* NavBar Superior */}
-        <NavBarSuperior
-          titulo="Recuperar contraseña"
-          showBackButton={true}
-          onBackPress={() => navigation.goBack()}
-          rightButtonType="none"
-        />
+        <View style={EstilosRecuperarContrasena2.contenedor}>
+          <View style={[EstilosRecuperarContrasena2.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena2.contenidoWeb]}>
+            {/* NavBar Superior */}
+            <NavBarSuperior
+              titulo="Recuperar contraseña"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
-        <PasoTituloIcono
-          iconName="mail-outline"
-          texto="PASO 2:"
-        />
+            <PasoTituloIcono
+              iconName="mail-outline"
+              texto="PASO 2:"
+            />
 
-        {/* Paso de verificación */}
-        <Text style={EstilosRecuperarContrasena2.instruccion}>
-          Ingrese el código numérico que se ha enviado.
-        </Text>
+            {/* Paso de verificación */}
+            <Text style={EstilosRecuperarContrasena2.instruccion}>
+              Ingrese el código numérico que se ha enviado.
+            </Text>
 
-        {/* Campo de entrada */}
-        <Input
-          placeholder=" "
-          value={codigo}
-          onChangeText={setCodigo}
-        />
+            {/* Campo de entrada */}
+            <Input
+              placeholder=" "
+              value={codigo}
+              onChangeText={setCodigo}
+            />
 
-        {/* Snackbar para mostrar mensajes */}
-        <Snackbar
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          duration={4000} // 4 segundos
-          style={{
-            marginLeft: -30, 
-            alignSelf: "center", 
-            width: "90%", 
-          }}
-        >
-          {message}
-        </Snackbar>
+            {/* Snackbar para mostrar mensajes */}
+            <CustomSnackbar
+              visible={visible}
+              setVisible={setVisible}
+              message={message}
+            />
 
-        {/* Botón de enviar */}
-        <Button
-          titulo="Verificar código"
-          onPress={validarCodigo}
-          textSize={20}
-          textColor={Colors.fondo}
-          padding={15}
-          borderRadius={25}
-        />
-      </View>
-      </View>
-    </LinearGradient>
+            {/* Botón de enviar */}
+            <Button
+              titulo="Verificar código"
+              onPress={validarCodigo}
+              textSize={20}
+              textColor={Colors.fondo}
+              padding={15}
+              borderRadius={25}
+            />
+          </View>
+        </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

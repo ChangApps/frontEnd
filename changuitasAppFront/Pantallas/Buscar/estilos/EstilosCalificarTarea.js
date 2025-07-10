@@ -1,107 +1,67 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+import Colors from '../../../assets/Colors';
 
-const EstilosCalificarTarea = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#ffffff',
-    },
-    encabezado: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 15,
-      backgroundColor: 'white',
-      marginTop: 50,
-    },
-    botonVolver: {
-      padding: 8,
-      marginLeft:-25,
-    },
-    textoEncabezado: {
-      fontSize: 24,
-      fontWeight: '600',
-      marginRight: 190,
-    },
-    header: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#333333',
-      marginBottom: 20,
-    },
-    moreIcon: {
-      position: 'absolute',
-      top: 20,
-      right: 20,
-    },
-    label: {
-      fontSize: 16,
-      color: '#333333',
-      marginTop: 20,
-      marginBottom: 10,
-    },
-    starsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 20,
-    },
-    rating: {
-      flexDirection: 'row',
-      marginTop: 5,
-    },
-    textInput: {
-      height: 150,
-      borderWidth: 1,
-      borderColor: '#b3cccc',
-      borderRadius: 10,
-      padding: 15,
-      backgroundColor: '#f5f5f5',
-      fontSize: 16,
-      color: '#333333',
-    },
-    submitButton: {
-      backgroundColor: '#91C9C0',
-      paddingVertical: 12,
-      borderRadius: 25,
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    submitButtonText: {
-      color: '#ffffff',
-      fontSize: 18,
-      fontWeight: '600',
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      paddingVertical: 20,
-    },
-    prevButton: {
-      borderWidth: 1,
-      borderColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 50,
-    },
-    prevButtonText: {
-      color: '#197278',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    nextButton: {
-      backgroundColor: '#197278',
-      paddingVertical: 12,
-      paddingHorizontal: 40,
-      borderRadius: 50,
-    },
-    nextButtonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-  });
-  
+const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: Colors.fondo,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.fondo,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: Platform.OS === 'web' ? 250 : 20,
+    paddingTop: Platform.OS === 'web' ? 20 : 30,
+    justifyContent: 'flex-start',
+  },
+  label: {
+    fontSize: 20,
+    color: Colors.blancoTexto,
+    marginBottom: Platform.OS === 'web' ? 15 : 30,
+    fontWeight: '500',
+  },
+  rating: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: Platform.OS === 'web' ? 10 : 30,
+    paddingVertical: 10,
+  },
+  star: {
+    marginHorizontal: Platform.OS === 'web' ? 20 : 10,
+  },
+  textInput: {
+    backgroundColor: Colors.blancoOscuroTexto,
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: Colors.naranja,
+    padding: 15,
+    minHeight: Platform.OS === 'web' ? 160 : 200,
+    fontSize: 20,
+    color: Colors.negro,
+    marginBottom: 30,
+    textAlignVertical: 'top',
+  },
+  buttonContainer: {
+    paddingHorizontal: Platform.OS === 'web' ? 80 : 30,
+    marginTop: 'auto',
+    marginBottom: Platform.OS === 'web' ? 15 : 60,
+  },
+  snackbar: {
+    position: 'absolute',
+    top: 100,
+    left: 20,
+    right: 20,
+    zIndex: 100000,
+  },
+});
 
-
-export default EstilosCalificarTarea;
+export default styles;

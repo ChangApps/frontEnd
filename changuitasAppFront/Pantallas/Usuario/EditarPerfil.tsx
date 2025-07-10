@@ -1,6 +1,5 @@
 import React, { useState,useEffect, useContext } from 'react';
-import { View, Text, SafeAreaView,TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking} from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, SafeAreaView,TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';

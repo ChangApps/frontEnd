@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-native-paper
-import { Ionicons } from "@expo/vector-icons";
+import { Checkbox } from 'react-native-paper';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';

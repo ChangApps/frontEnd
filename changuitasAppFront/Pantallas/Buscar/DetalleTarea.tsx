@@ -1,24 +1,20 @@
-// DetalleTarea.tsx
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Text, Image, Modal, TouchableOpacity, TouchableWithoutFeedback, View, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Snackbar } from 'react-native-paper';
-
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
 import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-
 import ImagenConModal from '../../componentes/perfilesUsuarios/ImagenConModal';
-import InfoUsuarioCompacto from '../../componentes/perfilesUsuarios/InfoUsuarioCompacto';
 import DatosTareaCompactos from '../../componentes/perfilesUsuarios/DatosTareaCompactos';
 import AccionesTarea from '../../componentes/perfilesUsuarios/AccionesTarea';
 import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfilUsuario';
 import ModalCancelarChanguita from '../../componentes/ModalCancelarChanguita';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -46,6 +42,7 @@ const DetalleTarea = () => {
     'Cambio de planes',
     'Otro motivo',
   ];
+
   interface Usuario {
     username: string;
     first_name: string;
@@ -54,7 +51,7 @@ const DetalleTarea = () => {
     email: string;
     telefono: string;
     fotoPerfil: string | null;
-    is_staff:boolean;
+    is_staff: boolean;
   }
 
   useEffect(() => {
@@ -147,7 +144,7 @@ const DetalleTarea = () => {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'user/json'
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });
@@ -217,13 +214,6 @@ const DetalleTarea = () => {
         estilos={EstilosDetalleTarea}
       />
 
-      <Snackbar
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        duration={4000}
-      >
-        {message}
-      </Snackbar>
       <ModalCancelarChanguita
         visible={mostrarModalCancelar}
         onClose={() => setMostrarModalCancelar(false)}
@@ -237,7 +227,15 @@ const DetalleTarea = () => {
         setMotivoSeleccionado={setMotivoSeleccionado}
         motivosCancelacion={motivosCancelacion}
       />
+
       <BarraNavegacionInferior />
+
+      {/* CustomSnackbar */}
+      <CustomSnackbar
+        visible={visible}
+        setVisible={setVisible}
+        message={message}
+      />
     </SafeAreaView>
   );
 };

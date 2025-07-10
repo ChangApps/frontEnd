@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, Linking, Alert, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Linking, Alert, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
+import styles from './estilos/EstilosCalificarTarea';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -14,6 +14,7 @@ import Colors from '../../assets/Colors';
 import { AuthContext } from '../../autenticacion/auth';
 import { cerrarSesion } from '../../autenticacion/authService';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const CalificarTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -201,123 +202,16 @@ const CalificarTarea = () => {
             onNavigate={handleNavigation}
           />
 
-          {/* Snackbar para errores */}
-          <Snackbar
+          {/* CustomSnackbar */}
+          <CustomSnackbar
             visible={visible}
-            onDismiss={() => setVisible(false)}
-            duration={Snackbar.DURATION_SHORT}
-            style={styles.snackbar}
-          >
-            {message}
-          </Snackbar>
+            setVisible={setVisible}
+            message={message}
+          />
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
-
-  let paddingHorizontalContenido = 250;//50
-  if (Platform.OS == "android") {
-    paddingHorizontalContenido = 20
-  }
-
-  let espacioStart = 20
-  if (Platform.OS == "android") {
-    espacioStart = 10
-  }
-
-  let cajaDescripcionSize = 160
-  if (Platform.OS == "android") {
-    cajaDescripcionSize = 200
-  }
-
-  let paddingTopContenedor = 20
-  if (Platform.OS == "android") {
-    paddingTopContenedor = 30
-  }
-
-  let paddingHorizontalBoton = 80
-  if (Platform.OS == "android") {
-    paddingHorizontalBoton = 30
-  }
-
-  let paddingVerticalBoton = 15
-  if (Platform.OS == "android") {
-    paddingVerticalBoton = 60
-  }
-
-  let marginStart = 15
-  if (Platform.OS == "android") {
-    marginStart = 30
-  }
-
-  let marginBox = 10
-  if (Platform.OS == "android") {
-    marginBox = 30
-  }
-
-const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: Colors.fondo,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: Colors.fondo,
-  },
-  scrollContainer: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 20, // Espaciado adicional al final
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: paddingHorizontalContenido,
-    paddingTop: paddingTopContenedor,
-    justifyContent: 'flex-start',
-  },
-  label: {
-    fontSize: 20,
-    color: Colors.blancoTexto,
-    marginBottom: marginStart,
-    fontWeight: '500',
-  },
-  rating: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: marginBox,
-    paddingVertical: 10,
-  },
-  star: {
-    marginHorizontal: espacioStart,
-  },
-  textInput: {
-    backgroundColor: Colors.blancoOscuroTexto,
-    borderRadius: 12,
-    borderWidth: 3,
-    borderColor: Colors.naranja,
-    padding: 15,
-    minHeight: cajaDescripcionSize,
-    fontSize: 20,
-    color: Colors.negro,
-    marginBottom: 30,
-    textAlignVertical: 'top',
-
-  },
-  buttonContainer: {
-    paddingHorizontal: paddingHorizontalBoton, 
-    marginTop: 'auto',
-    marginBottom: paddingVerticalBoton,
-  },
-  snackbar: {
-    position: 'absolute',
-    top: 100,
-    left: 20,
-    right: 20,
-    zIndex: 100000,
-  },
-});
 
 export default CalificarTarea;

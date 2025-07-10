@@ -1,25 +1,23 @@
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena1 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena1";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
-
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const RecuperarContrasena1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [email, setEmail] = useState("");  
-  const [visible, setVisible] = useState(false);  
-  const [message, setMessage] = useState("");  
+  const [email, setEmail] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const enviarCodigo = async () => {
@@ -63,62 +61,55 @@ const RecuperarContrasena1 = () => {
     }
   };
 
-const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosRecuperarContrasena1.areaSegura}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena1.degradado}>
-      <View style={EstilosRecuperarContrasena1.contenedor}>
-        <View style={[EstilosRecuperarContrasena1.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena1.contenidoWeb]}>
-        {/* NavBar Superior */}
-        <NavBarSuperior
-          titulo="Recuperar contraseña"
-          showBackButton={true}
-          onBackPress={() => navigation.goBack()}
-          rightButtonType="none"
-        />
+        <View style={EstilosRecuperarContrasena1.contenedor}>
+          <View style={[EstilosRecuperarContrasena1.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena1.contenidoWeb]}>
+            {/* NavBar Superior */}
+            <NavBarSuperior
+              titulo="Recuperar contraseña"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
-        <Text style={EstilosRecuperarContrasena1.instruccion}>
-          Para recuperar tu contraseña, escribe la dirección de correo electrónico para recibir el código de recuperación.
-        </Text>
+            <Text style={EstilosRecuperarContrasena1.instruccion}>
+              Para recuperar tu contraseña, escribe la dirección de correo electrónico para recibir el código de recuperación.
+            </Text>
 
-        <PasoTituloIcono
-          iconName="mail-outline"
-          texto="PASO 1:"
-        />
+            <PasoTituloIcono
+              iconName="mail-outline"
+              texto="PASO 1:"
+            />
 
-        {/* Campo de entrada */}
-        <Input
-          placeholder="Correo electrónico"
-          value={email}
-          onChangeText={setEmail}
-        />
+            {/* Campo de entrada */}
+            <Input
+              placeholder="Correo electrónico"
+              value={email}
+              onChangeText={setEmail}
+            />
 
-        <Snackbar
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          duration={4000}
-          style={{
-            marginLeft: -30, 
-            alignSelf: "center", 
-            width: "90%", 
-          }}
-        >
-          {message}
-        </Snackbar>
-    
-        {/* Botón de enviar */}
-        <Button
-          titulo="Enviar"
-          onPress={enviarCodigo}
-          textSize={20}
-          textColor={Colors.fondo}
-          padding={15}
-          borderRadius={25}
-        />
-      </View>
-      </View>
-    </LinearGradient>
+            <CustomSnackbar
+              visible={visible}
+              setVisible={setVisible}
+              message={message}
+            />
+
+            {/* Botón de enviar */}
+            <Button
+              titulo="Enviar"
+              onPress={enviarCodigo}
+              textSize={20}
+              textColor={Colors.fondo}
+              padding={15}
+              borderRadius={25}
+            />
+          </View>
+        </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

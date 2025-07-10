@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Switch,Alert } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, ScrollView, Switch,Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Picker } from '@react-native-picker/picker';

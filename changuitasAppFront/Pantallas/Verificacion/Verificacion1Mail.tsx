@@ -1,27 +1,23 @@
-import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, SafeAreaView, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
-import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../utils/API_URL";
-import EstilosVerificacion1Mail  from "./estilos/EstilosVerificacion1Mail";
+import EstilosVerificacion1Mail from "./estilos/EstilosVerificacion1Mail";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
-
-
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const Verificacion1Mail = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'Verificacion1Mail'>>();
   const [codigo, setCodigo] = useState('');  // Estado para almacenar el código ingresado
   const [email, setEmail] = useState(''); // Estado para almacenar el email
-  const [isEmailValid, setIsEmailValid] = useState(false);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
 
@@ -50,11 +46,11 @@ const Verificacion1Mail = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
-      setMessage("El código a sido enviado al correo.");
-      setVisible(true);
+        setMessage("El código a sido enviado al correo.");
+        setVisible(true);
       } else {
         Alert.alert("Error", data.error || "No se pudo enviar el código");
       }
@@ -63,7 +59,7 @@ const Verificacion1Mail = () => {
     }
   };
 
-  
+
   const validarCodigo = async () => {
     const codigoInt = parseInt(codigo, 10);
     if (isNaN(codigoInt)) {
@@ -77,14 +73,14 @@ const Verificacion1Mail = () => {
       const response = await fetch(`${API_URL}/validar-codigo/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ codigo: codigoInt, email: email }), 
+        body: JSON.stringify({ codigo: codigoInt, email: email }),
       });
 
       const data = await response.json();
       if (response.ok) {
         Alert.alert("Éxito", "Código válido");
         setMessage("El código es válido");
-        console.log("Datos a enviar: ",route.params.datosUsuario);
+        console.log("Datos a enviar: ", route.params.datosUsuario);
         navigation.navigate('Verificacion2Registro', { datosUsuario: route.params.datosUsuario });
       } else {
         Alert.alert("Error", data.error || "El código no es válido");
@@ -98,58 +94,53 @@ const Verificacion1Mail = () => {
     }
   };
 
-const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosVerificacion1Mail.areaSegura}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion1Mail.degradado}>
-      <View style={EstilosVerificacion1Mail.contenedor}>
-        <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>
-        <NavBarSuperior
-                  titulo="Verificación"
-                  showBackButton={true}
-                  onBackPress={() => navigation.goBack()}
-                  rightButtonType="none"
-                />
+        <View style={EstilosVerificacion1Mail.contenedor}>
+          <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>
+            <NavBarSuperior
+              titulo="Verificación"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
-        <PasoTituloIcono
-          iconName="mail-outline"
-          texto="PASO 1:"
-        />
-        <Text style={EstilosVerificacion1Mail.instruccion}>
-          Ingrese el código numérico que se ha enviado a su correo electrónico:
-        </Text>
+            <PasoTituloIcono
+              iconName="mail-outline"
+              texto="PASO 1:"
+            />
+            <Text style={EstilosVerificacion1Mail.instruccion}>
+              Ingrese el código numérico que se ha enviado a su correo electrónico:
+            </Text>
 
-        {/* Campo de entrada */}
-        <Input
-          placeholder="Código"
-          value={codigo}
-          onChangeText={setCodigo}
-        />
+            {/* Campo de entrada */}
+            <Input
+              placeholder="Código"
+              value={codigo}
+              onChangeText={setCodigo}
+            />
 
-        {/* Botón para validar el código  onPress=validarCodigo */}
-        <Button
-          titulo="Siguiente"
-          onPress={validarCodigo}
-          textSize={20}
-          textColor={Colors.fondo}
-          padding={15}
-          borderRadius={25}
-        />
+            {/* Botón para validar el código  onPress=validarCodigo */}
+            <Button
+              titulo="Siguiente"
+              onPress={validarCodigo}
+              textSize={20}
+              textColor={Colors.fondo}
+              padding={15}
+              borderRadius={25}
+            />
 
-      </View>
+          </View>
 
-
-  
-      <Snackbar
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        duration={4000} // 4 segundos
-        style={{ marginLeft: -20, alignSelf: "center", width: "90%" }}
-      >
-        {message}
-      </Snackbar>
-      </View>
+          <CustomSnackbar
+            visible={visible}
+            setVisible={setVisible}
+            message={message}
+          />
+        </View>
       </LinearGradient>
     </SafeAreaView>
   );

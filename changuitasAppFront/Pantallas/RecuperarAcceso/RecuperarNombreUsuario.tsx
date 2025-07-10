@@ -1,17 +1,16 @@
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from "../../utils/API_URL";
 import EstilosRecuperarNombreUsuario from "./estilos/EstilosRecuperarNombreUsuario";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const RecuperarNombreUsuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -27,7 +26,7 @@ const RecuperarNombreUsuario = () => {
       return;
     }
 
-   
+
     // Mostrar mensaje de envío antes de la petición
     setMessage(`Enviando correo al Email: ${email}...`);
     setVisible(true);
@@ -47,7 +46,7 @@ const RecuperarNombreUsuario = () => {
         setMessage("Revisa tu correo electrónico.");
         setVisible(true);
         setTimeout(() => {
-          navigation.goBack(); 
+          navigation.goBack();
         }, 4000);
       } else {
         setMessage(data?.email || "Hubo un error al procesar la solicitud.");
@@ -59,59 +58,52 @@ const RecuperarNombreUsuario = () => {
     }
   };
 
-const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
-    
+
     <SafeAreaView style={EstilosRecuperarNombreUsuario.areaSegura}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarNombreUsuario.degradado}>
-      <View style={EstilosRecuperarNombreUsuario.contenedor}>
-        <View style={[EstilosRecuperarNombreUsuario.contenidoResponsivo, width > 600 && EstilosRecuperarNombreUsuario.contenidoWeb]}>
-        {/* NavBar Superior */}
-        <NavBarSuperior
-          titulo="Recuperar usuario"
-          showBackButton={true}
-          onBackPress={() => navigation.goBack()}
-          rightButtonType="none"
-        />
+        <View style={EstilosRecuperarNombreUsuario.contenedor}>
+          <View style={[EstilosRecuperarNombreUsuario.contenidoResponsivo, width > 600 && EstilosRecuperarNombreUsuario.contenidoWeb]}>
+            {/* NavBar Superior */}
+            <NavBarSuperior
+              titulo="Recuperar usuario"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
-        {/* Paso de verificación */}
-        <Text style={EstilosRecuperarNombreUsuario.instruccion}>
-          Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu usuario.
-        </Text>
+            {/* Paso de verificación */}
+            <Text style={EstilosRecuperarNombreUsuario.instruccion}>
+              Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu usuario.
+            </Text>
 
-        {/* Campo de entrada */}
-        <Input
-          placeholder="Correo electrónico"
-          value={email}
-          onChangeText={setEmail}
-        />
+            {/* Campo de entrada */}
+            <Input
+              placeholder="Correo electrónico"
+              value={email}
+              onChangeText={setEmail}
+            />
 
-        {/* Snackbar para mostrar mensajes */}
-        <Snackbar
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          duration={4000} // 4 segundos
-          style={{
-            marginLeft: -30, 
-            alignSelf: "center", 
-            width: "90%", 
-          }}
-        >
-          {message}
-</Snackbar>
+            {/* Snackbar para mostrar mensajes */}
+            <CustomSnackbar
+              visible={visible}
+              setVisible={setVisible}
+              message={message}
+            />
 
-        {/* Botón de enviar */}
-        <Button
-                  titulo="Enviar"
-                  onPress={enviarSolicitud}
-                  textSize={20}
-                  textColor={Colors.fondo}
-                  padding={15}
-                  borderRadius={25}
-                />
-      </View>
-      </View>
+            {/* Botón de enviar */}
+            <Button
+              titulo="Enviar"
+              onPress={enviarSolicitud}
+              textSize={20}
+              textColor={Colors.fondo}
+              padding={15}
+              borderRadius={25}
+            />
+          </View>
+        </View>
       </LinearGradient>
     </SafeAreaView>
   );

@@ -1,6 +1,5 @@
-import {SafeAreaView,Text, TextInput, TouchableOpacity, View, useWindowDimensions, } from "react-native";
+import {SafeAreaView,Text, TouchableOpacity, View, useWindowDimensions, } from "react-native";
 import React, { useContext, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
