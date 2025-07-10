@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -147,47 +147,49 @@ const UsuariosBloqueados = () => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView style={EstilosUsuariosBloqueados.contenedor}>
-        {/* Header con Perfil*/}
-        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
+        <ScrollView contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}>
+          {/* Header con Perfil*/}
+          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
-        {/* Barra de pestañas */}
-        <BarraPestanasPerfil />
+          {/* Barra de pestañas */}
+          <BarraPestanasPerfil />
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#197278" />
-        ) : (
-          usuariosBloqueados.length === 0 ? (
-            <View style={EstilosUsuariosBloqueados.noResultsContainer}>
-              <Image
-                source={require('./estilos/no-results.png')}
-                style={EstilosUsuariosBloqueados.noResultsImage}
-                resizeMode="contain"
-              />
-              <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text>
-            </View>
-
+          {loading ? (
+            <ActivityIndicator size="large" color="#197278" />
           ) : (
-            <FlatList
-              data={usuariosBloqueados}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View style={EstilosUsuariosBloqueados.usuarioBloqueado}>
-                  <Image
-                    source={{ uri: item.foto || 'https://via.placeholder.com/50' }}
-                    style={EstilosUsuariosBloqueados.image}
-                  />
-                  <Text>{item.nombre}</Text>
-                  <TouchableOpacity onPress={() => desbloquearUsuario(item.id)}>
-                    <Text style={EstilosUsuariosBloqueados.botonDesbloquear}>Desbloquear</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              contentContainerStyle={EstilosUsuariosBloqueados.listaUsuarios}
-            />
-          )
-        )}
+            usuariosBloqueados.length === 0 ? (
+              <View style={EstilosUsuariosBloqueados.noResultsContainer}>
+                <Image
+                  source={require('./estilos/no-results.png')}
+                  style={EstilosUsuariosBloqueados.noResultsImage}
+                  resizeMode="contain"
+                />
+                <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text>
+              </View>
 
+            ) : (
+              <FlatList
+                data={usuariosBloqueados}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <View style={EstilosUsuariosBloqueados.usuarioBloqueado}>
+                    <Image
+                      source={{ uri: item.foto || 'https://via.placeholder.com/50' }}
+                      style={EstilosUsuariosBloqueados.image}
+                    />
+                    <Text>{item.nombre}</Text>
+                    <TouchableOpacity onPress={() => desbloquearUsuario(item.id)}>
+                      <Text style={EstilosUsuariosBloqueados.botonDesbloquear}>Desbloquear</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                contentContainerStyle={EstilosUsuariosBloqueados.listaUsuarios}
+              />
+            )
+          )}
+
+        </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="UsuarioBloqueados" // O el screen activo correspondiente

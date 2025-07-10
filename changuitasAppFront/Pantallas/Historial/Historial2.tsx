@@ -247,9 +247,10 @@ const Historial2 = () => {
         {/* NavBar Superior */}
         <NavBarSuperior
           titulo="Historial"
-          showBackButton={false}
+          showBackButton={true}
           onBackPress={() => navigation.goBack()}
-          rightButtonType="none"
+          rightButtonType="menu"
+          onRightPress={() => { toggleDesplegable(); }}
         />
 
         {/* Menú Desplegable */}

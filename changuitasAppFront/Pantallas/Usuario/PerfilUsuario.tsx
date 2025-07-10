@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, SafeAreaView, ActivityIndicator, Linking, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -163,6 +163,7 @@ const PerfilUsuario: React.FC = () => {
   return (
     <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
       <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
+        <ScrollView contentContainerStyle={EstilosPerfilUsuario.scrollContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
         <BarraPestanasPerfil />
@@ -183,6 +184,7 @@ const PerfilUsuario: React.FC = () => {
         />
         <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
         {usuario && <DatosPersonalesUsuario usuario={usuario} />}
+        </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="PerfilUsuario" // O el screen activo correspondiente

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -183,43 +183,44 @@ const MisServicios = () => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView style={EstilosMisServicios.contenedor}>
-        {/* Header con Perfil*/}
-        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
+        <ScrollView contentContainerStyle={EstilosMisServicios.scrollContainer}>
+          {/* Header con Perfil*/}
+          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
-        {/* Barra de pestañas */}
-        <BarraPestanasPerfil />
+          {/* Barra de pestañas */}
+          <BarraPestanasPerfil />
 
-        {/* Botón Agregar Servicio */}
-        <TouchableOpacity
-          style={EstilosMisServicios.botonAgregarServicio}
-          onPress={() => navigation.navigate('AgregarServicio1')}
-        >
-          <Ionicons name="add" size={20} color="#FC6A30" />
-          <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
-        </TouchableOpacity>
+          {/* Botón Agregar Servicio */}
+          <TouchableOpacity
+            style={EstilosMisServicios.botonAgregarServicio}
+            onPress={() => navigation.navigate('AgregarServicio1')}
+          >
+            <Ionicons name="add" size={20} color="#FC6A30" />
+            <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
+          </TouchableOpacity>
 
-        {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
-        {loading ? (
-          <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
-        ) : services.length === 0 ? (
-          <View style={EstilosMisServicios.noResultsContainer}>
-            <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
-            <Image
-              source={require('./estilos/bored.png')}
-              style={EstilosMisServicios.noResultsImage}
-              resizeMode="contain"
+          {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+          {loading ? (
+            <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
+          ) : services.length === 0 ? (
+            <View style={EstilosMisServicios.noResultsContainer}>
+              <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+              <Image
+                source={require('./estilos/bored.png')}
+                style={EstilosMisServicios.noResultsImage}
+                resizeMode="contain"
+              />
+            </View>
+          ) : (
+            <FlatList
+              data={services}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderServiceItem}
+              contentContainerStyle={EstilosMisServicios.listaServicios}
             />
-          </View>
-        ) : (
-          <FlatList
-            data={services}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderServiceItem}
-            contentContainerStyle={EstilosMisServicios.listaServicios}
-          />
-        )}
-
+          )}
+        </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="MisServicios" // O el screen activo correspondiente
