@@ -20,6 +20,7 @@ import Input from '../../componentes/inputs/Input';
 import PasswordInput from '../../componentes/inputs/PasswordInput';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { Button } from '../../componentes/Buttons';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -365,7 +366,9 @@ const EditarPerfil = () => {
           {/* Botón de Guardar Cambios*/}
           {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
           {!visible && (
-            <TouchableOpacity
+            <View style={{ alignItems: 'center'}}>
+            <Button
+              titulo="Guardar Cambios"
               onPress={() =>
                 guardarCambios(
                   camposModificados,
@@ -378,10 +381,14 @@ const EditarPerfil = () => {
                   setVisible
                 )
               }
-              style={EstilosEditarPerfil.botonGuardarCambios}
-            >
-              <Text style={EstilosEditarPerfil.textoBotonGuardar}>Guardar Cambios</Text>
-            </TouchableOpacity>
+              backgroundColor="#FC6A30"
+              textColor="#191A2E"
+              textSize={16}
+              padding={12}
+              borderRadius={50}
+              width="80%"
+            />
+            </View>
           )}
 
           {/* CustomSnackbar */}

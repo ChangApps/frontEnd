@@ -11,6 +11,8 @@ import { AuthContext } from '../../autenticacion/auth';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { Button } from '../../componentes/Buttons';
+import { COLORES_APP, FUENTES, DIMENSIONES } from '../../componentes/estilosCompartidosPerfilesUsuarios';
 
 const PerfilProveedor = () => {
 
@@ -407,15 +409,42 @@ const PerfilProveedor = () => {
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
-            <TouchableOpacity style={EstilosPerfilProveedor.nextButton} onPress={iniciarChanguita}>
-              <Text style={EstilosPerfilProveedor.nextButtonText}>Iniciar changuita</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={EstilosPerfilProveedor.prevButton} onPress={handleChat}>
-              <Text style={EstilosPerfilProveedor.prevButtonText}>Chatear</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={EstilosPerfilProveedor.prevButton} onPress={() => bloquearUsuario(Number(route.params.id))}>
-              <Text style={EstilosPerfilProveedor.prevButtonText}>Bloquear</Text>
-            </TouchableOpacity>
+             <Button
+                titulo="Iniciar changuita"
+                onPress={iniciarChanguita}
+                backgroundColor={COLORES_APP.primario} 
+                textColor="String"        
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="40%"
+              />
+              
+              <Button
+                titulo="Chatear"
+                onPress={handleChat}
+                backgroundColor="transparent"
+                borderColor={COLORES_APP.primario}
+                borderWidth={1}
+                textColor={COLORES_APP.primario}
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="25%"
+              />
+
+              <Button
+                titulo="Bloquear"
+                onPress={() => bloquearUsuario(Number(route.params.id))}
+                backgroundColor="transparent"
+                borderColor={COLORES_APP.primario}
+                borderWidth={1}
+                textColor={COLORES_APP.primario}
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="25%"
+              />
           </View>
 
           {/* Datos adicionales */}

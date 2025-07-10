@@ -11,6 +11,7 @@ import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
 import { mostrarOpcionesSelectorImagen } from '../../utils/seleccionImagen';
 import { ImageCropperWeb } from "../../componentes/ImageCropperWeb";
+import { Button } from "../../componentes/Buttons";
 
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -212,12 +213,21 @@ const Verificacion2Registro = () => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <TouchableOpacity
-          onPress={crearUsuario}
-          style={EstilosVerificacion2.botonContenedor}
-        >
-          <Text style={EstilosVerificacion2.textoBoton}>Siguiente →</Text>
-        </TouchableOpacity>
+
+        <View style={{ alignSelf: 'center', width: '60%', marginTop:20 }}>
+          <Button
+            titulo="Siguiente →"
+            onPress={crearUsuario}
+            backgroundColor= '#FC6A30'
+            textColor="#fffff"           
+            textSize={18}                 
+            padding={15}                  
+            borderRadius={25}             
+            width={undefined}             
+            showIcon={false}
+          />
+        </View>
+
       </View>
     </SafeAreaView>
   );
