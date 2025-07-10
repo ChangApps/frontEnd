@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
@@ -15,6 +14,7 @@ import AccionesTarea from '../../componentes/perfilesUsuarios/AccionesTarea';
 import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfilUsuario';
 import ModalCancelarChanguita from '../../componentes/ModalCancelarChanguita';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -164,6 +164,26 @@ const DetalleTarea = () => {
     }
   };
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
   return (
     <SafeAreaView style={EstilosDetalleTarea.contenedor}>
       <View style={EstilosDetalleTarea.encabezado}>
@@ -228,7 +248,10 @@ const DetalleTarea = () => {
         motivosCancelacion={motivosCancelacion}
       />
 
-      <BarraNavegacionInferior />
+      <NavBarInferior
+        activeScreen="DetalleTarea" // O el screen activo correspondiente
+        onNavigate={handleNavigation}
+      />
 
       {/* CustomSnackbar */}
       <CustomSnackbar

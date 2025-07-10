@@ -1,45 +1,45 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView,Alert, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosAgregarServicio1 from './estilos/EstilosAgregarServicio1';
 import { AuthContext } from '../../autenticacion/auth';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [state,setState] = useContext(AuthContext);
+  const [state, setState] = useContext(AuthContext);
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
   const redirectAdmin = () => {
-      Linking.openURL('http://127.0.0.1:8000/admin/');
-    };
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
 
   const logout = async () => {
-      try {
-        setState({ token: "" });
-        await cerrarSesion(); // Simula el proceso de cierre de sesión
-        console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-      }  catch (error: any) {
-          console.log('Error en el cierre de sesión:', error.message);
-          Alert.alert("Error", error.message);
-      } finally {
+    try {
+      setState({ token: "" });
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
+      Alert.alert("Error", error.message);
+    } finally {
       console.log("Intentando ir al iniciar sesion ");
       navigation.reset({
         index: 0,
         routes: [{ name: "InicioDeSesion" }],
       });
-      }
-    };
+    }
+  };
 
   const handleSelectService = (service: string) => {
     // Seleccionar un solo servicio, desmarcando el anterior
@@ -54,15 +54,35 @@ const AgregarServicio1 = () => {
     navigation.navigate('AgregarServicio2', { selectedServices: [selectedService] });
   };
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
   return (
     <View style={EstilosAgregarServicio1.container}>
       {/* NavBar Superior */}
-                  <NavBarSuperior
-                    titulo="Agregar un servicio"
-                    showBackButton={true}
-                    onBackPress={() => navigation.goBack()}
-                    rightButtonType="none"
-                  />
+      <NavBarSuperior
+        titulo="Agregar un servicio"
+        showBackButton={true}
+        onBackPress={() => navigation.goBack()}
+        rightButtonType="none"
+      />
       <ScrollView contentContainerStyle={EstilosAgregarServicio1.scrollContainer}>
         <View style={EstilosAgregarServicio1.pasosWrapper}>
           <View style={EstilosAgregarServicio1.pasoActivo}>
@@ -84,29 +104,32 @@ const AgregarServicio1 = () => {
         {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedService, handleSelectService)}
         {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedService, handleSelectService)}
 
-      {/* Botones de acción */}
-      <View style={EstilosAgregarServicio1.botonesContenedor}>
-        <Button
-          titulo="Siguiente"
-          onPress={handleNext}
-          textSize={18}
-          textColor={Colors.fondo}
-          padding={14}
-          borderRadius={25}
-        />
-        <Button
-          titulo="Cancelar"
-          onPress={() => navigation.navigate('MisServicios')}
-          backgroundColor="transparent"
-          textColor={Colors.naranja}
-          textSize={18}
-          padding={14}
-          borderRadius={25}
-        />
-      </View>
+        {/* Botones de acción */}
+        <View style={EstilosAgregarServicio1.botonesContenedor}>
+          <Button
+            titulo="Siguiente"
+            onPress={handleNext}
+            textSize={18}
+            textColor={Colors.fondo}
+            padding={14}
+            borderRadius={25}
+          />
+          <Button
+            titulo="Cancelar"
+            onPress={() => navigation.navigate('MisServicios')}
+            backgroundColor="transparent"
+            textColor={Colors.naranja}
+            textSize={18}
+            padding={14}
+            borderRadius={25}
+          />
+        </View>
       </ScrollView>
 
-      <BarraNavegacionInferior />
+      <NavBarInferior
+        activeScreen="AgregarServicio1" // O el screen activo correspondiente
+        onNavigate={handleNavigation}
+      />
     </View>
   );
 };

@@ -6,12 +6,12 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import API_URL from '../../utils/API_URL';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosHistorial2 from './estilos/EstilosHistorial2';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -154,9 +154,9 @@ const Historial2 = () => {
         /*
         // Filtrar las solicitudes con estado 'F' o 'C' antes de continuar
         const solicitudesFiltradas = historialData.filter((item:any) => 
-          item.estado === 'F' || item.estado === 'C' // Filtramos por estado
+        item.estado === 'F' || item.estado === 'C' // Filtramos por estado
         );
-      */
+        */
         const solicitudesData = historialData.map((item: any) => ({
           clienteId: item.cliente,
           idSolicitud: item.id,
@@ -219,6 +219,26 @@ const Historial2 = () => {
     }
   };
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -266,7 +286,10 @@ const Historial2 = () => {
         />
 
         {/* Barra de navegación inferior */}
-        <BarraNavegacionInferior />
+        <NavBarInferior
+          activeScreen="Historial2" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

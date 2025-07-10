@@ -1,4 +1,4 @@
-import { SafeAreaView,Text, View, ScrollView, Alert } from "react-native";
+import { SafeAreaView, Text, View, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -44,25 +44,25 @@ const Registro = () => {
       setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;
     }
-  
+
     if (!fechaNacimiento.trim()) {
       Alert.alert('Error', 'El campo de fecha de nacimiento no puede estar vacío.');
       setErrorMessage('El campo de fecha de nacimiento no puede estar vacío.');
       return;
     }
-    
+
     // Reformatea fecha de nacimiento a 'YYYY-MM-DD'
     const fechaNacimientoFormatoCorrecto = fechaNacimiento.split('/').reverse().join('-');
-  
+
     const birthDate = new Date(fechaNacimientoFormatoCorrecto);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-  
+
     if (age < 18) {
       Alert.alert('Error', 'Debes tener al menos 18 años para registrarte');
       setErrorMessage('Debes tener al menos 18 años para registrarte');
@@ -97,11 +97,11 @@ const Registro = () => {
         },
         body: JSON.stringify(usuario),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         let errorMessage = '';
-  
+
         // Diccionario para traducir claves y mensajes
         const translations: Record<string, string> = {
           username: 'Nombre de usuario',
@@ -115,7 +115,7 @@ const Registro = () => {
           password: 'Contraseña',
           password2: 'Repetir contraseña',
         };
-    
+
         const translatedErrors: Record<string, string> = {
           "This field may not be blank.": "Este campo no puede estar vacío.",
           "This field may not be null.": "Este campo no puede ser vacío.",
@@ -135,12 +135,12 @@ const Registro = () => {
           parentKey: string = ''
         ): string => {
           let message = '';
-  
+
           for (const [key, value] of Object.entries(errors)) {
             const field = parentKey
               ? `${translations[parentKey] || parentKey} -> ${translations[key] || key}`
               : translations[key] || key;
-  
+
             if (Array.isArray(value)) {
               // Si es un array, traducimos cada mensaje
               const messages = value.map(
@@ -156,21 +156,21 @@ const Registro = () => {
               message += `${field}: ${singleMessage}\n`;
             }
           }
-  
+
           return message;
         };
-  
+
         // Traducimos los errores
         errorMessage = translateErrors(errorData).trim();
-  
+
         throw new Error(errorMessage);
       }
-  
+
       // Si la respuesta es exitosa
       const data = await response.json();
-     console.log('Los datos son válidos'); 
-       navigation.navigate('Verificacion1Mail', { datosUsuario: usuario });
-    
+      console.log('Los datos son válidos');
+      navigation.navigate('Verificacion1Mail', { datosUsuario: usuario });
+
     } catch (error: any) {
       const errorMessage = error.message || 'No se pudieron validar los datos.';
       console.error('Error detallado:', error);
@@ -178,8 +178,8 @@ const Registro = () => {
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     }
   };
-  
-const { width } = useWindowDimensions();
+
+  const { width } = useWindowDimensions();
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
@@ -187,135 +187,135 @@ const { width } = useWindowDimensions();
         <ScrollView>
           <View style={EstilosRegistro.contenedor}>
             <View style={[EstilosRegistro.contenidoResponsivo, width > 600 && EstilosRegistro.contenidoWeb]}>
-            {/* NavBar Superior */}
-            <NavBarSuperior
-              titulo="Crear perfil"
-              showBackButton={true}
-              onBackPress={() => navigation.goBack()}
-              rightButtonType="none"
-            />
+              {/* NavBar Superior */}
+              <NavBarSuperior
+                titulo="Crear perfil"
+                showBackButton={true}
+                onBackPress={() => navigation.goBack()}
+                rightButtonType="none"
+              />
 
               {/* Mensaje de error */}
-          {errorMessage && (
-            <View style={EstilosRegistro.errorContainer}>
-              <Text style={EstilosRegistro.errorText}>Error: {errorMessage}</Text>
-            </View>
-          )}
+              {errorMessage && (
+                <View style={EstilosRegistro.errorContainer}>
+                  <Text style={EstilosRegistro.errorText}>Error: {errorMessage}</Text>
+                </View>
+              )}
 
-            <View style={EstilosRegistro.formulario}>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Nombre de usuario</Text>
-                <Input
-                  placeholder="Username"
-                  value={username}
-                  onChangeText={setUsername}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Nombre</Text>
-                <Input
-                  placeholder="Nombre"
-                  value={firstName}
-                  onChangeText={setFirstName}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Apellido</Text>
-                <Input
-                  placeholder="Apellido"
-                  value={lastName}
-                  onChangeText={setLastName}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Fecha de nacimiento</Text>
-                <Input
-                  placeholder="aaaa-mm-dd"
-                  value={fechaNacimiento}
-                  onChangeText={setFechaNacimiento}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>DNI</Text>
-                <Input
-                  placeholder="12345678"
-                  value={documento}
-                  onChangeText={setDocumento}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Teléfono</Text>
-                <Input
-                  placeholder="2901245599"
-                  value={telefono}
-                  onChangeText={setTelefono}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Calle</Text>
-                <Input
-                  placeholder="San Martín"
-                  value={calle}
-                  onChangeText={setCalle}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Altura</Text>
-                <Input
-                  placeholder="456"
-                  value={altura}
-                  onChangeText={setAltura}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Piso (opcional)</Text>
-                <Input
-                  placeholder="1"
-                  value={piso}
-                  onChangeText={setPiso}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Nro. dpto. (opcional)</Text>
-                <Input
-                  placeholder="A"
-                  value={nroDepto}
-                  onChangeText={setNroDepto}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Barrio</Text>
-                <Input
-                  placeholder="Centro"
-                  value={barrio}
-                  onChangeText={setBarrio}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Correo electrónico</Text>
-                <Input
-                  placeholder="changuitas@app.com"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Contraseña</Text>
-                <PasswordInput
-                  placeholder="************"
-                  value={password}
-                  onChangeText={setPassword}
-                />
-              </View>
-              <View style={EstilosRegistro.campo}>
-                <Text style={EstilosRegistro.etiqueta}>Confirmar contraseña</Text>
-                <PasswordInput
-                  placeholder="************"
-                  value={confirmarPassword}
-                  onChangeText={setConfirmarPassword}
-                />
-              </View>
-              {/* Botón de Registrarse */}
+              <View style={EstilosRegistro.formulario}>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Nombre de usuario</Text>
+                  <Input
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Nombre</Text>
+                  <Input
+                    placeholder="Nombre"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Apellido</Text>
+                  <Input
+                    placeholder="Apellido"
+                    value={lastName}
+                    onChangeText={setLastName}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Fecha de nacimiento</Text>
+                  <Input
+                    placeholder="aaaa-mm-dd"
+                    value={fechaNacimiento}
+                    onChangeText={setFechaNacimiento}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>DNI</Text>
+                  <Input
+                    placeholder="12345678"
+                    value={documento}
+                    onChangeText={setDocumento}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Teléfono</Text>
+                  <Input
+                    placeholder="2901245599"
+                    value={telefono}
+                    onChangeText={setTelefono}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Calle</Text>
+                  <Input
+                    placeholder="San Martín"
+                    value={calle}
+                    onChangeText={setCalle}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Altura</Text>
+                  <Input
+                    placeholder="456"
+                    value={altura}
+                    onChangeText={setAltura}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Piso (opcional)</Text>
+                  <Input
+                    placeholder="1"
+                    value={piso}
+                    onChangeText={setPiso}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Nro. dpto. (opcional)</Text>
+                  <Input
+                    placeholder="A"
+                    value={nroDepto}
+                    onChangeText={setNroDepto}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Barrio</Text>
+                  <Input
+                    placeholder="Centro"
+                    value={barrio}
+                    onChangeText={setBarrio}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Correo electrónico</Text>
+                  <Input
+                    placeholder="changuitas@app.com"
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Contraseña</Text>
+                  <PasswordInput
+                    placeholder="************"
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                </View>
+                <View style={EstilosRegistro.campo}>
+                  <Text style={EstilosRegistro.etiqueta}>Confirmar contraseña</Text>
+                  <PasswordInput
+                    placeholder="************"
+                    value={confirmarPassword}
+                    onChangeText={setConfirmarPassword}
+                  />
+                </View>
+                {/* Botón de Registrarse */}
                 <Button
                   titulo="Registrarse"
                   onPress={handleRegistro}
@@ -324,8 +324,8 @@ const { width } = useWindowDimensions();
                   padding={15}
                   borderRadius={25}
                 />
+              </View>
             </View>
-          </View>
           </View>
         </ScrollView>
       </SafeAreaView>

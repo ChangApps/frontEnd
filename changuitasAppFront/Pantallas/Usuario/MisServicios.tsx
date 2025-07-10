@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity,Alert, FlatList, Image, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from '../../utils/API_URL';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import EstilosMisServicios from './estilos/EstilosMisServicios';
 import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -29,13 +29,13 @@ const MisServicios = () => {
       hastaHora: string;
     }>;
   }
-  
+
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [state,setState] = useContext(AuthContext);
+  const [state, setState] = useContext(AuthContext);
   const [idServicioSeleccionado, setIdServicioSeleccionado] = useState(null);
-  
+
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
@@ -43,24 +43,24 @@ const MisServicios = () => {
   const redirectAdmin = () => {
     Linking.openURL('http://127.0.0.1:8000/admin/');
   };
- 
+
   const logout = async () => {
     try {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    }  catch (error: any) {
-        console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
+      Alert.alert("Error", error.message);
     } finally {
-    console.log("Intentando ir al iniciar sesion ");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "InicioDeSesion" }],
-    });
+      console.log("Intentando ir al iniciar sesion ");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "InicioDeSesion" }],
+      });
     }
   };
-  
+
   const EliminarServicio = async (serviceId: any) => {
     try {
       // Almacena el id del servicio en la variable de estado antes de borrar
@@ -71,7 +71,7 @@ const MisServicios = () => {
         throw new Error('Token de acceso no encontrado');
       }
 
-     console.log("Eliminado el servicio: ",serviceId);
+      console.log("Eliminado el servicio: ", serviceId);
 
       const response = await fetch(`${API_URL}/servicios/${serviceId}/`, {
         method: "DELETE",
@@ -80,9 +80,9 @@ const MisServicios = () => {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-  
+
       if (response.status === 200) {
-     
+
         console.log("Se elimino el servicio correctamente");
         // Actualiza la lista de servicios eliminando el servicio borrado.
         setServices(services.filter(servicio => servicio.id !== serviceId));
@@ -131,6 +131,7 @@ const MisServicios = () => {
   useEffect(() => {
     fetchUsuario();
   }, []);
+
   const renderServiceItem = ({ item }: { item: Servicio }) => (
     <View style={EstilosMisServicios.servicioCard}>
       <Text style={EstilosMisServicios.nombreServicio}>{item.nombreServicio}</Text>
@@ -146,16 +147,37 @@ const MisServicios = () => {
           {item.dia}: {item.desdeHora} - {item.hastaHora}
         </Text>
       )}
-  
+
       {/* Botón para eliminar el servicio */}
-          <TouchableOpacity 
-      style={EstilosMisServicios.botonEliminar} 
-      onPress={() => EliminarServicio(item.id)}
-        >
+      <TouchableOpacity
+        style={EstilosMisServicios.botonEliminar}
+        onPress={() => EliminarServicio(item.id)}
+      >
         <Ionicons name="trash-outline" size={24} color="red" />
       </TouchableOpacity>
     </View>
   );
+
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -165,25 +187,25 @@ const MisServicios = () => {
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
-      {/* Barra de pestañas */}
-    <BarraPestanasPerfil/>
+        {/* Barra de pestañas */}
+        <BarraPestanasPerfil />
 
         {/* Botón Agregar Servicio */}
-        <TouchableOpacity 
-          style={EstilosMisServicios.botonAgregarServicio} 
-             onPress={() => navigation.navigate('AgregarServicio1')}
+        <TouchableOpacity
+          style={EstilosMisServicios.botonAgregarServicio}
+          onPress={() => navigation.navigate('AgregarServicio1')}
         >
           <Ionicons name="add" size={20} color="#FC6A30" />
           <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
         </TouchableOpacity>
 
-         {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
-         {loading ? (
+        {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
+        {loading ? (
           <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
         ) : services.length === 0 ? (
           <View style={EstilosMisServicios.noResultsContainer}>
-          <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
-          <Image
+            <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+            <Image
               source={require('./estilos/bored.png')}
               style={EstilosMisServicios.noResultsImage}
               resizeMode="contain"
@@ -198,10 +220,13 @@ const MisServicios = () => {
           />
         )}
 
-      {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>        
-    </SafeAreaView>
- </TouchableWithoutFeedback>
+        {/* Barra de navegación inferior */}
+        <NavBarInferior
+          activeScreen="MisServicios" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

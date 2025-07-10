@@ -5,10 +5,10 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from "../../utils/API_URL";
-import BarraNavegacionInferior from "../../utils/BarraNavegacionInferior";
 import EstilosResultadosBusqueda from "./estilos/EstilosResultadosBusqueda";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
+import { NavBarInferior } from "../../componentes/NavBarInferior";
 
 const ResultadosBusqueda = () => {
     const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
@@ -70,6 +70,26 @@ const ResultadosBusqueda = () => {
 
     //Filtramos los proveedores que NO están bloqueados
     const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
+
+    const handleNavigation = (screen: string) => {
+        switch (screen) {
+            case 'Home':
+                navigation.navigate('Home');
+                break;
+            case 'Historial1':
+                navigation.navigate('Historial1');
+                break;
+            case 'Add':
+                navigation.navigate('AgregarServicio1');
+                break;
+            case 'Notifications':
+                // Navegar a notificaciones
+                break;
+            case 'PerfilUsuario':
+                navigation.navigate('PerfilUsuario');
+                break;
+        }
+    };
 
     return (
         <SafeAreaView style={EstilosResultadosBusqueda.safeArea}>
@@ -144,7 +164,10 @@ const ResultadosBusqueda = () => {
             </Modal>
 
             {/* Barra de navegación inferior */}
-            <BarraNavegacionInferior />
+            <NavBarInferior
+                activeScreen="ResultadosBusqueda" // O el screen activo correspondiente
+                onNavigate={handleNavigation}
+            />
 
             {/* CustomSnackbar */}
             <CustomSnackbar

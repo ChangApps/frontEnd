@@ -6,12 +6,12 @@ import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import API_URL from '../../utils/API_URL';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -224,6 +224,25 @@ const Historial1 = () => {
     }
   };
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -271,7 +290,10 @@ const Historial1 = () => {
         />
 
         {/* Barra de navegación inferior */}
-        <BarraNavegacionInferior />
+        <NavBarInferior
+          activeScreen="Historial1" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
