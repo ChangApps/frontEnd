@@ -14,6 +14,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { Direccion } from '../../types/interfaces';
 import { redirectAdmin } from '../../utils/utils';
 import Colors from '../../assets/Colors';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const PerfilProveedor = () => {
 
@@ -384,18 +385,7 @@ const PerfilProveedor = () => {
           </Modal>
 
           {/* Snackbar para mostrar mensajes */}
-          <Snackbar
-            visible={visible}
-            onDismiss={() => setVisible(false)}
-            duration={4000} // 4 segundos
-            style={{
-              marginLeft: -30,
-              alignSelf: "center",
-              width: "90%",
-            }}
-          >
-            {message}
-          </Snackbar>
+         <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
