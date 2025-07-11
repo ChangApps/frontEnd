@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -17,7 +17,7 @@ const ResultadosBusqueda = () => {
     const [message, setMessage] = useState('');
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
-    const { proveedores, error } = route.params;
+    const { proveedores, error,busquedaGeneral } = route.params;
     const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
     const [selectedImage, setSelectedImage] = useState("");
 
@@ -104,51 +104,96 @@ const ResultadosBusqueda = () => {
 
 
                 {/* Mostrar mensaje de error si existe */}
-                {error ? (
-                    <View style={EstilosResultadosBusqueda.errorContainer}>
-                        <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
-                    </View>
+               {error ? (
+                <View style={EstilosResultadosBusqueda.errorContainer}>
+                    <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
+                </View>
                 ) : proveedoresFiltrados.length === 0 ? (
-                    <View style={EstilosResultadosBusqueda.noResultsContainer}>
-                        <Image
-                            source={require('./estilos/list-is-empty.png')}
-                            style={EstilosResultadosBusqueda.noResultsImage}
-                            resizeMode="contain"
-                        />
-                        <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>No se encontraron proveedores para los filtros seleccionados.</Text>
-                    </View>
+                <View style={EstilosResultadosBusqueda.noResultsContainer}>
+                    <Image
+                    source={require('./estilos/list-is-empty.png')}
+                    style={EstilosResultadosBusqueda.noResultsImage}
+                    resizeMode="contain"
+                    />
+                    <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>
+                    No se encontraron proveedores para los filtros seleccionados.
+                    </Text>
+                </View>
                 ) : (
-
-                    proveedoresFiltrados.map((item, index) => (
+                <ScrollView>
+                    {busquedaGeneral
+                    ? (
+                        proveedoresFiltrados.map((item: any, index: number) => (
                         <View key={index} style={EstilosResultadosBusqueda.resultItem}>
-                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))} style={EstilosResultadosBusqueda.image}>
-                                <Image
-                                    style={EstilosResultadosBusqueda.image}
-                                    source={{ uri: obtenerFotoPerfil(item) }}
-                                />
+                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
+                            <Image
+                                style={EstilosResultadosBusqueda.image}
+                                source={{ uri: obtenerFotoPerfil(item) }}
+                            />
                             </TouchableOpacity>
+
                             <View style={EstilosResultadosBusqueda.resultDetails}>
-                                <Text style={EstilosResultadosBusqueda.name}>{item.nombre} {item.apellido}</Text>
-                                <Text style={EstilosResultadosBusqueda.category}>{item.nombreServicio || "Categoría no especificada"}</Text>
-                                <View style={EstilosResultadosBusqueda.rating}>
-                                    {[...Array(5)].map((_, i) => (
-                                        <Ionicons
-                                            key={i}
-                                            name="star"
-                                            size={16}
-                                            color={i < item.puntaje ? "#FC6A30" : "#CCCCCC"}
-                                        />
-                                    ))}
+                            <Text style={EstilosResultadosBusqueda.name}>
+                                {item.first_name} {item.last_name}
+                            </Text>
+
+                            {item.servicios?.map((servicio: any, idx: number) => (
+                                <View key={idx} style={{ marginTop: 6 }}>
+                                <Text style={{ color: '#ffffff', fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
+                                {servicio.dias?.map((dia: any, diaIdx: number) => (
+                                    <Text key={diaIdx} style={{ color: '#aaaaaa', fontSize: 12 }}>
+                                    {dia.dia} de {dia.desdeHora} a {dia.hastaHora}
+                                    </Text>
+                                ))}
                                 </View>
+                            ))}
                             </View>
+
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
-                                style={EstilosResultadosBusqueda.arrowButton}
+                            onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
+                            style={EstilosResultadosBusqueda.arrowButton}
                             >
-                                <Ionicons name="chevron-forward" size={20} color="#fff" />
+                            <Ionicons name="chevron-forward" size={20} color="#fff" />
                             </TouchableOpacity>
                         </View>
-                    ))
+                        ))
+                    )
+                    : (
+                        proveedoresFiltrados.map((item: any, index: number) => (
+                        <View key={index} style={EstilosResultadosBusqueda.resultItem}>
+                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))} style={EstilosResultadosBusqueda.image}>
+                            <Image
+                                style={EstilosResultadosBusqueda.image}
+                                source={{ uri: obtenerFotoPerfil(item) }}
+                            />
+                            </TouchableOpacity>
+                            <View style={EstilosResultadosBusqueda.resultDetails}>
+                            <Text style={EstilosResultadosBusqueda.name}>{item.first_name} {item.last_name}</Text>
+                            <Text style={EstilosResultadosBusqueda.category}>
+                                {item.servicios?.[0]?.nombreServicio || "Categoría no especificada"}
+                            </Text>
+                            <View style={EstilosResultadosBusqueda.rating}>
+                                {[...Array(5)].map((_, i) => (
+                                <Ionicons
+                                    key={i}
+                                    name="star"
+                                    size={16}
+                                    color={i < item.puntaje ? "#FC6A30" : "#CCCCCC"}
+                                />
+                                ))}
+                            </View>
+                            </View>
+                            <TouchableOpacity
+                            onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
+                            style={EstilosResultadosBusqueda.arrowButton}
+                            >
+                            <Ionicons name="chevron-forward" size={20} color="#fff" />
+                            </TouchableOpacity>
+                        </View>
+                        ))
+                    )
+                    }
+                </ScrollView>
                 )}
             </View>
 

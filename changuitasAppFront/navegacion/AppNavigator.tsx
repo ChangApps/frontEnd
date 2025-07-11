@@ -65,6 +65,7 @@ export type RootStackParamList = {
   ResultadosBusqueda: { 
     proveedores: any[]; 
     error?: string; // Para el mensaje de error
+    busquedaGeneral: Boolean;
   };
   PerfilProveedor: { id: any[] };
   DetalleTarea: { id: string; idSolicitud: string };

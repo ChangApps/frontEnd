@@ -65,7 +65,18 @@ const PantallaHome = () => {
       const data = await res.json();
 
       console.log('Datos obtenidos:', data);
-      return data;
+      if (!data || data.length === 0) {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: [],
+          error: 'No se encontraron resultados para tu búsqueda.',
+          busquedaGeneral: false
+        });
+      } else {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: data,
+          busquedaGeneral: true
+        });
+      }
     } catch (error) {
       console.error('Error al obtener los datos:', error);
     }
