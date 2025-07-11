@@ -20,6 +20,7 @@ import ResultadoListSimple from '../../componentes/ResultadoListSimple';
 import Colors from '../../assets/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import ModalBuscar from '../../componentes/ModalBuscar';
+import API_URL from '../../utils/API_URL';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -39,7 +40,37 @@ const PantallaHome = () => {
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
+  const [textoBusqueda, setTextoBusqueda] = useState('');
   
+
+  const handleBuscar = async () => {
+    console.log("Buscando por:", textoBusqueda);
+
+    try {
+      const storedToken = await AsyncStorage.getItem('accessToken');
+      const res = await fetch(`${API_URL}/buscar-usuario/?q=${encodeURIComponent(textoBusqueda)}`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+
+        if (res.status === 204) {
+          console.log("No se encontraron resultados.");
+          
+          return;
+        }
+
+    if (!res.ok) throw new Error('Error al obtener los datos');
+
+      const data = await res.json();
+
+      console.log('Datos obtenidos:', data);
+      return data;
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
@@ -160,14 +191,16 @@ const PantallaHome = () => {
         <ScrollView contentContainerStyle={EstilosHome.scrollContenido}>
           {/* Buscador */}
           <View style={EstilosHome.barraBusqueda}>
-            <TextInput
-              style={EstilosHome.inputBusqueda}
-              placeholder="Buscar..."
-              placeholderTextColor="#ccc"
-            />
-            <TouchableOpacity style={EstilosHome.botonFiltro}>
-             <FontAwesome6 name="magnifying-glass" size={20} color="black" />
-            </TouchableOpacity>
+               <TextInput
+                style={EstilosHome.inputBusqueda}
+                placeholder="Buscar..."
+                placeholderTextColor="#ccc"
+                value={textoBusqueda}          
+                onChangeText={setTextoBusqueda} 
+              />
+          <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
+          <FontAwesome6 name="magnifying-glass" size={20} color="black" />
+          </TouchableOpacity>
           </View>
 
           {/* Últimas personas */}
