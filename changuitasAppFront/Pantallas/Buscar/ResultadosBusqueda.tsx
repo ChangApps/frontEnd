@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, ScrollView } from "react-native";
+import {  SafeAreaView,Text,View, TouchableOpacity, Image, Modal,  TouchableWithoutFeedback, ScrollView, FlatList,} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -10,219 +10,226 @@ import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
 import { NavBarInferior } from "../../componentes/NavBarInferior";
 import Colors from "../../assets/Colors";
+import ModalSeleccionarServicio from "../../componentes/ModalSeleccionarServicio";
 
 const ResultadosBusqueda = () => {
-    const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [visible, setVisible] = useState(false);
-    const [message, setMessage] = useState('');
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
-    const { proveedores, error,busquedaGeneral } = route.params;
-    const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
-    const [selectedImage, setSelectedImage] = useState("");
+  const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalServiciosVisible, setModalServiciosVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [serviciosModal, setServiciosModal] = useState<any[]>([]);
+  const [proveedorSeleccionado, setProveedorSeleccionado] = useState<any>(null);
 
-    console.log("Datos del arreglo de proveedores: ", proveedores);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
+  const { proveedores, error, busquedaGeneral } = route.params;
 
-    useEffect(() => {
-        const obtenerUsuariosBloqueados = async () => {
-            try {
-                const accessToken = await AsyncStorage.getItem('accessToken');
-                const response = await fetch(`${API_URL}/bloqueados/`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
+  const obtenerUsuariosBloqueados = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const response = await fetch(`${API_URL}/bloqueados/`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
 
-                const data = await response.json();
-                if (response.ok) {
-                    const idsBloqueados = data.map((usuario: any) => usuario.id);
-                    console.log("Usuarios bloqueados:", idsBloqueados);
-                    setUsuariosBloqueados(idsBloqueados);
-                } else {
-                    console.error("Error al obtener usuarios bloqueados:", data.error);
-                    setMessage("Error al obtener usuarios bloqueados");
-                    setVisible(true);
-                }
-            } catch (error) {
-                console.error("Error al obtener usuarios bloqueados:", error);
-                setMessage("Error de conexión al obtener usuarios bloqueados");
-                setVisible(true);
-            } finally {
-                setLoading(false);
-            }
-        };
+      const data = await response.json();
+      if (response.ok) {
+        const idsBloqueados = data.map((usuario: any) => usuario.id);
+        setUsuariosBloqueados(idsBloqueados);
+      } else {
+        setMessage("Error al obtener usuarios bloqueados");
+        setVisible(true);
+      }
+    } catch (error) {
+      setMessage("Error de conexión al obtener usuarios bloqueados");
+      setVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        obtenerUsuariosBloqueados();
-    }, []);
+  useEffect(() => {
+    obtenerUsuariosBloqueados();
+  }, []);
 
-    const handleImagePress = (imageUri: string) => {
-        setSelectedImage(imageUri);
-        setModalVisible(true);
-    };
+  const obtenerFotoPerfil = (proveedor: any) => {
+    return proveedor.fotoPerfil ? `${API_URL}${proveedor.fotoPerfil}` : "https://via.placeholder.com/100";
+  };
 
-    const handleCloseModal = () => {
-        setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
-    };
+  const handleImagePress = (imageUri: string) => {
+    setSelectedImage(imageUri);
+    setModalVisible(true);
+  };
 
-    const obtenerFotoPerfil = (proveedor: any) => {
-        return proveedor.fotoPerfil ? `${API_URL}${proveedor.fotoPerfil}` : "https://via.placeholder.com/100";
-    };
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
-    //Filtramos los proveedores que NO están bloqueados
-    const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
 
-    const handleNavigation = (screen: string) => {
-        switch (screen) {
-            case 'Home':
-                navigation.navigate('Home');
-                break;
-            case 'Historial1':
-                navigation.navigate('Historial1');
-                break;
-            case 'Add':
-                navigation.navigate('AgregarServicio1');
-                break;
-            case 'Notifications':
-                // Navegar a notificaciones
-                break;
-            case 'PerfilUsuario':
-                navigation.navigate('PerfilUsuario');
-                break;
-        }
-    };
+  const handleProveedorPress = (proveedor: any) => {
+    if (proveedor.servicios.length > 1) {
+      setProveedorSeleccionado(proveedor);
+      setServiciosModal(proveedor.servicios);
+      setModalServiciosVisible(true);
+    } else {
+      navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
+    }
+  };
 
-    return (
-        <SafeAreaView style={EstilosResultadosBusqueda.safeArea}>
-            <View style={EstilosResultadosBusqueda.container}>
-                {/* NavBar Superior */}
-                <NavBarSuperior
-                    titulo="Resultados"
-                    showBackButton={true}
-                    onBackPress={() => navigation.goBack()}
-                    rightButtonType="none"
-                />
+  const handleServicioSeleccionado = (servicio: any) => {
+    setModalServiciosVisible(false);
+    navigation.navigate('PerfilProveedor', {
+      id: proveedorSeleccionado.id,
+      servicio: servicio.id,
+    });
+  };
 
+  const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
 
-                {/* Mostrar mensaje de error si existe */}
-               {error ? (
-                <View style={EstilosResultadosBusqueda.errorContainer}>
-                    <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
-                </View>
-                ) : proveedoresFiltrados.length === 0 ? (
-                <View style={EstilosResultadosBusqueda.noResultsContainer}>
-                    <Image
-                    source={require('./estilos/list-is-empty.png')}
-                    style={EstilosResultadosBusqueda.noResultsImage}
-                    resizeMode="contain"
-                    />
-                    <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>
-                    No se encontraron proveedores para los filtros seleccionados.
-                    </Text>
-                </View>
-                ) : (
-                <ScrollView>
-                    {busquedaGeneral
-                    ? (
-                        proveedoresFiltrados.map((item: any, index: number) => (
-                        <View key={index} style={EstilosResultadosBusqueda.resultItem}>
-                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
-                            <Image
-                                style={EstilosResultadosBusqueda.image}
-                                source={{ uri: obtenerFotoPerfil(item) }}
-                            />
-                            </TouchableOpacity>
+  return (
+    <SafeAreaView style={EstilosResultadosBusqueda.safeArea}>
+      <View style={EstilosResultadosBusqueda.container}>
+        <NavBarSuperior
+          titulo="Resultados"
+          showBackButton={true}
+          onBackPress={() => navigation.goBack()}
+          rightButtonType="none"
+        />
 
-                            <View style={EstilosResultadosBusqueda.resultDetails}>
-                            <Text style={EstilosResultadosBusqueda.name}>
-                                {item.first_name} {item.last_name}
+        {error ? (
+          <View style={EstilosResultadosBusqueda.errorContainer}>
+            <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
+          </View>
+        ) : proveedoresFiltrados.length === 0 ? (
+          <View style={EstilosResultadosBusqueda.noResultsContainer}>
+            <Image
+              source={require('./estilos/list-is-empty.png')}
+              style={EstilosResultadosBusqueda.noResultsImage}
+              resizeMode="contain"
+            />
+            <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>
+              No se encontraron proveedores para los filtros seleccionados.
+            </Text>
+          </View>
+        ) : (
+          <ScrollView>
+            {busquedaGeneral
+              ? (
+                proveedoresFiltrados.map((item: any, index: number) => (
+                  <View key={index} style={EstilosResultadosBusqueda.resultItem}>
+                    <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
+                      <Image
+                        style={EstilosResultadosBusqueda.image}
+                        source={{ uri: obtenerFotoPerfil(item) }}
+                      />
+                    </TouchableOpacity>
+
+                    <View style={EstilosResultadosBusqueda.resultDetails}>
+                      <Text style={EstilosResultadosBusqueda.name}>
+                        {item.first_name} {item.last_name}
+                      </Text>
+
+                      {item.servicios?.map((servicio: any, idx: number) => (
+                        <View key={idx} style={{ marginTop: 6 }}>
+                          <Text style={{ color: Colors.naranja, fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
+                          {servicio.dias?.map((dia: any, diaIdx: number) => (
+                            <Text key={diaIdx} style={{ color: '#aaaaaa', fontSize: 12 }}>
+                              {dia.dia} de {dia.desdeHora} a {dia.hastaHora}
                             </Text>
-
-                            {item.servicios?.map((servicio: any, idx: number) => (
-                                <View key={idx} style={{ marginTop: 6 }}>
-                                <Text style={{ color: Colors.naranja, fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
-                                {servicio.dias?.map((dia: any, diaIdx: number) => (
-                                    <Text key={diaIdx} style={{ color: '#aaaaaa', fontSize: 12 }}>
-                                    {dia.dia} de {dia.desdeHora} a {dia.hastaHora}
-                                    </Text>
-                                ))}
-                                </View>
-                            ))}
-                            </View>
-
-                            <TouchableOpacity
-                            onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
-                            style={EstilosResultadosBusqueda.arrowButton}
-                            >
-                            <Ionicons name="chevron-forward" size={20} color="#fff" />
-                            </TouchableOpacity>
+                          ))}
                         </View>
-                        ))
-                    )
-                    : (
-                        proveedoresFiltrados.map((item: any, index: number) => (
-                        <View key={index} style={EstilosResultadosBusqueda.resultItem}>
-                            <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))} style={EstilosResultadosBusqueda.image}>
-                            <Image
-                                style={EstilosResultadosBusqueda.image}
-                                source={{ uri: obtenerFotoPerfil(item) }}
-                            />
-                            </TouchableOpacity>
-                            <View style={EstilosResultadosBusqueda.resultDetails}>
-                            <Text style={EstilosResultadosBusqueda.name}>{item.first_name} {item.last_name}</Text>
-                            <Text style={EstilosResultadosBusqueda.category}>
-                                {item.servicios?.[0]?.nombreServicio || "Categoría no especificada"}
-                            </Text>
-                            <View style={EstilosResultadosBusqueda.rating}>
-                                {[...Array(5)].map((_, i) => (
-                                <Ionicons
-                                    key={i}
-                                    name="star"
-                                    size={16}
-                                    color={i < item.puntaje ? "#FC6A30" : "#CCCCCC"}
-                                />
-                                ))}
-                            </View>
-                            </View>
-                            <TouchableOpacity
-                            onPress={() => navigation.navigate('PerfilProveedor', { id: item.id })}
-                            style={EstilosResultadosBusqueda.arrowButton}
-                            >
-                            <Ionicons name="chevron-forward" size={20} color="#fff" />
-                            </TouchableOpacity>
-                        </View>
-                        ))
-                    )
-                    }
-                </ScrollView>
-                )}
-            </View>
-
-            {/* Modal para la imagen ampliada */}
-            <Modal visible={modalVisible} animationType="fade" transparent>
-                <TouchableWithoutFeedback onPress={handleCloseModal}>
-                    <View style={EstilosResultadosBusqueda.modalContainer}>
-                        {selectedImage && (
-                            <Image source={{ uri: selectedImage }} style={EstilosResultadosBusqueda.imagenModal} />
-                        )}
+                      ))}
                     </View>
-                </TouchableWithoutFeedback>
-            </Modal>
 
-            {/* Barra de navegación inferior */}
-            <NavBarInferior
-                activeScreen="ResultadosBusqueda" // O el screen activo correspondiente
-                onNavigate={handleNavigation}
-            />
+                    <TouchableOpacity
+                      onPress={() => handleProveedorPress(item)}
+                      style={EstilosResultadosBusqueda.arrowButton}
+                    >
+                      <Ionicons name="chevron-forward" size={20} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                ))
+              ) : (
+                proveedoresFiltrados.map((item: any, index: number) => (
+                  <View key={index} style={EstilosResultadosBusqueda.resultItem}>
+                    <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
+                      <Image
+                        style={EstilosResultadosBusqueda.image}
+                        source={{ uri: obtenerFotoPerfil(item) }}
+                      />
+                    </TouchableOpacity>
+                    <View style={EstilosResultadosBusqueda.resultDetails}>
+                      <Text style={EstilosResultadosBusqueda.name}>{item.first_name} {item.last_name}</Text>
+                      <Text style={EstilosResultadosBusqueda.category}>
+                        {item.servicios?.[0]?.nombreServicio || "Categoría no especificada"}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => handleProveedorPress(item)}
+                      style={EstilosResultadosBusqueda.arrowButton}
+                    >
+                      <Ionicons name="chevron-forward" size={20} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                ))
+            )}
+          </ScrollView>
+        )}
+      </View>
 
-            {/* CustomSnackbar */}
-            <CustomSnackbar
-                visible={visible}
-                setVisible={setVisible}
-                message={message}
-            />
-        </SafeAreaView>
-    );
+      {/* Modal para imagen ampliada */}
+      <Modal visible={modalVisible} animationType="fade" transparent>
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={EstilosResultadosBusqueda.modalContainer}>
+            {selectedImage && (
+              <Image source={{ uri: selectedImage }} style={EstilosResultadosBusqueda.imagenModal} />
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Modal para seleccionar servicio */}
+      <ModalSeleccionarServicio
+        visible={modalServiciosVisible}
+        onClose={() => setModalServiciosVisible(false)}
+        servicios={serviciosModal}
+        onSeleccionar={handleServicioSeleccionado}
+        />
+
+      <NavBarInferior
+        activeScreen="ResultadosBusqueda"
+        onNavigate={handleNavigation}
+      />
+
+      <CustomSnackbar
+        visible={visible}
+        setVisible={setVisible}
+        message={message}
+      />
+    </SafeAreaView>
+  );
 };
 
 export default ResultadosBusqueda;

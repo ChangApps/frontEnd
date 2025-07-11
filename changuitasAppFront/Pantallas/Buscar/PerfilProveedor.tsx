@@ -179,21 +179,21 @@ const PerfilProveedor = () => {
       }
 
       const proveedorId = route.params.id; //solo para usar en esta funcion
-      setreseniasUserId(route.params.id); //para pasar a resenias 
+      const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
+      console.log('PerfilProveedor: ID usuario recibido',proveedorId,' ID del servicio obtenido:', idServicio);
 
-      const idServicioString = await AsyncStorage.getItem('idServicio');
-      const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
+    //  const idServicioString = await AsyncStorage.getItem('idServicio');
+    //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
 
       // Realiza la solicitud al backend para obtener los ProveedorServicio
-      console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
-      const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${servicioIdentificador}/`, {
+     // console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
+      const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${idServicio}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-
       console.log('Response status (ProveedorServicio):', responseProveedor.status);
 
       if (!responseProveedor.ok) {
