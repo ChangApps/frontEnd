@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from "../../../assets/Colors";
 
 const EstilosResultadosBusqueda = StyleSheet.create({
     safeArea: {
@@ -8,7 +9,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
       container: {
         flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 70,
+        paddingTop: 25,
       },
       header: {
         flexDirection: 'row',
@@ -47,7 +48,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: Colors.blancoTexto,
   },
   category: {
     fontSize: 14,

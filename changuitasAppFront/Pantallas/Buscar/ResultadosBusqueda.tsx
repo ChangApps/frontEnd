@@ -9,6 +9,7 @@ import EstilosResultadosBusqueda from "./estilos/EstilosResultadosBusqueda";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
 import { NavBarInferior } from "../../componentes/NavBarInferior";
+import Colors from "../../assets/Colors";
 
 const ResultadosBusqueda = () => {
     const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
@@ -139,7 +140,7 @@ const ResultadosBusqueda = () => {
 
                             {item.servicios?.map((servicio: any, idx: number) => (
                                 <View key={idx} style={{ marginTop: 6 }}>
-                                <Text style={{ color: '#ffffff', fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
+                                <Text style={{ color: Colors.naranja, fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
                                 {servicio.dias?.map((dia: any, diaIdx: number) => (
                                     <Text key={diaIdx} style={{ color: '#aaaaaa', fontSize: 12 }}>
                                     {dia.dia} de {dia.desdeHora} a {dia.hastaHora}
