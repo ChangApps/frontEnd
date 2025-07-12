@@ -64,7 +64,6 @@ export const verificarSolicitudesAceptadas = async (
  const data = await res.json();
 
 if (!Array.isArray(data)) {
-  console.log("Respuesta inesperada del servidor en verificarSolicitudesAceptadas:", data);
   return;
 }
 

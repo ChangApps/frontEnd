@@ -88,15 +88,23 @@ const ResultadosBusqueda = () => {
     }
   };
 
-  const handleProveedorPress = (proveedor: any) => {
-    if (proveedor.servicios.length > 1) {
-      setProveedorSeleccionado(proveedor);
-      setServiciosModal(proveedor.servicios);
-      setModalServiciosVisible(true);
-    } else {
-      navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
-    }
-  };
+
+const handleProveedorPress = (proveedor: any) => {
+  if (!proveedor.servicios || proveedor.servicios.length === 0) {
+    setMessage("El proveedor selecionado no tiene servicios disponibles");
+    setVisible(true);
+    return;
+  }
+
+  if (proveedor.servicios.length > 1) {
+    setProveedorSeleccionado(proveedor);
+    setServiciosModal(proveedor.servicios);
+    setModalServiciosVisible(true);
+  } else {
+    console.log('ResultadosBusqueda proveedor id: ', proveedor.id, ' proveedor.servicios: ', proveedor.servicios);
+     navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
+  }
+};
 
   const handleServicioSeleccionado = (servicio: any) => {
     setModalServiciosVisible(false);

@@ -21,6 +21,7 @@ import Colors from '../../assets/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import ModalBuscar from '../../componentes/ModalBuscar';
 import API_URL from '../../utils/API_URL';
+import {redirectAdmin} from '../../utils/utils'
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -100,10 +101,6 @@ const PantallaHome = () => {
         navigation.navigate('PerfilUsuario');
         break;
     }
-  };
-
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
   const toggleDesplegable = () => setMostrarDesplegable(!mostrarDesplegable);
