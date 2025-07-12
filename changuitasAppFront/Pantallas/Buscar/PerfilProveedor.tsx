@@ -11,6 +11,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const PerfilProveedor = () => {
 
@@ -143,12 +144,13 @@ const PerfilProveedor = () => {
         navigation.navigate('DetalleTarea', { id, idSolicitud });
 
       } else {
-        Alert.alert("Error", responseJson.error || "No se pudo enviar la solicitud.");
-        setMessage("Error. al enviar la solicitud.");
+        const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
+        setMessage(errorMsg);
         setVisible(true);
-      }
+        }
     } catch (error) {
-      setMessage("Error. al enviar la solicitud.");
+      console.error("Error inesperado al iniciar changuita:", error);
+      setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
     }
   };
@@ -392,7 +394,8 @@ const PerfilProveedor = () => {
           </Modal>
 
           {/* Snackbar para mostrar mensajes */}
-          <Snackbar
+          <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
+          {/* <Snackbar
             visible={visible}
             onDismiss={() => setVisible(false)}
             duration={4000} // 4 segundos
@@ -403,7 +406,7 @@ const PerfilProveedor = () => {
             }}
           >
             {message}
-          </Snackbar>
+          </Snackbar> */}
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>

@@ -182,7 +182,7 @@ const PerfilUsuario: React.FC = () => {
           trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
           puntaje={(usuario as any)?.puntaje ?? 0}
         />
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
         {usuario && <DatosPersonalesUsuario usuario={usuario} />}
         </ScrollView>
         {/* Barra de navegación inferior */}
