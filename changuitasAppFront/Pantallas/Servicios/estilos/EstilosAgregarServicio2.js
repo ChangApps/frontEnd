@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosAgregarServicio2 = StyleSheet.create({
     container: {
     flex: 1,
-    backgroundColor: '#0B0F2F',
+    backgroundColor: Colors.fondo,
     paddingTop: 50,
   },
       contenedorEncabezado: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FC6A30', // Color de fondo de la barra
+        backgroundColor:Colors.naranja, // Color de fondo de la barra
         paddingHorizontal: 15,
         paddingVertical: 10,
       },
@@ -24,6 +25,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
         marginTop: 20,
       },
       etiqueta: {
+        color: Colors.blancoTexto,
         fontSize: 16,
         fontWeight: '600',
         marginBottom: 8,
@@ -59,7 +61,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
       },
       textoDia: {
         fontSize: 16,
-        color: 'black',
+        color:Colors.blancoTexto,
         marginLeft: 8,
         flex: 1,
       },
@@ -74,7 +76,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
       },
       textoSeparador: {
         fontSize: 16,
-        color: 'black',
+        color: Colors.blancoTexto,
       },
       contenedorBotones: {
         flexDirection: 'row',
@@ -104,25 +106,6 @@ const EstilosAgregarServicio2 = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
       },
-      barraNavegacion: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 60,
-        backgroundColor: 'white',
-        borderTopWidth: 1,
-        borderTopColor: '#ddd',
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-      },
-      iconoNavegacion: {
-        alignItems: 'center',
-      },
-      textoNavegacion: {
-        fontSize: 12,
-        color: 'gray',
-      },
       picker: {
         height: 50,
         width: 121,
@@ -134,7 +117,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
       },
       pickerContainer: {
         borderWidth: 1, // Borde alrededor del contenedor
-        borderColor: '#FC6A30', // Color del borde
+        borderColor: Colors.naranja, // Color del borde
         borderRadius: 8, // Bordes redondeados
         backgroundColor: 'white', // Fondo blanco
         shadowColor: '#000', // Color de la sombra
@@ -155,7 +138,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
   gap: 10,
 },
 pasoActivo: {
-  backgroundColor: '#FF6D3B',
+  backgroundColor:  Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
@@ -163,7 +146,7 @@ pasoActivo: {
 pasoInactivo: {
   backgroundColor: 'transparent',
   borderWidth: 1,
-  borderColor: '#FF6D3B',
+  borderColor: Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
@@ -174,7 +157,7 @@ pasoTextoActivo: {
   fontSize: 14,
 },
 pasoTextoInactivo: {
-  color: '#FF6D3B',
+  color:  Colors.naranja,
   fontWeight: 'bold',
   fontSize: 14,
 },
