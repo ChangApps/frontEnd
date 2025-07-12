@@ -136,12 +136,13 @@ const PerfilProveedor = () => {
         navigation.navigate('DetalleTarea', { id, idSolicitud });
 
       } else {
-        console.log("Error", responseJson.error || "No se pudo enviar la solicitud.");
-        setMessage("Error. al enviar la solicitud.");
+        const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
+        setMessage(errorMsg);
         setVisible(true);
-      }
+        }
     } catch (error) {
-      setMessage("Error. al enviar la solicitud.");
+      console.error("Error inesperado al iniciar changuita:", error);
+      setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
     }
   };
