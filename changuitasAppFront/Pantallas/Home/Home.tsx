@@ -18,6 +18,9 @@ import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces
 import { fetchUHistorial } from '../../services/historialService';
 import ResultadoListSimple from '../../componentes/ResultadoListSimple';
 import Colors from '../../assets/Colors';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import ModalBuscar from '../../componentes/ModalBuscar';
+import API_URL from '../../utils/API_URL';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -36,9 +39,49 @@ const PantallaHome = () => {
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
-  const [visible, setVisible] = useState(false);  
-  const [message, setMessage] = useState(""); 
+  const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
+  const [textoBusqueda, setTextoBusqueda] = useState('');
   
+
+  const handleBuscar = async () => {
+    console.log("Buscando por:", textoBusqueda);
+
+    try {
+      const storedToken = await AsyncStorage.getItem('accessToken');
+      const res = await fetch(`${API_URL}/buscar-usuario/?q=${encodeURIComponent(textoBusqueda)}`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+
+        if (res.status === 204) {
+          console.log("No se encontraron resultados.");
+          
+          return;
+        }
+
+    if (!res.ok) throw new Error('Error al obtener los datos');
+
+      const data = await res.json();
+
+      console.log('Datos obtenidos:', data);
+      if (!data || data.length === 0) {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: [],
+          error: 'No se encontraron resultados para tu búsqueda.',
+          busquedaGeneral: false
+        });
+      } else {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: data,
+          busquedaGeneral: true
+        });
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
@@ -159,14 +202,16 @@ const PantallaHome = () => {
         <ScrollView contentContainerStyle={EstilosHome.scrollContenido}>
           {/* Buscador */}
           <View style={EstilosHome.barraBusqueda}>
-            <TextInput
-              style={EstilosHome.inputBusqueda}
-              placeholder="Buscar..."
-              placeholderTextColor="#ccc"
-            />
-            <TouchableOpacity style={EstilosHome.botonFiltro}>
-              <Ionicons name="options" size={20} color="#fff" />
-            </TouchableOpacity>
+               <TextInput
+                style={EstilosHome.inputBusqueda}
+                placeholder="Buscar..."
+                placeholderTextColor="#ccc"
+                value={textoBusqueda}          
+                onChangeText={setTextoBusqueda} 
+              />
+          <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
+          <FontAwesome6 name="magnifying-glass" size={20} color="black" />
+          </TouchableOpacity>
           </View>
 
           {/* Últimas personas */}
@@ -187,6 +232,8 @@ const PantallaHome = () => {
       )}
 
           {/* Categorías */}
+         {/* Modal de búsqueda */}
+      <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} />
           <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
           <FlatList
             data={categorias}
@@ -194,8 +241,11 @@ const PantallaHome = () => {
             numColumns={2}
             columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
             renderItem={({ item }) => (
-              <TouchableOpacity style={EstilosHome.cardCategoria}>
-               <Ionicons name="image" size={20} color={Colors.naranja} />
+                 <TouchableOpacity
+                style={EstilosHome.cardCategoria}
+                onPress={() => setMostrarModalBuscar(true)} 
+              >
+                <Ionicons name="image" size={20} color={Colors.naranja} />
                 <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
               </TouchableOpacity>
             )}

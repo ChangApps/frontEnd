@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, View, SafeAreaView, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -87,7 +87,11 @@ const DetalleTarea = () => {
 
       setFecha(data.fechaSolicitud);
       setServicio(data.nombreServicio);
-      setEstado(data.estado);
+      
+      if(data.estado === 'PA') {
+      setEstado('Pendiente Aceptacion');
+      }
+
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
 
       const userId = await AsyncStorage.getItem('userId');
@@ -184,82 +188,89 @@ const DetalleTarea = () => {
     }
   };
 
-  return (
-    <SafeAreaView style={EstilosDetalleTarea.contenedor}>
-      <View style={EstilosDetalleTarea.encabezado}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
-        <Text style={EstilosDetalleTarea.textoEncabezado}>
-          Detalle de la tarea
-        </Text>
-        <TouchableOpacity onPress={logout}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
-        </TouchableOpacity>
-      </View>
+return (
+  <SafeAreaView style={EstilosDetalleTarea.contenedor}>
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={EstilosDetalleTarea.encabezado}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          </TouchableOpacity>
+          <Text style={EstilosDetalleTarea.textoEncabezado}>
+            Detalle de la tarea
+          </Text>
+          <TouchableOpacity onPress={logout}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="#ffffff" />
+          </TouchableOpacity>
+        </View>
 
-      <View style={EstilosDetalleTarea.seccionUsuario}>
-        <ImagenPerfilUsuario
-          imageUri={imageUri}
-          modalVisible={modalVisible}
-          onImagePress={() => setModalVisible(true)}
-          onCloseModal={() => setModalVisible(false)}
+        <View style={EstilosDetalleTarea.seccionUsuario}>
+          <ImagenPerfilUsuario
+            imageUri={imageUri}
+            modalVisible={modalVisible}
+            onImagePress={() => setModalVisible(true)}
+            onCloseModal={() => setModalVisible(false)}
+          />
+          <Text style={EstilosDetalleTarea.nombreCompleto}>
+            {usuario?.username}
+          </Text>
+        </View>
+
+        <ImagenConModal
+          uri={imageUri}
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          estiloImagen={EstilosDetalleTarea.imagenModal}
         />
-        <Text style={EstilosDetalleTarea.nombreCompleto}>
-          {usuario?.username}
-        </Text>
-      </View>
 
-      <ImagenConModal
-        uri={imageUri}
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        estiloImagen={EstilosDetalleTarea.imagenModal}
-      />
+        <DatosTareaCompactos
+          servicio={servicio}
+          fecha={fecha}
+          puntaje={puntaje}
+          estado={estado}
+          estilos={EstilosDetalleTarea}
+        />
 
-      <DatosTareaCompactos
-        servicio={servicio}
-        fecha={fecha}
-        puntaje={puntaje}
-        estado={estado}
-        estilos={EstilosDetalleTarea}
-      />
+        <AccionesTarea
+          rol={rol}
+          estado={estado}
+          aceptarChanguita={aceptarChanguita}
+          setMostrarModal={setMostrarModalCancelar}
+          finalizarSolicitud={finalizarChanguita}
+          estilos={EstilosDetalleTarea}
+        />
 
-      <AccionesTarea
-        rol={rol}
-        estado={estado}
-        aceptarChanguita={aceptarChanguita}
-        setMostrarModal={setMostrarModalCancelar}
-        finalizarSolicitud={finalizarChanguita}
-        estilos={EstilosDetalleTarea}
-      />
-
-      <ModalCancelarChanguita
-        visible={mostrarModalCancelar}
-        onClose={() => setMostrarModalCancelar(false)}
-        onConfirm={(motivo) => {
-          console.log('Changuita cancelada por:', motivo);
-          cancelarChanguita();
-          setMostrarModalCancelar(false);
-          setMotivoSeleccionado('');
-        }}
-        motivoSeleccionado={motivoSeleccionado}
-        setMotivoSeleccionado={setMotivoSeleccionado}
-        motivosCancelacion={motivosCancelacion}
-      />
+        <ModalCancelarChanguita
+          visible={mostrarModalCancelar}
+          onClose={() => setMostrarModalCancelar(false)}
+          onConfirm={(motivo) => {
+            console.log('Changuita cancelada por:', motivo);
+            cancelarChanguita();
+            setMostrarModalCancelar(false);
+            setMotivoSeleccionado('');
+          }}
+          motivoSeleccionado={motivoSeleccionado}
+          setMotivoSeleccionado={setMotivoSeleccionado}
+          motivosCancelacion={motivosCancelacion}
+        />
+      </ScrollView>
 
       <NavBarInferior
-        activeScreen="DetalleTarea" // O el screen activo correspondiente
+        activeScreen="DetalleTarea"
         onNavigate={handleNavigation}
       />
+    </View>
 
-      {/* CustomSnackbar */}
-      <CustomSnackbar
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-      />
-    </SafeAreaView>
+    {/* Snackbar*/}
+    <CustomSnackbar
+      visible={visible}
+      setVisible={setVisible}
+      message={message}
+    />
+  </SafeAreaView>
   );
 };
 
