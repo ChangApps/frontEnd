@@ -1,4 +1,4 @@
-import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback } from "react-native";
+import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
@@ -11,6 +11,11 @@ import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
 import {mostrarOpcionesSelectorImagen} from '../../utils/seleccionImagen';
 import { ImageCropperWeb } from "../../componentes/ImageCropperWeb";
+import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../../assets/Colors";
+import { NavBarSuperior } from "../../componentes/NavBarSuperior";
+import PasoTituloIcono from "../../componentes/PasoTituloIcono";
+import { Button } from "../../componentes/Buttons";
 
 
 const Verificacion2Registro = () => {
@@ -141,17 +146,27 @@ const Verificacion2Registro = () => {
     }
   };
   
+const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosVerificacion2.areaSegura}>
+      <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion2.degradado}>
       <View style={EstilosVerificacion2.contenedor}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosVerificacion2.botonAtras}>
-        <Ionicons name="arrow-back" size={30} color="#197278" />
-      </TouchableOpacity>
-        <Text style={EstilosVerificacion2.titulo}>Verificación</Text>
-        <Text style={EstilosVerificacion2.textoPaso}>PASO 2</Text>
-        <Text style={EstilosVerificacion2.subtitulo}>Subir foto de perfil</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
+      <View style={[EstilosVerificacion2.contenidoResponsivo, width > 600 && EstilosVerificacion2.contenidoWeb]}>
+      <NavBarSuperior
+                        titulo="Verificación"
+                        showBackButton={true}
+                        onBackPress={() => navigation.goBack()}
+                        rightButtonType="none"
+                      />
+                      
+      <PasoTituloIcono
+          iconName="mail-outline"
+          texto="PASO 2:"
+        />
+        
+      <Text style={EstilosVerificacion2.instruccion}>Subir foto de perfil</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
 
         <View style={EstilosVerificacion2.contenedorImagenPerfil}>
   <TouchableOpacity onPress={handleImagePress} style={EstilosVerificacion2.contenedorImagenPerfil}>
@@ -216,13 +231,17 @@ const Verificacion2Registro = () => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <TouchableOpacity 
-            onPress={crearUsuario} 
-           style={EstilosVerificacion2.botonContenedor}
-          >
-          <Text style={EstilosVerificacion2.textoBoton}>Siguiente →</Text>
-        </TouchableOpacity>
+        <Button
+          titulo="Siguiente"
+          onPress={crearUsuario}
+          textSize={20}
+          textColor={Colors.fondo}
+          padding={15}
+          borderRadius={25}
+        />
       </View>
+      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const EstilosVerificacion2 = StyleSheet.create({
   areaSegura: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
   },
   contenedor: {
     flex: 1,
