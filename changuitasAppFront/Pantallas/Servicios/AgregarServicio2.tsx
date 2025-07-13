@@ -11,6 +11,7 @@ import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -215,7 +216,7 @@ const AgregarServicio2 = () => {
   };
 
   return (
-    <View style={EstilosAgregarServicio2.container}>
+    <SafeAreaView edges={['top']} style={EstilosAgregarServicio2.safeContainer}>
       {/* NavBar Superior */}
       <NavBarSuperior
         titulo="Agregar un servicio"
@@ -307,7 +308,7 @@ const AgregarServicio2 = () => {
         activeScreen="AgregarServicio2" // O el screen activo correspondiente
         onNavigate={handleNavigation}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
