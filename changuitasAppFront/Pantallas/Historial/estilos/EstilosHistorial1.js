@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosHistorial1 = StyleSheet.create({
-  contenedor: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: '#191A2E',
+    backgroundColor: Colors.fondo,
   },
   encabezado: {
     flexDirection: 'row',

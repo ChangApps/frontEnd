@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AxiosError } from 'axios';
@@ -22,6 +22,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import ModalBuscar from '../../componentes/ModalBuscar';
 import API_URL from '../../utils/API_URL';
 import {redirectAdmin} from '../../utils/utils'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -178,7 +179,7 @@ const PantallaHome = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosHome.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
 
         {/* Encabezado */}

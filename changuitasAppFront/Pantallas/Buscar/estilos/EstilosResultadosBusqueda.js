@@ -2,26 +2,26 @@ import { StyleSheet } from 'react-native';
 import Colors from "../../../assets/Colors";
 
 const EstilosResultadosBusqueda = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#191A2E',
-      },
-      container: {
-        flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 25,
-      },
-      header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-      },
-      title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#333',
-        marginLeft: 10,
-      },
+  safeContainer: {
+    flex: 1,
+    backgroundColor: Colors.fondo,
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 25,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginLeft: 10,
+  },
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -82,7 +82,7 @@ const EstilosResultadosBusqueda = StyleSheet.create({
     backgroundColor: '#F8D7DA',
     borderRadius: 10,
     padding: 10,
-    marginTop:20,
+    marginTop: 20,
   },
   errorText: {
     color: '#A94442',
@@ -102,8 +102,8 @@ const EstilosResultadosBusqueda = StyleSheet.create({
     resizeMode: 'cover',
   },
   noResultsContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   mensajeNoUsuarios: {

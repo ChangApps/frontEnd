@@ -5,7 +5,7 @@ import Colors from '../assets/Colors';
 export const COLORES_APP = {
   // Colores del sistema existente
   ...Colors,
-  
+
   // Colores específicos para las pantallas de perfil y tareas
   primario: '#FC6A30',
   gris: '#666',
@@ -63,9 +63,9 @@ const EstilosCompartidos = StyleSheet.create({
   },
 
   // Contenedores principales
-  contenedor: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: COLORES_APP.fondo,
+    backgroundColor: Colors.fondo,
   },
   contenedorConMargenInferior: {
     flex: 1,
@@ -73,14 +73,14 @@ const EstilosCompartidos = StyleSheet.create({
     paddingBottom: DIMENSIONES.alturaNavegacion,
   },
   contenedorPrueba: {
-        width: "90%",
-        padding: 20,
-        justifyContent: "center",
-      },
-      contenedorWeb: {
-        maxWidth: 500,
-      },
-  
+    width: "90%",
+    padding: 20,
+    justifyContent: "center",
+  },
+  contenedorWeb: {
+    maxWidth: 500,
+  },
+
   // Encabezados
   encabezado: {
     flexDirection: 'row',
@@ -105,7 +105,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontWeight: '600',
     color: COLORES_APP.blancoTexto,
   },
-  
+
   // Sistema de pestañas
   barraPestanas: {
     flexDirection: 'row',
@@ -131,7 +131,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.normal,
     color: COLORES_APP.blancoTexto,
   },
-  
+
   // Sección de usuario - imagen pequeña (80x80)
   seccionUsuario: {
     alignItems: 'center',
@@ -144,7 +144,7 @@ const EstilosCompartidos = StyleSheet.create({
     backgroundColor: COLORES_APP.grisBackground,
     marginBottom: 10,
   },
-  
+
   // Sección de usuario - imagen grande (160x160)
   imagenUsuarioGrande: {
     width: DIMENSIONES.tamanoImagenUsuarioGrande,
@@ -153,7 +153,7 @@ const EstilosCompartidos = StyleSheet.create({
     backgroundColor: COLORES_APP.grisBackground,
     marginBottom: 10,
   },
-  
+
   nombreCompleto: {
     fontSize: FUENTES.titulo,
     fontWeight: 'bold',
@@ -163,7 +163,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.normal,
     color: COLORES_APP.gris,
   },
-  
+
   // Datos adicionales
   datosExtras: {
     flexDirection: 'row',
@@ -182,7 +182,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.mediana,
     color: COLORES_APP.grisTexto,
   },
-  
+
   // Datos personales
   tituloDatosPersonales: {
     fontSize: FUENTES.grande,
@@ -198,7 +198,7 @@ const EstilosCompartidos = StyleSheet.create({
     color: COLORES_APP.blancoTexto,
     marginBottom: 5,
   },
-  
+
   // Botones
   buttonContainer: {
     flexDirection: 'row',
@@ -228,7 +228,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.normal,
     fontWeight: 'bold',
   },
-  
+
   // Navegación
   barraNavegacion: {
     flexDirection: 'row',
@@ -261,7 +261,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.pequena,
     color: 'gray',
   },
-  
+
   // Modales base
   modalContainer: {
     flex: 1,
@@ -286,7 +286,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  
+
   // Modal de imagen circular
   imagenModal: {
     width: DIMENSIONES.tamanoImagenModal,
@@ -294,7 +294,7 @@ const EstilosCompartidos = StyleSheet.create({
     borderRadius: DIMENSIONES.tamanoImagenModal / 2,
     resizeMode: 'cover',
   },
-  
+
   // Modal de imagen grande
   imagenGrande: {
     width: '90%',
@@ -314,7 +314,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.grande,
     fontWeight: 'bold',
   },
-  
+
   // Botón cerrar modal
   botonCerrar: {
     marginTop: 10,

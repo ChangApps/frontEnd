@@ -1,4 +1,4 @@
-import {  SafeAreaView,Text,View, TouchableOpacity, Image, Modal,  TouchableWithoutFeedback, ScrollView, FlatList,} from "react-native";
+import { Text,View, TouchableOpacity, Image, Modal,  TouchableWithoutFeedback, ScrollView, FlatList,} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -11,6 +11,7 @@ import CustomSnackbar from "../../componentes/CustomSnackbar";
 import { NavBarInferior } from "../../componentes/NavBarInferior";
 import Colors from "../../assets/Colors";
 import ModalSeleccionarServicio from "../../componentes/ModalSeleccionarServicio";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ResultadosBusqueda = () => {
   const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
@@ -117,7 +118,7 @@ const handleProveedorPress = (proveedor: any) => {
   const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
 
   return (
-    <SafeAreaView style={EstilosResultadosBusqueda.safeArea}>
+    <SafeAreaView edges={['top']} style={EstilosResultadosBusqueda.safeContainer}>
       <View style={EstilosResultadosBusqueda.container}>
         <NavBarSuperior
           titulo="Resultados"

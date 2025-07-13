@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -12,6 +12,7 @@ import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -245,10 +246,11 @@ const Historial1 = () => {
   };
 
   return (
+
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosHistorial1.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosHistorial1.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
           titulo="Historial"
