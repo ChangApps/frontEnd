@@ -1,14 +1,11 @@
-
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator,Modal, Linking} from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, ActivityIndicator, Linking, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableWithoutFeedback} from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import EstilosPerfilUsuario from './estilos/EstilosPerfilUsuario';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import API_URL from '../../utils/API_URL';
 import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
 import { AuthContext } from '../../autenticacion/auth';
@@ -18,6 +15,8 @@ import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfi
 import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfilUsuario';
 import ResumenServiciosUsuario from '../../componentes/perfilesUsuarios/ResumenServiciosUsuarios';
 import DatosPersonalesUsuario from '../../componentes/perfilesUsuarios/DatosPersonales';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -29,15 +28,15 @@ const PerfilUsuario: React.FC = () => {
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [state,setState] = useContext(AuthContext);
+  const [state, setState] = useContext(AuthContext);
 
-    const handleImagePress = () => {
-      setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
-    };
+  const handleImagePress = () => {
+    setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
+  };
 
-    const handleCloseModal = () => {
-      setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
-    };
+  const handleCloseModal = () => {
+    setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
+  };
 
   // Interfaz para el tipo de datos del usuario
   interface Direccion {
@@ -57,25 +56,25 @@ const PerfilUsuario: React.FC = () => {
     telefono: string;
     direccion: Direccion;
     fotoPerfil: string | null;
-    is_staff:boolean;
+    is_staff: boolean;
   }
 
 
 
   const logout = async () => {
     try {
-    
+
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    }  catch (error: any) {
-        console.log('Error en el cierre de sesión:', error.message);
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
     } finally {
-    console.log("Intentando ir al iniciar sesion ");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "InicioDeSesion" }],
-    });
+      console.log("Intentando ir al iniciar sesion ");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "InicioDeSesion" }],
+      });
     }
   };
 
@@ -95,16 +94,16 @@ const PerfilUsuario: React.FC = () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
       console.log('Token obtenido de AsyncStorage:', accessToken);
-  
+
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
       }
-  
+
       const userId = await AsyncStorage.getItem('userId');
-        setUsuarioId(userId ?? ""); // Si es null, se asigna ""
+      setUsuarioId(userId ?? ""); // Si es null, se asigna ""
 
       console.log('ID del usuario extraído:', userId);
-  
+
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'GET',
         headers: {
@@ -112,18 +111,18 @@ const PerfilUsuario: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       console.log('Response status:', response.status);
-  
+
       if (!response.ok) {
         throw new Error(`Error al obtener el usuario: ${response.status}`);
       }
-  
+
       const data: Usuario = await response.json();
       console.log('Datos del usuario recibidos:', data);
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
-  
+
     } catch (error: any) {
       console.error('Error al cargar datos del usuario:', error);
       setMessage('Error al cargar datos del usuario');
@@ -142,9 +141,30 @@ const PerfilUsuario: React.FC = () => {
     );
   }
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosPerfilUsuario.safeContainer}>
+        <ScrollView contentContainerStyle={EstilosPerfilUsuario.scrollContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
         <BarraPestanasPerfil />
@@ -163,9 +183,14 @@ const PerfilUsuario: React.FC = () => {
           trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
           puntaje={(usuario as any)?.puntaje ?? 0}
         />
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
         {usuario && <DatosPersonalesUsuario usuario={usuario} />}
-        <BarraNavegacionInferior />
+        </ScrollView>
+        {/* Barra de navegación inferior */}
+        <NavBarInferior
+          activeScreen="PerfilUsuario" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

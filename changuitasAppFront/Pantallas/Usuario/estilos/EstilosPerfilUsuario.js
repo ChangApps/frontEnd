@@ -3,6 +3,10 @@ import EstilosCompartidos, { COLORES_APP } from '../../../componentes/estilosCom
 
 // Estilos específicos para PerfilUsuario que no están en los compartidos
 const estilosEspecificos = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 80, 
+  },
   // Este archivo solo usa los estilos compartidos, 
   // no tiene estilos específicos únicos
 });

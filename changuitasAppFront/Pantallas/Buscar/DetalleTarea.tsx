@@ -1,24 +1,23 @@
-// DetalleTarea.tsx
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Text, Image, Modal, TouchableOpacity, TouchableWithoutFeedback, View, SafeAreaView } from 'react-native';
+import { Text, TouchableOpacity, View, ScrollView, Linking, Platform } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Snackbar } from 'react-native-paper';
-
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import API_URL from '../../utils/API_URL';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
-
 import ImagenConModal from '../../componentes/perfilesUsuarios/ImagenConModal';
-import InfoUsuarioCompacto from '../../componentes/perfilesUsuarios/InfoUsuarioCompacto';
 import DatosTareaCompactos from '../../componentes/perfilesUsuarios/DatosTareaCompactos';
 import AccionesTarea from '../../componentes/perfilesUsuarios/AccionesTarea';
 import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfilUsuario';
 import ModalCancelarChanguita from '../../componentes/ModalCancelarChanguita';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import MenuDesplegable from '../../componentes/MenuDesplegable';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -38,6 +37,8 @@ const DetalleTarea = () => {
   const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState('');
   const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
+  // Estados para el menú desplegable
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
 
   const motivosCancelacion = [
     'No puedo asistir',
@@ -46,6 +47,7 @@ const DetalleTarea = () => {
     'Cambio de planes',
     'Otro motivo',
   ];
+
   interface Usuario {
     username: string;
     first_name: string;
@@ -54,7 +56,7 @@ const DetalleTarea = () => {
     email: string;
     telefono: string;
     fotoPerfil: string | null;
-    is_staff:boolean;
+    is_staff: boolean;
   }
 
   useEffect(() => {
@@ -94,7 +96,8 @@ const DetalleTarea = () => {
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
 
       const userId = await AsyncStorage.getItem('userId');
-      setRol(userId === data.cliente.toString() ? 'cliente' : 'trabajador');
+      const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
+      setRol(rolCalculado);
     } catch (err) {
       console.error(err);
     }
@@ -147,7 +150,7 @@ const DetalleTarea = () => {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'user/json'
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });
@@ -167,77 +170,123 @@ const DetalleTarea = () => {
     }
   };
 
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
+
+  // Función para alternar el menú desplegable
+  const toggleDesplegable = () => { setMostrarDesplegable(!mostrarDesplegable); };
+  // Función para redirigir al admin
+  const redirectAdmin = () => {
+    Linking.openURL('http://127.0.0.1:8000/admin/');
+  };
+
+  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
+
+  
   return (
-    <SafeAreaView style={EstilosDetalleTarea.contenedor}>
-      <View style={EstilosDetalleTarea.encabezado}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
-        <Text style={EstilosDetalleTarea.textoEncabezado}>
-          Detalle de la tarea
-        </Text>
-        <TouchableOpacity onPress={logout}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="ffffff" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView edges={['top']} style={EstilosDetalleTarea.safeContainer}>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 100 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <NavBarSuperior
+            titulo="Detalle de la tarea"
+            titleSize={titleSizeNavbarSuperior}
+            showBackButton={true}
+            onBackPress={() => { navigation.goBack(); }}
+            rightButtonType="menu"
+            onRightPress={() => { toggleDesplegable(); }}
+          />
 
-      <View style={EstilosDetalleTarea.seccionUsuario}>
-        <ImagenPerfilUsuario
-          imageUri={imageUri}
-          modalVisible={modalVisible}
-          onImagePress={() => setModalVisible(true)}
-          onCloseModal={() => setModalVisible(false)}
+          {/* Menú Desplegable */}
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
+
+          <View style={EstilosDetalleTarea.seccionUsuario}>
+            <ImagenPerfilUsuario
+              imageUri={imageUri}
+              modalVisible={modalVisible}
+              onImagePress={() => setModalVisible(true)}
+              onCloseModal={() => setModalVisible(false)}
+            />
+            <Text style={EstilosDetalleTarea.nombreCompleto}>
+              {usuario?.username}
+            </Text>
+          </View>
+
+          <ImagenConModal
+            uri={imageUri}
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            estiloImagen={EstilosDetalleTarea.imagenModal}
+          />
+
+          <DatosTareaCompactos
+            servicio={servicio}
+            fecha={fecha}
+            puntaje={puntaje}
+            estado={estado}
+            estilos={EstilosDetalleTarea}
+          />
+
+          <AccionesTarea
+            rol={rol}
+            estado={estado}
+            aceptarChanguita={aceptarChanguita}
+            setMostrarModal={setMostrarModalCancelar}
+            finalizarSolicitud={finalizarChanguita}
+            estilos={EstilosDetalleTarea}
+          />
+
+          <ModalCancelarChanguita
+            visible={mostrarModalCancelar}
+            onClose={() => setMostrarModalCancelar(false)}
+            onConfirm={(motivo) => {
+              console.log('Changuita cancelada por:', motivo);
+              cancelarChanguita();
+              setMostrarModalCancelar(false);
+              setMotivoSeleccionado('');
+            }}
+            motivoSeleccionado={motivoSeleccionado}
+            setMotivoSeleccionado={setMotivoSeleccionado}
+            motivosCancelacion={motivosCancelacion}
+          />
+        </ScrollView>
+
+        <NavBarInferior
+          activeScreen="DetalleTarea"
+          onNavigate={handleNavigation}
         />
-        <Text style={EstilosDetalleTarea.nombreCompleto}>
-          {usuario?.username}
-        </Text>
       </View>
 
-      <ImagenConModal
-        uri={imageUri}
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        estiloImagen={EstilosDetalleTarea.imagenModal}
-      />
-
-      <DatosTareaCompactos
-        servicio={servicio}
-        fecha={fecha}
-        puntaje={puntaje}
-        estado={estado}
-        estilos={EstilosDetalleTarea}
-      />
-
-      <AccionesTarea
-        rol={rol}
-        estado={estado}
-        aceptarChanguita={aceptarChanguita}
-        setMostrarModal={setMostrarModalCancelar}
-        finalizarSolicitud={finalizarChanguita}
-        estilos={EstilosDetalleTarea}
-      />
-
-      <Snackbar
+      {/* Snackbar*/}
+      <CustomSnackbar
         visible={visible}
-        onDismiss={() => setVisible(false)}
-        duration={4000}
-      >
-        {message}
-      </Snackbar>
-      <ModalCancelarChanguita
-        visible={mostrarModalCancelar}
-        onClose={() => setMostrarModalCancelar(false)}
-        onConfirm={(motivo) => {
-          console.log('Changuita cancelada por:', motivo);
-          cancelarChanguita();
-          setMostrarModalCancelar(false);
-          setMotivoSeleccionado('');
-        }}
-        motivoSeleccionado={motivoSeleccionado}
-        setMotivoSeleccionado={setMotivoSeleccionado}
-        motivosCancelacion={motivosCancelacion}
+        setVisible={setVisible}
+        message={message}
       />
-      <BarraNavegacionInferior />
     </SafeAreaView>
   );
 };

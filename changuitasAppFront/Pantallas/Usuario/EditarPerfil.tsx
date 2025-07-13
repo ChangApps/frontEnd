@@ -1,18 +1,15 @@
-import React, { useState,useEffect, useContext } from 'react';
-import { View, Text, SafeAreaView,TouchableOpacity, TextInput, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking} from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../../utils/API_URL';;
 import axios from 'axios';
-import { Snackbar } from 'react-native-paper';
 import EstilosEditarPerfil from './estilos/EstilosEditarPerfil';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import { mostrarOpcionesSelectorImagen } from '../../utils/seleccionImagen';
 import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import { ImageCropperWeb } from '../../componentes/ImageCropperWeb';
 import { guardarCambios } from './auxiliar/guardarCambios';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
@@ -21,29 +18,31 @@ import estilosModal from '../../componentes/estilosModal';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 import Input from '../../componentes/inputs/Input';
 import PasswordInput from '../../componentes/inputs/PasswordInput';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const EditarPerfil = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
- const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [imageUri, setImageUri] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  const [state,setState] = useContext(AuthContext);
+  const [state, setState] = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
-    // Estados para mostrar/ocultar contraseñas
+  // Estados para mostrar/ocultar contraseñas
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
-   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
-   const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
-   const [cropperVisible, setCropperVisible] = useState<boolean>(false);
-   // Estados para mostrar/ocultar secciones
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
+  const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
+  const [cropperVisible, setCropperVisible] = useState<boolean>(false);
+  // Estados para mostrar/ocultar secciones
   const [mostrarDatosContacto, setMostrarDatosContacto] = useState(true);
   const [mostrarDireccion, setMostrarDireccion] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
-  
-   const datosOriginales: { [key: string]: any } = {
+
+  const datosOriginales: { [key: string]: any } = {
     first_name: '',
     last_name: '',
     email: '',
@@ -86,23 +85,23 @@ const EditarPerfil = () => {
     setModalVisible(false); // Cerrar el modal cuando se presiona el botón de cerrar
   };
 
-   const logout = async () => {
-     try {
-       setState({ token: "" });
-       await cerrarSesion(); // Simula el proceso de cierre de sesión
-       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-     }  catch (error: any) {
-         console.log('Error en el cierre de sesión:', error.message);
-         Alert.alert("Error", error.message);
-     } finally {
-     console.log("Intentando ir al iniciar sesion ");
-     navigation.reset({
-       index: 0,
-       routes: [{ name: "InicioDeSesion" }],
-     });
-     }
-   };
- 
+  const logout = async () => {
+    try {
+      setState({ token: "" });
+      await cerrarSesion(); // Simula el proceso de cierre de sesión
+      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
+      Alert.alert("Error", error.message);
+    } finally {
+      console.log("Intentando ir al iniciar sesion ");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "InicioDeSesion" }],
+      });
+    }
+  };
+
   // Función para obtener la foto de perfil desde el backend
   const obtenerFotoPerfil = async () => {
     try {
@@ -151,9 +150,29 @@ const EditarPerfil = () => {
     }
   };
 
-    const toggleDesplegable = () => {
-      setMostrarDesplegable(!mostrarDesplegable);
-    };
+  const toggleDesplegable = () => {
+    setMostrarDesplegable(!mostrarDesplegable);
+  };
+
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -162,158 +181,158 @@ const EditarPerfil = () => {
       <SafeAreaView style={EstilosEditarPerfil.contenedor}>
         <ScrollView contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
           {/* Header con Perfil*/}
-        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-        <BarraPestanasPerfil />
+          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
+          <BarraPestanasPerfil />
 
-  
+
           {/* Menú Desplegable */}
           <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
-
-       {/* Sección para cambiar la foto */}
-       <View style={EstilosEditarPerfil.seccionFoto}>
-       <TouchableOpacity onPress={handleImagePress}>
-          <Image 
-            source={{ uri: imageUri || 'https://via.placeholder.com/80' }} 
-            style={EstilosEditarPerfil.imagenUsuario} 
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
           />
-          </TouchableOpacity>
-          {Platform.OS === 'web' ? (
-  <>
-    <TouchableOpacity
-      onPress={() =>
-        mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
-      }
-    >
-      <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-    </TouchableOpacity>
 
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={cropperVisible}
-      onRequestClose={() => setCropperVisible(false)}
-    >
-      <View style={EstilosEditarPerfil.modalOverlay}>
-        <View style={EstilosEditarPerfil.modalContent}>
-          <ImageCropperWeb
-            imageUri={imageUri}
-            setImageUri={setImageUri}
-            setCropperVisible={setCropperVisible}
-          />
-        </View>
-      </View>
-    </Modal>
-  </>
-) : (
-  <TouchableOpacity
-    onPress={() =>
-      mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
-    }
-  >
-    <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-  </TouchableOpacity>
-)}
+          {/* Sección para cambiar la foto */}
+          <View style={EstilosEditarPerfil.seccionFoto}>
+            <TouchableOpacity onPress={handleImagePress}>
+              <Image
+                source={{ uri: imageUri || 'https://via.placeholder.com/80' }}
+                style={EstilosEditarPerfil.imagenUsuario}
+              />
+            </TouchableOpacity>
+            {Platform.OS === 'web' ? (
+              <>
+                <TouchableOpacity
+                  onPress={() =>
+                    mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+                  }
+                >
+                  <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+                </TouchableOpacity>
 
-        </View>
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={cropperVisible}
+                  onRequestClose={() => setCropperVisible(false)}
+                >
+                  <View style={EstilosEditarPerfil.modalOverlay}>
+                    <View style={EstilosEditarPerfil.modalContent}>
+                      <ImageCropperWeb
+                        imageUri={imageUri}
+                        setImageUri={setImageUri}
+                        setCropperVisible={setCropperVisible}
+                      />
+                    </View>
+                  </View>
+                </Modal>
+              </>
+            ) : (
+              <TouchableOpacity
+                onPress={() =>
+                  mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+                }
+              >
+                <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+              </TouchableOpacity>
+            )}
 
-           
-      <CustomModal
-        visible={modalVisible}
-        onClose={handleCloseModal}
-        containerStyle={estilosModal.modalContainer}
-      >
-        <Image
-           source={{ uri: imageUri || 'https://place-hold.it/400x600' }}
-          style={estilosModal.imagenModal}
-        />
-      </CustomModal>
+          </View>
 
 
-              {/* Formulario de datos personales */}
-              <View style={EstilosEditarPerfil.formulario}>
+          <CustomModal
+            visible={modalVisible}
+            onClose={handleCloseModal}
+            containerStyle={estilosModal.modalContainer}
+          >
+            <Image
+              source={{ uri: imageUri || 'https://place-hold.it/400x600' }}
+              style={estilosModal.imagenModal}
+            />
+          </CustomModal>
 
 
-<TouchableOpacity onPress={() => setMostrarDatosContacto(!mostrarDatosContacto)}>
-  <Text style={EstilosEditarPerfil.tituloSeccion}>Datos de Contacto</Text>
-</TouchableOpacity>
-{mostrarDatosContacto && (
-  <>
-    <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.email || datosOriginales.email || ''}
-            onChangeText={(valor) => manejarCambioCampo('email', valor)}
-          />
-    <Text style={EstilosEditarPerfil.label}>Teléfono</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.telefono || datosOriginales.telefono || ''}
-            onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
-          />
-  </>
-)}
-
-<TouchableOpacity onPress={() => setMostrarDireccion(!mostrarDireccion)}>
-  <Text style={EstilosEditarPerfil.tituloSeccion}>Dirección</Text>
-</TouchableOpacity>
-{mostrarDireccion && (
-  <>
-    <Text style={EstilosEditarPerfil.label}>Calle</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
-            onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
-          />
-    <Text style={EstilosEditarPerfil.label}>Altura</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
-            onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
-          />
-    <Text style={EstilosEditarPerfil.label}>Número de Departamento</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
-            onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
-          />
-    <Text style={EstilosEditarPerfil.label}>Piso</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
-            onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
-          />
-    <Text style={EstilosEditarPerfil.label}>Barrio</Text>
-    <Input
-            placeholder=" "
-            value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
-            onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
-          />
-  </>
-)}
+          {/* Formulario de datos personales */}
+          <View style={EstilosEditarPerfil.formulario}>
 
 
-<TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
-  
+            <TouchableOpacity onPress={() => setMostrarDatosContacto(!mostrarDatosContacto)}>
+              <Text style={EstilosEditarPerfil.tituloSeccion}>Datos de Contacto</Text>
+            </TouchableOpacity>
+            {mostrarDatosContacto && (
+              <>
+                <Text style={EstilosEditarPerfil.label}>Correo electrónico</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.email || datosOriginales.email || ''}
+                  onChangeText={(valor) => manejarCambioCampo('email', valor)}
+                />
+                <Text style={EstilosEditarPerfil.label}>Teléfono</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.telefono || datosOriginales.telefono || ''}
+                  onChangeText={(valor) => manejarCambioCampo('telefono', valor)}
+                />
+              </>
+            )}
+
+            <TouchableOpacity onPress={() => setMostrarDireccion(!mostrarDireccion)}>
+              <Text style={EstilosEditarPerfil.tituloSeccion}>Dirección</Text>
+            </TouchableOpacity>
+            {mostrarDireccion && (
+              <>
+                <Text style={EstilosEditarPerfil.label}>Calle</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.direccion?.calle || datosOriginales.direccion.calle || ''}
+                  onChangeText={(valor) => manejarCambioCampo('direccion.calle', valor)}
+                />
+                <Text style={EstilosEditarPerfil.label}>Altura</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.direccion?.altura || datosOriginales.direccion.altura || ''}
+                  onChangeText={(valor) => manejarCambioCampo('direccion.altura', valor)}
+                />
+                <Text style={EstilosEditarPerfil.label}>Número de Departamento</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.direccion?.nroDepto || datosOriginales.direccion.nroDepto || ''}
+                  onChangeText={(valor) => manejarCambioCampo('direccion.nroDepto', valor)}
+                />
+                <Text style={EstilosEditarPerfil.label}>Piso</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.direccion?.piso || datosOriginales.direccion.piso || ''}
+                  onChangeText={(valor) => manejarCambioCampo('direccion.piso', valor)}
+                />
+                <Text style={EstilosEditarPerfil.label}>Barrio</Text>
+                <Input
+                  placeholder=" "
+                  value={camposModificados.direccion?.barrio || datosOriginales.direccion.barrio || ''}
+                  onChangeText={(valor) => manejarCambioCampo('direccion.barrio', valor)}
+                />
+              </>
+            )}
+
+
+            <TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
+
               {/* Botón para mostrar/ocultar campos de contraseña */}
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={EstilosEditarPerfil.botonCambiarPassword}
                 onPress={() => setShowPasswordFields(!showPasswordFields)}
               >
-        <Text style={[EstilosEditarPerfil.tituloSeccion, { alignSelf: 'flex-start' }]}>
+                <Text style={[EstilosEditarPerfil.tituloSeccion, { alignSelf: 'flex-start' }]}>
                   {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
                 </Text>
               </TouchableOpacity>
-               
+
               {/* Campos de contraseña */}
               {showPasswordFields && (
-              <>
-                <Text style={EstilosEditarPerfil.label}>Contraseña actual</Text>
+                <>
+                  <Text style={EstilosEditarPerfil.label}>Contraseña actual</Text>
 
                   <PasswordInput
                     placeholder=" "
@@ -321,7 +340,7 @@ const EditarPerfil = () => {
                     onChangeText={(valor) => manejarCambioCampo('old_password', valor)}
                   />
 
-                <Text style={EstilosEditarPerfil.label}>Nueva contraseña</Text>
+                  <Text style={EstilosEditarPerfil.label}>Nueva contraseña</Text>
 
                   <PasswordInput
                     placeholder=" "
@@ -330,61 +349,56 @@ const EditarPerfil = () => {
                   />
 
 
-                <Text style={EstilosEditarPerfil.label}>Confirmar nueva contraseña</Text>
+                  <Text style={EstilosEditarPerfil.label}>Confirmar nueva contraseña</Text>
 
                   <PasswordInput
                     placeholder=" "
                     value={camposModificados.password2}
                     onChangeText={(valor) => manejarCambioCampo('password2', valor)}
                   />
-                  
-              </>
-            )}
-            </TouchableOpacity>
-        </View>
-           
-      {/* Botón de Guardar Cambios*/}
-     {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
-      {!visible && (
-       <TouchableOpacity
-       onPress={() =>
-         guardarCambios(
-           camposModificados,
-           datosOriginales,
-           imageUri,
-           imageUriOriginal,
-           showPasswordFields,
-           navigation,
-           setMessage,
-           setVisible
-         )
-       }
-       style={EstilosEditarPerfil.botonGuardarCambios}
-     >
-          <Text style={EstilosEditarPerfil.textoBotonGuardar}>Guardar Cambios</Text>
-        </TouchableOpacity>
-      )} 
 
-      <Snackbar
-        visible={visible}
-        onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
-        duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
-        style={{
-          position: 'absolute',
-          top: -150,
-          left: 0,
-          right: 0,
-          zIndex: 100000,  // Alto para asegurarse de que esté encima de otros elementos
-        }}
-      >
-        {message}
-      </Snackbar>
-      </ScrollView>
-      {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>
-    </SafeAreaView>
-   </TouchableWithoutFeedback>
-      );
-    };
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Botón de Guardar Cambios*/}
+          {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
+          {!visible && (
+            <TouchableOpacity
+              onPress={() =>
+                guardarCambios(
+                  camposModificados,
+                  datosOriginales,
+                  imageUri,
+                  imageUriOriginal,
+                  showPasswordFields,
+                  navigation,
+                  setMessage,
+                  setVisible
+                )
+              }
+              style={EstilosEditarPerfil.botonGuardarCambios}
+            >
+              <Text style={EstilosEditarPerfil.textoBotonGuardar}>Guardar Cambios</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* CustomSnackbar */}
+          <CustomSnackbar
+            visible={visible}
+            setVisible={setVisible}
+            message={message}
+          />
+        </ScrollView>
+        {/* Barra de navegación inferior */}
+        <NavBarInferior
+          activeScreen="EditarPerfil" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
+  );
+};
 
 export default EditarPerfil;

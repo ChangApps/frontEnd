@@ -1,23 +1,23 @@
-import React, { useContext, useState, useEffect} from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, FlatList, TouchableWithoutFeedback, Linking } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
-import { Snackbar } from 'react-native-paper';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Alert, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from '../../autenticacion/auth';
 import API_URL from '../../utils/API_URL';
-import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
 import EstilosHistorial1 from './estilos/EstilosHistorial1';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [state,setState] = useContext(AuthContext);
+  const [state, setState] = useContext(AuthContext);
   const [userId, setUserId] = useState('');
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
@@ -39,7 +39,7 @@ const Historial1 = () => {
     nroDepto: number | null;
     barrio: string;
   }
-  
+
   interface Proveedor {
     id: number;
     username: string;
@@ -67,7 +67,7 @@ const Historial1 = () => {
     valoracion: number | null;
     proveedorServicio: number;
     cliente: number;
-    notificacion: any; 
+    notificacion: any;
     estado: "PA" | "I" | "F" | "C";
     proveedor_id: number;
     nombreServicio: string;
@@ -75,118 +75,118 @@ const Historial1 = () => {
   }
 
   const redirectAdmin = () => {
-  Linking.openURL('http://127.0.0.1:8000/admin/');
+    Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-useEffect(() => {
-  const obtenerDatosAsyncStorage = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');   
+  useEffect(() => {
+    const obtenerDatosAsyncStorage = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
 
-      // Verificar si se obtiene el userId
-      if (userId) {
-        setUserId(userId);
+        // Verificar si se obtiene el userId
+        if (userId) {
+          setUserId(userId);
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos de AsyncStorage:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener los datos de AsyncStorage:", error);
-    }
-  };
+    };
 
-  obtenerDatosAsyncStorage();
-  fetchUHistorial();
-}, []);  // Solo se ejecuta una vez cuando el componente se monta
+    obtenerDatosAsyncStorage();
+    fetchUHistorial();
+  }, []);  // Solo se ejecuta una vez cuando el componente se monta
 
   const logout = async () => {
     try {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    }  catch (error: any) {
-        console.log('Error en el cierre de sesión:', error.message);
-        Alert.alert("Error", error.message);
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
+      Alert.alert("Error", error.message);
     } finally {
-    console.log("Intentando ir al iniciar sesion ");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "InicioDeSesion" }],
-    });
+      console.log("Intentando ir al iniciar sesion ");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "InicioDeSesion" }],
+      });
     }
   };
 
-const fetchUHistorial = async () => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    const userId = await AsyncStorage.getItem('userId');
+  const fetchUHistorial = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const userId = await AsyncStorage.getItem('userId');
 
-    if (!accessToken || !userId) {
-      throw new Error('No se encontró el token o el ID de usuario');
+      if (!accessToken || !userId) {
+        throw new Error('No se encontró el token o el ID de usuario');
+      }
+
+      const responseHistorial = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      // Manejo especial para 404
+      if (responseHistorial.status === 404) {
+        console.log("No se encontraron registros de historial (404)");
+        setHistorial([]);
+        setSolicitudesInfo([]);
+        return; // Salir de la función sin mostrar error
+      }
+
+      if (!responseHistorial.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+
+      const historialData = await responseHistorial.json();
+      if (historialData.length > 0) {
+        setHistorial(historialData);
+
+        // Extraer los proveedores y la información de solicitudes
+        const solicitudesData = historialData.map((item: any) => ({
+          proveedorId: item.proveedor_id,
+          idSolicitud: item.id,
+          fechaSolicitud: item.fechaSolicitud
+        }));
+
+        setSolicitudesInfo(solicitudesData);
+
+        // Obtener datos de los proveedores
+        const proveedores = solicitudesData.map((item: any) => item.proveedorId);
+        await fetchMultipleProveedoresData(proveedores);
+      } else {
+        throw new Error('El historial está vacío');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error al cargar datos de la solicitud:', error.message);
+      } else {
+        console.error('Error desconocido:', error);
+      }
     }
-
-    const responseHistorial = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    // Manejo especial para 404
-    if (responseHistorial.status === 404) {
-      console.log("No se encontraron registros de historial (404)");
-      setHistorial([]);
-      setSolicitudesInfo([]);
-      return; // Salir de la función sin mostrar error
-    }
-
-    if (!responseHistorial.ok) {
-      throw new Error('Error en la respuesta del servidor');
-    }
-
-    const historialData = await responseHistorial.json();
-    if (historialData.length > 0) {
-      setHistorial(historialData);
-
-      // Extraer los proveedores y la información de solicitudes
-      const solicitudesData = historialData.map((item: any) => ({
-        proveedorId: item.proveedor_id,
-        idSolicitud: item.id,
-        fechaSolicitud: item.fechaSolicitud
-      }));
-  
-      setSolicitudesInfo(solicitudesData);
-
-      // Obtener datos de los proveedores
-      const proveedores = solicitudesData.map((item: any) => item.proveedorId);
-      await fetchMultipleProveedoresData(proveedores);
-    } else {
-      throw new Error('El historial está vacío');
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Error al cargar datos de la solicitud:', error.message);
-    } else {
-      console.error('Error desconocido:', error);
-    }
-  }
-};
+  };
 
 
-const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
+  const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
     try {
       console.log("Adentro del fetch multiple proveedores data");
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
       }
-  
+
       if (proveedorIds.length === 0) {
         throw new Error('No hay proveedores disponibles');
       }
-  
+
       // Realizamos las solicitudes en paralelo usando Promise.all
       const proveedoresDataPromises = proveedorIds.map(idDelproveedor => {
         return fetch(`${API_URL}/usuarios/${idDelproveedor}/`, {
@@ -197,26 +197,26 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
           },
         });
       });
-  
+
       // Esperamos todas las respuestas
       const proveedorResponses = await Promise.all(proveedoresDataPromises);
-  
+
       // Comprobamos si alguna de las respuestas no fue exitosa
       for (let i = 0; i < proveedorResponses.length; i++) {
         if (!proveedorResponses[i].ok) {
           throw new Error(`Error al obtener el proveedor con ID ${proveedorIds[i]}: ${proveedorResponses[i].status}`);
         }
       }
-  
+
       // Procesamos las respuestas en paralelo
       const proveedoresData = await Promise.all(proveedorResponses.map(response => response.json()));
-  
-      console.log('Respuesta exitosa: Datos de los proveedores recibidos:', proveedoresData);
-  
-      // Actualiza el estado con los datos de los proveedores
-      setProveedores(proveedoresData); 
 
-    } catch (error:any) {
+      console.log('Respuesta exitosa: Datos de los proveedores recibidos:', proveedoresData);
+
+      // Actualiza el estado con los datos de los proveedores
+      setProveedores(proveedoresData);
+
+    } catch (error: any) {
       console.error('Error al cargar datos de los proveedores:', error.message);
       setMessage('No se pudo cargar los datos de los proveedores');
       setVisible(true);
@@ -224,31 +224,52 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
       setLoading(false); // Cuando termina el fetch de proveedores, se desactiva la carga
     }
   };
-  
+
+  const handleNavigation = (screen: string) => {
+    switch (screen) {
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      case 'Historial1':
+        navigation.navigate('Historial1');
+        break;
+      case 'Add':
+        navigation.navigate('AgregarServicio1');
+        break;
+      case 'Notifications':
+        // Navegar a notificaciones
+        break;
+      case 'PerfilUsuario':
+        navigation.navigate('PerfilUsuario');
+        break;
+    }
+  };
 
   return (
+
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosHistorial1.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosHistorial1.safeContainer}>
         {/* NavBar Superior */}
-                    <NavBarSuperior
-                      titulo="Historial"
-                      showBackButton={false}
-                      onBackPress={() => navigation.goBack()}
-                      rightButtonType="none"
-                    />
+        <NavBarSuperior
+          titulo="Historial"
+          showBackButton={true}
+          onBackPress={() => navigation.goBack()}
+          rightButtonType="menu"
+          onRightPress={() => { toggleDesplegable(); }}
+        />
 
         {/* Menú Desplegable */}
-         <MenuDesplegable
+        <MenuDesplegable
           visible={mostrarDesplegable}
           usuario={state.usuario}
           onLogout={logout}
           onRedirectAdmin={redirectAdmin}
         />
 
-          {/* Barra de pestañas */}
-          <View style={EstilosHistorial1.pasosWrapper}>
+        {/* Barra de pestañas */}
+        <View style={EstilosHistorial1.pasosWrapper}>
           <TouchableOpacity style={EstilosHistorial1.pasoActivo} onPress={() => navigation.navigate('Historial1')}>
             <Text style={EstilosHistorial1.pasoTextoActivo}>Servicios contratados</Text>
           </TouchableOpacity>
@@ -265,25 +286,17 @@ const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
           mensajeVacio="No haz contratado ningún trabajo."
         />
 
-
-      <Snackbar
+        <CustomSnackbar
           visible={visible}
-          onDismiss={() => setVisible(false)}  // Ocultar el Snackbar cuando se cierre
-          duration={Snackbar.DURATION_SHORT}    // Podemos intercalar entre  DURATION_LONG o DURATION_SHORT
-          style={{
-            position: 'absolute',
-            top: -150,
-            left: 0,
-            right: 0,
-            zIndex: 100000,  
-            marginRight: 50,
-          }}
-        >
-          {message}
-        </Snackbar>
+          setVisible={setVisible}
+          message={message}
+        />
 
         {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>
+        <NavBarInferior
+          activeScreen="Historial1" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

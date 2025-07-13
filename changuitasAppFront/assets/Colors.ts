@@ -8,7 +8,8 @@ const Colors = {
   grisTexto: '#70706f',
   grisBoxes: '#333237',
   grisFondo: '#292929',
-  negro:"#00000"
+  negro:'#00000',
+  grisTextoAyuda: '#B3B3B3'
 };
 
 export default Colors;

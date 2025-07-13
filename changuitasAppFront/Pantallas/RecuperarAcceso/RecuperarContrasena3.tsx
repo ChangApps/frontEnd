@@ -1,19 +1,18 @@
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import axios from "axios";
-import { Snackbar } from "react-native-paper";
 import { RootStackParamList } from '../..//navegacion/AppNavigator';
 import API_URL from "../../utils/API_URL";
 import EstilosRecuperarContrasena3 from "../RecuperarAcceso/estilos/EstilosRecuperarContrasena3";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import PasswordInput from "../../componentes/inputs/PasswordInput";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const RecuperarContrasena3 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -44,7 +43,7 @@ const RecuperarContrasena3 = () => {
       // Realizar la solicitud PATCH para actualizar la contraseña
       const response = await axios.patch(`${API_URL}/actualizar-contrasena/`, {
         password: password, // Enviar la nueva contraseña
-        id:id 
+        id: id
       });
 
       if (response.status === 200) {
@@ -63,77 +62,70 @@ const RecuperarContrasena3 = () => {
     }
   };
 
-const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <SafeAreaView style={EstilosRecuperarContrasena3.areaSegura}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena3.degradado}>
-      <View style={EstilosRecuperarContrasena3.contenedor}>
-        <View style={[EstilosRecuperarContrasena3.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena3.contenidoWeb]}>
-        {/* NavBar Superior */}
-        <NavBarSuperior
-          titulo="Recuperar contraseña"
-          showBackButton={true}
-          onBackPress={() => navigation.goBack()}
-          rightButtonType="none"
-        />
+        <View style={EstilosRecuperarContrasena3.contenedor}>
+          <View style={[EstilosRecuperarContrasena3.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena3.contenidoWeb]}>
+            {/* NavBar Superior */}
+            <NavBarSuperior
+              titulo="Recuperar contraseña"
+              showBackButton={true}
+              onBackPress={() => navigation.goBack()}
+              rightButtonType="none"
+            />
 
-        <PasoTituloIcono
-          iconName="mail-outline"
-          texto="PASO 2:"
-        />
+            <PasoTituloIcono
+              iconName="mail-outline"
+              texto="PASO 2:"
+            />
 
-        {/* Paso de verificación */}
-        <Text style={EstilosRecuperarContrasena3.instruccion}>
-          Nueva contraseña
-        </Text>
+            {/* Paso de verificación */}
+            <Text style={EstilosRecuperarContrasena3.instruccion}>
+              Nueva contraseña
+            </Text>
 
-        <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
-          <PasswordInput
-            placeholder="***************"
-            value={password}
-            onChangeText={setPassword}
-          />
+            <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
+              <PasswordInput
+                placeholder="***************"
+                value={password}
+                onChangeText={setPassword}
+              />
+            </View>
+
+            <Text style={EstilosRecuperarContrasena3.instruccion}>
+              Confirmar contraseña
+            </Text>
+
+            <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
+              <PasswordInput
+                placeholder="***************"
+                value={password}
+                onChangeText={setConfirmarPassword}
+              />
+            </View>
+
+            {/* Snackbar para mostrar mensajes */}
+            <CustomSnackbar
+              visible={visible}
+              setVisible={setVisible}
+              message={message}
+            />
+
+            {/* Botón de enviar */}
+            <Button
+              titulo="Guardar"
+              onPress={ActualizarContrasenia}
+              textSize={20}
+              textColor={Colors.fondo}
+              padding={15}
+              borderRadius={25}
+            />
+          </View>
         </View>
-
-        <Text style={EstilosRecuperarContrasena3.instruccion}>
-          Confirmar contraseña
-        </Text>
-
-        <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
-          <PasswordInput
-            placeholder="***************"
-            value={password}
-            onChangeText={setConfirmarPassword}
-          />
-        </View>
-
-        {/* Snackbar para mostrar mensajes */}
-        <Snackbar
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          duration={4000} // 4 segundos
-          style={{
-            marginLeft: -30, 
-            alignSelf: "center", 
-            width: "90%", 
-          }}
-        >
-          {message}
-        </Snackbar>
-
-        {/* Botón de enviar */}
-        <Button
-          titulo="Guardar"
-          onPress={ActualizarContrasenia}
-          textSize={20}
-          textColor={Colors.fondo}
-          padding={15}
-          borderRadius={25}
-        />
-      </View>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

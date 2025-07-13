@@ -27,6 +27,7 @@ const estilosEspecificos = StyleSheet.create({
     fontSize: FUENTES.normal,
     color: COLORES_APP.negro,
   },
+  
 });
 
 // Combinar estilos compartidos con específicos

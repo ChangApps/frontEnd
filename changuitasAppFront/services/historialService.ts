@@ -27,13 +27,6 @@ export const fetchMultipleProveedoresData = async (
     );
 
     const proveedorResponses = await Promise.all(proveedoresDataPromises);
-
-    for (let i = 0; i < proveedorResponses.length; i++) {
-      if (!proveedorResponses[i].ok) {
-        throw new Error(`Error al obtener proveedor con ID ${proveedorIds[i]}`);
-      }
-    }
-
     const proveedoresData = await Promise.all(proveedorResponses.map(res => res.json()));
     return proveedoresData;
   } catch (error) {

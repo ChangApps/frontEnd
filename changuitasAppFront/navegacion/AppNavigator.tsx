@@ -65,8 +65,9 @@ export type RootStackParamList = {
   ResultadosBusqueda: { 
     proveedores: any[]; 
     error?: string; // Para el mensaje de error
+    busquedaGeneral: Boolean;
   };
-  PerfilProveedor: { id: any[] };
+  PerfilProveedor: { id: number; servicio: number | null };
   DetalleTarea: { id: string; idSolicitud: string };
   CalificarTarea: { idSolicitud: string };
   Historial1: undefined;

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import { Checkbox } from 'react-native-paper';  // Importar Checkbox de react-native-paper
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Checkbox } from 'react-native-paper';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import BarraNavegacionInferior from '../../utils/BarraNavegacionInferior';
-import  EstilosBuscarServicio1 from '../Buscar/estilos/EstilosBuscarServicio1';
+import EstilosBuscarServicio1 from '../Buscar/estilos/EstilosBuscarServicio1';
 const BuscarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -36,16 +35,16 @@ const BuscarServicio1 = () => {
       <View style={EstilosBuscarServicio1.headerContainer}>
         <Text style={EstilosBuscarServicio1.header}>Buscar un servicio (1/2)</Text>
       </View>
-      
+
       <ScrollView contentContainerStyle={EstilosBuscarServicio1.scrollContainer}>
         {/* Sección de servicios */}
-         {/* Sección de servicios */}
-         {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedService, handleSelectService)}
-        {renderCategory("JARDINERÍA", ["Jardinero","Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
+        {/* Sección de servicios */}
+        {renderCategory("BELLEZA", ["Depilacion", "Maquillaje", "Manicura", "Peluqueria", "Podologia"], selectedService, handleSelectService)}
+        {renderCategory("JARDINERÍA", ["Jardinero", "Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", [
-          "Gasista", "Electricista", "Plomero", "Carpintero", 
-          "Pintor", "Albañil", "Ziguería", "Gomería", 
+          "Gasista", "Electricista", "Plomero", "Carpintero",
+          "Pintor", "Albañil", "Ziguería", "Gomería",
           "Electrodomésticos", "Calderista"
         ], selectedService, handleSelectService)}
         {renderCategory("CUIDADO DE PERSONAS", ["Niñero/a", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
@@ -63,22 +62,22 @@ const BuscarServicio1 = () => {
       </ScrollView>
 
       {/* Barra de navegación inferior */}
-      <BarraNavegacionInferior/>
+      <BarraNavegacionInferior />
     </View>
   );
 };
 
 
 const renderCategory = (
-    title: any,
-    options: any,
-    selectedService: any,
-    handleSelectService: any
-  ) => (
-    <View key={title}>
-      <Text style={EstilosBuscarServicio1.categoryTitle}>{title}</Text>
-      {options.map((option: any) => (
-       <TouchableOpacity
+  title: any,
+  options: any,
+  selectedService: any,
+  handleSelectService: any
+) => (
+  <View key={title}>
+    <Text style={EstilosBuscarServicio1.categoryTitle}>{title}</Text>
+    {options.map((option: any) => (
+      <TouchableOpacity
         style={EstilosBuscarServicio1.optionContainer}
         key={option}
         onPress={() => handleSelectService(option)}
@@ -88,8 +87,8 @@ const renderCategory = (
           status={selectedService === option ? 'checked' : 'unchecked'}
         />
         <Text style={EstilosBuscarServicio1.optionText}>{option}</Text>
-     </TouchableOpacity>
-      ))}
-    </View>
-  );
+      </TouchableOpacity>
+    ))}
+  </View>
+);
 export default BuscarServicio1;
