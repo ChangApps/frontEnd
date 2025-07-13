@@ -91,7 +91,8 @@ const DetalleTarea = () => {
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
 
       const userId = await AsyncStorage.getItem('userId');
-      setRol(userId === data.cliente.toString() ? 'cliente' : 'trabajador');
+      const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
+      setRol(rolCalculado);
     } catch (err) {
       console.error(err);
     }
