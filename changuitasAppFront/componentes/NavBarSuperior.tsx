@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../assets/Colors';
+import { Ionicons } from '@expo/vector-icons';
+
 
 interface NavBarSuperiorProps {
     titulo: string;
@@ -62,19 +64,25 @@ export function NavBarSuperior({
             return <View style={[styles.buttonContainer, { width: buttonSize, height: buttonSize }]} />;
         }
 
-        const iconName = rightButtonType === 'filter' ? 'tune' : 'menu';
-
         return (
             <TouchableOpacity
                 style={[styles.buttonContainer, { width: buttonSize, height: buttonSize }]}
                 onPress={onRightPress}
                 activeOpacity={0.7}
             >
-                <MaterialIcons
-                    name={iconName}
-                    size={iconSize}
-                    color={Colors.blancoTexto}
-                />
+                {rightButtonType === 'menu' ? (
+                    <Ionicons
+                        name="ellipsis-horizontal"
+                        size={iconSize}
+                        color={Colors.blancoTexto}
+                    />
+                ) : (
+                    <MaterialIcons
+                        name="tune"
+                        size={iconSize}
+                        color={Colors.blancoTexto}
+                    />
+                )}
             </TouchableOpacity>
         );
     };
