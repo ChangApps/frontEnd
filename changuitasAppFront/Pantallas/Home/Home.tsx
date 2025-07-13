@@ -115,12 +115,7 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       await cerrarSesion();
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-    } finally {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'InicioDeSesion' }],
-      });
-    }
+    } 
   };
 
   const onDismissSnackbar = () => {
