@@ -143,7 +143,6 @@ const Resenias = () => {
                     onBackPress={() => { navigation.goBack(); }}
                     rightButtonType="menu"
                     onRightPress={() => { toggleDesplegable(); }}
-                    paddingHorizontal={5}
                 />
 
                 {/* Menú Desplegable */}

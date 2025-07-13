@@ -171,8 +171,6 @@ const Historial2 = () => {
         // Obtener los proveedores relacionados con las solicitudes
         const clientes = solicitudesData.map((item: any) => item.clienteId);
         await fetchMultipleClientesData(clientes);
-      } else {
-        throw new Error('El historial está vacío');
       }
     } catch (error: any) {
       console.error('Error al cargar datos del usuario (historial):', error.message);
