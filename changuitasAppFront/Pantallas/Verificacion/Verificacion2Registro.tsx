@@ -1,4 +1,4 @@
-import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback } from "react-native";
+import { Alert, Platform, Image, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback } from "react-native";
 import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import EstilosVerificacion2 from './estilos/EstilosVerificacion2';
 import FormData from 'form-data';
 import { mostrarOpcionesSelectorImagen } from '../../utils/seleccionImagen';
 import { ImageCropperWeb } from "../../componentes/ImageCropperWeb";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Verificacion2Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -139,7 +140,7 @@ const Verificacion2Registro = () => {
 
 
   return (
-    <SafeAreaView style={EstilosVerificacion2.areaSegura}>
+    <SafeAreaView edges={['top']} style={EstilosVerificacion2.safeContainer}>
       <View style={EstilosVerificacion2.contenedor}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={EstilosVerificacion2.botonAtras}>
           <Ionicons name="arrow-back" size={30} color="#197278" />

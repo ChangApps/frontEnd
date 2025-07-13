@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -11,6 +11,7 @@ import EstilosResenias from "./estilos/EstilosResenias";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import { NavBarInferior } from "../../componentes/NavBarInferior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Resenias = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -133,7 +134,7 @@ const Resenias = () => {
     };
 
     return (
-        <SafeAreaView style={EstilosResenias.safeArea}>
+        <SafeAreaView edges={['top']} style={EstilosResenias.safeContainer}>
             <View style={EstilosResenias.container}>
                 {/* NavBar Superior */}
                 <NavBarSuperior
@@ -142,6 +143,7 @@ const Resenias = () => {
                     onBackPress={() => { navigation.goBack(); }}
                     rightButtonType="menu"
                     onRightPress={() => { toggleDesplegable(); }}
+                    paddingHorizontal={5}
                 />
 
                 {/* Menú Desplegable */}

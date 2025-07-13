@@ -1,15 +1,13 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosResenias = StyleSheet.create({
-    safeArea: {
+    safeContainer: {
         flex: 1,
-        backgroundColor: '#191A2E',
+        backgroundColor: Colors.fondo,
     },
     container: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        marginTop:30,
     },
     header: {
         flexDirection: 'row',
@@ -105,14 +103,14 @@ const EstilosResenias = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         elevation: 5,
         zIndex: 10,
-      },
-      opcionDesplegable: {
+    },
+    opcionDesplegable: {
         paddingVertical: 10,
         paddingHorizontal: 15,
-      },
-      textoDesplegable: {
+    },
+    textoDesplegable: {
         fontSize: 16,
         color: '#333333',
-      },
+    },
 });
 export default EstilosResenias;

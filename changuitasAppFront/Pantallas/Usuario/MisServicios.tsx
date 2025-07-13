@@ -184,7 +184,6 @@ const MisServicios = () => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
       <SafeAreaView edges={['top']} style={EstilosMisServicios.safeContainer}>
-        <ScrollView contentContainerStyle={EstilosMisServicios.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
           
@@ -222,7 +221,6 @@ const MisServicios = () => {
               contentContainerStyle={EstilosMisServicios.listaServicios}
             />
           )}
-        </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="MisServicios" // O el screen activo correspondiente
