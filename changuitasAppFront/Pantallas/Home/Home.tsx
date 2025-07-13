@@ -23,6 +23,7 @@ import ModalBuscar from '../../componentes/ModalBuscar';
 import API_URL from '../../utils/API_URL';
 import {redirectAdmin} from '../../utils/utils'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -43,6 +44,8 @@ const PantallaHome = () => {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState('');
+const [cargandoContenido, setCargandoContenido] = useState(true);
+
   
 
   const handleBuscar = async () => {
@@ -137,16 +140,24 @@ const PantallaHome = () => {
 
   useEffect(() => {
     const init = async () => {
+    try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
-        console.log(storedToken);
+        console.log("El stored token es: ", storedToken);
         setAccessToken(storedToken);
-        await fetchUsuarioLogueado();
+        const resultado = await obtenerCategorias(); 
+        setCategorias(resultado);
+      //  await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
-       const resultado = await obtenerCategorias(); 
-      setCategorias(resultado);
+      } else {
+        console.log('No se encontró token');
       }
-    };
+    } catch (err) {
+      console.error("Error en init:", err);
+    } finally {
+      setCargandoContenido(false);
+    }
+  };
     init();
 
     const interval = setInterval(async () => {
@@ -177,6 +188,8 @@ const PantallaHome = () => {
     }
   }, [trabajosNotificados, snackbarVisible, trabajoActual]);
 
+if (cargandoContenido) return <PantallaCarga />;
+
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
@@ -197,58 +210,58 @@ const PantallaHome = () => {
           onRedirectAdmin={redirectAdmin}
         />
 
-        <ScrollView contentContainerStyle={EstilosHome.scrollContenido}>
-          {/* Buscador */}
-          <View style={EstilosHome.barraBusqueda}>
-               <TextInput
-                style={EstilosHome.inputBusqueda}
-                placeholder="Buscar..."
-                placeholderTextColor="#ccc"
-                value={textoBusqueda}          
-                onChangeText={setTextoBusqueda} 
-              />
-          <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
-          <FontAwesome6 name="magnifying-glass" size={20} color="black" />
-          </TouchableOpacity>
-          </View>
+          
+              <FlatList
+              ListHeaderComponent={
+                <>
+                  {/* Buscador */}
+                  <View style={EstilosHome.barraBusqueda}>
+                    <TextInput
+                      style={EstilosHome.inputBusqueda}
+                      placeholder="Buscar..."
+                      placeholderTextColor="#ccc"
+                      value={textoBusqueda}
+                      onChangeText={setTextoBusqueda}
+                    />
+                    <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
+                      <FontAwesome6 name="magnifying-glass" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
 
-          {/* Últimas personas */}
-       <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
-            {personasContratadas.length === 0 ? (
-        <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
-      ) : (
-          <ResultadoListSimple
-          historial={historial}
-          usuarios={proveedores}
-          navigation={navigation}
-          claveUsuario="proveedor_id"
-          estiloCard={EstilosHome.cardPersona}
-          estiloAvatar={EstilosHome.avatarPlaceholder
-          }
-          estiloNombre={EstilosHome.nombrePersona}
-        />
-      )}
+                  {/* Últimas personas */}
+                  <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
+                  {personasContratadas.length === 0 ? (
+                    <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
+                  ) : (
+                    <ResultadoListSimple
+                      historial={historial}
+                      usuarios={proveedores}
+                      navigation={navigation}
+                      claveUsuario="proveedor_id"
+                      estiloCard={EstilosHome.cardPersona}
+                      estiloAvatar={EstilosHome.avatarPlaceholder}
+                      estiloNombre={EstilosHome.nombrePersona}
+                    />
+                  )}
 
-          {/* Categorías */}
-         {/* Modal de búsqueda */}
-      <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} />
-          <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
-          <FlatList
-            data={categorias}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-            renderItem={({ item }) => (
-                 <TouchableOpacity
-                style={EstilosHome.cardCategoria}
-                onPress={() => setMostrarModalBuscar(true)} 
-              >
-                <Ionicons name="image" size={20} color={Colors.naranja} />
-                <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
+                  <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+                </>
+              }
+              data={categorias}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={2}
+              columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={EstilosHome.cardCategoria}
+                  onPress={() => setMostrarModalBuscar(true)}
+                >
+                  <Ionicons name="image" size={20} color={Colors.naranja} />
+                  <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
+                </TouchableOpacity>
+              )}
+              contentContainerStyle={EstilosHome.scrollContenido}
+            />
 
         {/* Snackbar */}
         <Snackbar

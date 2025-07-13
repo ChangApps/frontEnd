@@ -45,13 +45,6 @@ const InicioDeSesion = () => {
         return;  // Sale si hay un error en los datos recibidos
       }
 
-      setState({
-        token: data.access,
-        usuario: {
-          id: data.id,
-          is_staff: data.is_staff,
-        }
-      });
       // Almacena el token en AsyncStorage
       await AsyncStorage.setItem('@auth', JSON.stringify({
         token: data.access,
@@ -70,6 +63,14 @@ const InicioDeSesion = () => {
       // Limpia los campos de username y password después del login exitoso
       setusername('');
       setPassword('');
+
+      setState({
+              token: data.access,
+              usuario: {
+                id: data.id,
+                is_staff: data.is_staff,
+              }
+            });
 
       // Navega a la pantalla principal (Home) (automaticamente)
 
