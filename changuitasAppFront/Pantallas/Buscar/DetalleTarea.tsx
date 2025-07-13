@@ -32,7 +32,7 @@ const DetalleTarea = () => {
   const [servicio, setServicio] = useState('');
   const [estado, setEstado] = useState('');
   const [puntaje, setPuntaje] = useState<string | number>('Aun no asignado');
-  const [rol, setRol] = useState<any>('');
+  const [rol, setRol] = useState<'cliente' | 'trabajador' | null>(null);
   const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState('');
   const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
@@ -95,11 +95,8 @@ const DetalleTarea = () => {
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
 
       const userId = await AsyncStorage.getItem('userId');
-        if (userId === data.cliente.toString()) {
-        setRol('cliente');
-      } else {
-        setRol('trabajador');
-      }
+      const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
+      setRol(rolCalculado);
     } catch (err) {
       console.error(err);
     }
