@@ -7,7 +7,7 @@ export const COLORES_APP = {
   ...Colors,
 
   // Colores específicos para las pantallas de perfil y tareas
-  primario: '#FC6A30',
+  primario: Colors.naranja,
   gris: '#666',
   grisClaro: '#ddd',
   grisBackground: '#f0f0f0',
