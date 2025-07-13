@@ -29,7 +29,7 @@ export const DIMENSIONES = {
   tamanoImagenUsuarioChico: 80,
   tamanoImagenUsuarioGrande: 160,
   tamanoImagenModal: 200,
-  marginTopEncabezado: 50,
+  marginTopEncabezado: 10,
   zIndexModal: 10,
   // Posiciones específicas
   topNavegacionRelativa: -40,

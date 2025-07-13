@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,6 +12,7 @@ import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -182,10 +183,11 @@ const MisServicios = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosMisServicios.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosMisServicios.safeContainer}>
         <ScrollView contentContainerStyle={EstilosMisServicios.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          
           <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
 
           {/* Barra de pestañas */}

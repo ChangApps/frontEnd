@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -12,6 +12,7 @@ import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const RecuperarContrasena1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -64,7 +65,7 @@ const RecuperarContrasena1 = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView style={EstilosRecuperarContrasena1.areaSegura}>
+    <SafeAreaView edges={['top']} style={EstilosRecuperarContrasena1.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena1.degradado}>
         <View style={EstilosRecuperarContrasena1.contenedor}>
           <View style={[EstilosRecuperarContrasena1.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena1.contenidoWeb]}>
@@ -74,6 +75,7 @@ const RecuperarContrasena1 = () => {
               showBackButton={true}
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
+              paddingHorizontal={5}
             />
 
             <Text style={EstilosRecuperarContrasena1.instruccion}>
