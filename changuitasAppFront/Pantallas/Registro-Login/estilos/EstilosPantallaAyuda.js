@@ -1,34 +1,17 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosPantallaAyuda = StyleSheet.create({
-  contenedor: {
+  safeContainer: {
     flex: 1,
+    backgroundColor: Colors.fondo,
   },
   degradado: {
     flex: 1,
   },
-  encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    marginTop: 50,
-  },
-  textoInicio: {
-    fontSize: 24,
-    color: '#F2F2F2',
-    fontWeight: '600',
-  },
-  menuPuntos: {
-    fontSize: 24,
-    color: '#F2F2F2',
-    fontWeight: '600',
-  },
   tituloAyuda: {
     fontSize: 18,
-    color: '#FC6A30',
+    color: Colors.naranja,
     textAlign: 'center',
     marginVertical: 10,
   },
@@ -38,13 +21,14 @@ const EstilosPantallaAyuda = StyleSheet.create({
   },
   tituloPregunta: {
     fontSize: 16,
-    color: '#FC6A30',
+    color: Colors.naranja,
     marginBottom: 5,
   },
   infoPregunta: {
     fontSize: 16,
-    color: '#B3B3B3',
+    color: Colors.grisTextoAyuda,
     marginBottom: 5,
+    textAlign: 'justify',
   },
   contenidoResponsivo: {
     width: '100%',
@@ -54,6 +38,14 @@ const EstilosPantallaAyuda = StyleSheet.create({
     maxWidth: 700,
     alignSelf: 'center',
   },
+  infoSubparrafo: {
+  fontSize: 16,
+  color: Colors.grisTextoAyuda,
+  marginBottom: 5,
+  textAlign: 'justify',
+  paddingLeft: 20, // sangría visual
+},
+
 });
 
 export default EstilosPantallaAyuda;

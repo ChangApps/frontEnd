@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View, ScrollView, Alert } from "react-native";
+import { Text, View, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,8 +10,8 @@ import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import PasswordInput from "../../componentes/inputs/PasswordInput";
 import { Button } from "../../componentes/Buttons";
-import { Platform, useWindowDimensions } from 'react-native';
-
+import { useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -183,7 +183,7 @@ const Registro = () => {
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
-      <SafeAreaView style={EstilosRegistro.areaSegura}>
+      <SafeAreaView edges={['top']} style={EstilosRegistro.safeContainer}>
         <ScrollView>
           <View style={EstilosRegistro.contenedor}>
             <View style={[EstilosRegistro.contenidoResponsivo, width > 600 && EstilosRegistro.contenidoWeb]}>
@@ -193,6 +193,7 @@ const Registro = () => {
                 showBackButton={true}
                 onBackPress={() => navigation.goBack()}
                 rightButtonType="none"
+                paddingHorizontal={5}
               />
 
               {/* Mensaje de error */}

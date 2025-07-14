@@ -11,6 +11,7 @@ import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -215,7 +216,7 @@ const AgregarServicio2 = () => {
   };
 
   return (
-    <View style={EstilosAgregarServicio2.container}>
+    <SafeAreaView edges={['top']} style={EstilosAgregarServicio2.safeContainer}>
       {/* NavBar Superior */}
       <NavBarSuperior
         titulo="Agregar un servicio"
@@ -246,11 +247,15 @@ const AgregarServicio2 = () => {
 
         {Object.keys(diasSeleccionados).map((dia) => (
           <View style={EstilosAgregarServicio2.filaDia} key={dia}>
-            <Switch
-              value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
-              onValueChange={() => cambiarDia(dia)}
-            />
-            <Text style={EstilosAgregarServicio2.textoDia}>{dia}</Text>
+            <View style={EstilosAgregarServicio2.switchYTextoDia}>
+              <Switch
+                value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
+                onValueChange={() => cambiarDia(dia)}
+                trackColor={{ false: Colors.grisTexto, true: Colors.naranja }}
+                thumbColor={diasSeleccionados[dia as keyof typeof diasSeleccionados] ? Colors.naranja : Colors.grisTexto}
+              />
+              <Text style={EstilosAgregarServicio2.textoDia}>{dia}</Text>
+            </View>
 
             {/* Picker para la hora de inicio */}
             <View style={EstilosAgregarServicio2.pickerContainer}>
@@ -307,7 +312,7 @@ const AgregarServicio2 = () => {
         activeScreen="AgregarServicio2" // O el screen activo correspondiente
         onNavigate={handleNavigation}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

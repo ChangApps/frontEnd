@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView,  TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AxiosError } from 'axios';
@@ -18,6 +18,12 @@ import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces
 import { fetchUHistorial } from '../../services/historialService';
 import ResultadoListSimple from '../../componentes/ResultadoListSimple';
 import Colors from '../../assets/Colors';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import ModalBuscar from '../../componentes/ModalBuscar';
+import API_URL from '../../utils/API_URL';
+import {redirectAdmin} from '../../utils/utils'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -36,9 +42,51 @@ const PantallaHome = () => {
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
   const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
-  const [visible, setVisible] = useState(false);  
-  const [message, setMessage] = useState(""); 
+  const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
+  const [textoBusqueda, setTextoBusqueda] = useState('');
+const [cargandoContenido, setCargandoContenido] = useState(true);
+
   
+
+  const handleBuscar = async () => {
+    console.log("Buscando por:", textoBusqueda);
+
+    try {
+      const storedToken = await AsyncStorage.getItem('accessToken');
+      const res = await fetch(`${API_URL}/buscar-usuario/?q=${encodeURIComponent(textoBusqueda)}`, {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+
+        if (res.status === 204) {
+          console.log("No se encontraron resultados.");
+          
+          return;
+        }
+
+    if (!res.ok) throw new Error('Error al obtener los datos');
+
+      const data = await res.json();
+
+      console.log('Datos obtenidos:', data);
+      if (!data || data.length === 0) {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: [],
+          error: 'No se encontraron resultados para tu búsqueda.',
+          busquedaGeneral: false
+        });
+      } else {
+        navigation.navigate('ResultadosBusqueda', {
+          proveedores: data,
+          busquedaGeneral: true
+        });
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
@@ -59,10 +107,6 @@ const PantallaHome = () => {
     }
   };
 
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
   const toggleDesplegable = () => setMostrarDesplegable(!mostrarDesplegable);
 
   const logout = async () => {
@@ -71,12 +115,7 @@ const PantallaHome = () => {
       await cerrarSesion();
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-    } finally {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'InicioDeSesion' }],
-      });
-    }
+    } 
   };
 
   const onDismissSnackbar = () => {
@@ -96,16 +135,24 @@ const PantallaHome = () => {
 
   useEffect(() => {
     const init = async () => {
+    try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
-        console.log(storedToken);
+        console.log("El stored token es: ", storedToken);
         setAccessToken(storedToken);
-        await fetchUsuarioLogueado();
+        const resultado = await obtenerCategorias(); 
+        setCategorias(resultado);
+      //  await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
-       const resultado = await obtenerCategorias(); 
-      setCategorias(resultado);
+      } else {
+        console.log('No se encontró token');
       }
-    };
+    } catch (err) {
+      console.error("Error en init:", err);
+    } finally {
+      setCargandoContenido(false);
+    }
+  };
     init();
 
     const interval = setInterval(async () => {
@@ -136,9 +183,11 @@ const PantallaHome = () => {
     }
   }, [trabajosNotificados, snackbarVisible, trabajoActual]);
 
+if (cargandoContenido) return <PantallaCarga />;
+
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosHome.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
 
         {/* Encabezado */}
@@ -156,51 +205,58 @@ const PantallaHome = () => {
           onRedirectAdmin={redirectAdmin}
         />
 
-        <ScrollView contentContainerStyle={EstilosHome.scrollContenido}>
-          {/* Buscador */}
-          <View style={EstilosHome.barraBusqueda}>
-            <TextInput
-              style={EstilosHome.inputBusqueda}
-              placeholder="Buscar..."
-              placeholderTextColor="#ccc"
+          
+              <FlatList
+              ListHeaderComponent={
+                <>
+                  {/* Buscador */}
+                  <View style={EstilosHome.barraBusqueda}>
+                    <TextInput
+                      style={EstilosHome.inputBusqueda}
+                      placeholder="Buscar..."
+                      placeholderTextColor="#ccc"
+                      value={textoBusqueda}
+                      onChangeText={setTextoBusqueda}
+                    />
+                    <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
+                      <FontAwesome6 name="magnifying-glass" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Últimas personas */}
+                  <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
+                  {personasContratadas.length === 0 ? (
+                    <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
+                  ) : (
+                    <ResultadoListSimple
+                      historial={historial}
+                      usuarios={proveedores}
+                      navigation={navigation}
+                      claveUsuario="proveedor_id"
+                      estiloCard={EstilosHome.cardPersona}
+                      estiloAvatar={EstilosHome.avatarPlaceholder}
+                      estiloNombre={EstilosHome.nombrePersona}
+                    />
+                  )}
+
+                  <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+                </>
+              }
+              data={categorias}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={2}
+              columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={EstilosHome.cardCategoria}
+                  onPress={() => setMostrarModalBuscar(true)}
+                >
+                  <Ionicons name="image" size={20} color={Colors.naranja} />
+                  <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
+                </TouchableOpacity>
+              )}
+              contentContainerStyle={EstilosHome.scrollContenido}
             />
-            <TouchableOpacity style={EstilosHome.botonFiltro}>
-              <Ionicons name="options" size={20} color="#fff" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Últimas personas */}
-       <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
-            {personasContratadas.length === 0 ? (
-        <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
-      ) : (
-          <ResultadoListSimple
-          historial={historial}
-          usuarios={proveedores}
-          navigation={navigation}
-          claveUsuario="proveedor_id"
-          estiloCard={EstilosHome.cardPersona}
-          estiloAvatar={EstilosHome.avatarPlaceholder
-          }
-          estiloNombre={EstilosHome.nombrePersona}
-        />
-      )}
-
-          {/* Categorías */}
-          <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
-          <FlatList
-            data={categorias}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={EstilosHome.cardCategoria}>
-               <Ionicons name="image" size={20} color={Colors.naranja} />
-                <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
 
         {/* Snackbar */}
         <Snackbar

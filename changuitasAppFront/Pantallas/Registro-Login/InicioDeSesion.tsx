@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, TouchableOpacity, View, useWindowDimensions, } from "react-native";
+import { Text, TouchableOpacity, View, useWindowDimensions, } from "react-native";
 import React, { useContext, useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,6 +12,7 @@ import Input from "../../componentes/inputs/Input";
 import PasswordInput from "../../componentes/inputs/PasswordInput";
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -45,13 +46,6 @@ const InicioDeSesion = () => {
         return;  // Sale si hay un error en los datos recibidos
       }
 
-      setState({
-        token: data.access,
-        usuario: {
-          id: data.id,
-          is_staff: data.is_staff,
-        }
-      });
       // Almacena el token en AsyncStorage
       await AsyncStorage.setItem('@auth', JSON.stringify({
         token: data.access,
@@ -71,6 +65,14 @@ const InicioDeSesion = () => {
       setusername('');
       setPassword('');
 
+      setState({
+              token: data.access,
+              usuario: {
+                id: data.id,
+                is_staff: data.is_staff,
+              }
+            });
+
       // Navega a la pantalla principal (Home) (automaticamente)
 
     } catch (error: any) {
@@ -85,7 +87,7 @@ const InicioDeSesion = () => {
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosInicioDeSesion.degradado}>
-      <SafeAreaView style={EstilosInicioDeSesion.areaSegura}>
+      <SafeAreaView edges={['top']} style={EstilosInicioDeSesion.safeContainer}>
         <View style={[EstilosInicioDeSesion.contenedor, width > 600 && EstilosInicioDeSesion.contenedorWeb]}>
           <View style={EstilosInicioDeSesion.encabezado}>
             <Text style={EstilosInicioDeSesion.titulo}>Iniciar sesión</Text>

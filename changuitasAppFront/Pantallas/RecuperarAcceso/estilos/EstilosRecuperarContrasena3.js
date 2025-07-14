@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosRecuperarContrasena3 = StyleSheet.create({
-  areaSegura: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.fondo,
   },
   contenedor: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 70,
+    paddingHorizontal: 25,
   },
   degradado: {
       flex: 1,
@@ -61,23 +61,6 @@ const EstilosRecuperarContrasena3 = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     marginBottom: 15,
-  },
-
-  botonSiguiente: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: '#197278',
-    borderRadius: 25,
-  },
-  textoBoton: {
-    color: '#197278',
-    fontSize: 16,
-    fontWeight: '600',
-    marginRight: 5,
   },
   contenidoResponsivo: {
       width: '100%',

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, Linking, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Linking, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -12,6 +12,7 @@ import ResultadoList from '../../componentes/ResultadoList';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -170,8 +171,6 @@ const Historial2 = () => {
         // Obtener los proveedores relacionados con las solicitudes
         const clientes = solicitudesData.map((item: any) => item.clienteId);
         await fetchMultipleClientesData(clientes);
-      } else {
-        throw new Error('El historial está vacío');
       }
     } catch (error: any) {
       console.error('Error al cargar datos del usuario (historial):', error.message);
@@ -243,7 +242,7 @@ const Historial2 = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosHistorial2.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosHistorial2.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
           titulo="Historial"

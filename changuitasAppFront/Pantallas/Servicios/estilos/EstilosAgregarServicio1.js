@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosAgregarServicio1 = StyleSheet.create({
-    container: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: '#0B0F2F',
-    paddingTop: 50,
+    backgroundColor: Colors.fondo,
   },
   title: {
-    color: 'white',
+    color: Colors.blancoTexto,
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -15,10 +15,10 @@ const EstilosAgregarServicio1 = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 15,
   },
   selectorBoton: {
-    backgroundColor: '#FF6D3B',
+    backgroundColor: Colors.naranja,
     alignSelf: 'flex-start',
     paddingHorizontal: 15,
     paddingVertical: 6,
@@ -26,14 +26,14 @@ const EstilosAgregarServicio1 = StyleSheet.create({
     marginBottom: 20,
   },
   selectorTexto: {
-    color: 'white',
+    color: Colors.blancoTexto,
     fontWeight: 'bold',
   },
   categoriaContenedor: {
     marginBottom: 25,
   },
   categoriaTitulo: {
-    color: '#FFF',
+    color: Colors.blancoTexto,
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 10,
@@ -44,7 +44,7 @@ const EstilosAgregarServicio1 = StyleSheet.create({
     gap: 10,
   },
   chip: {
-    borderColor: '#FF6D3B',
+    borderColor: Colors.naranja,
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 12,
@@ -53,29 +53,23 @@ const EstilosAgregarServicio1 = StyleSheet.create({
     marginBottom: 8,
   },
   chipSeleccionado: {
-    backgroundColor: '#FF6D3B',
+    backgroundColor: Colors.naranja
   },
   chipTexto: {
-    color: '#FF6D3B',
+    color: Colors.blancoTexto,
     fontWeight: '600',
   },
   chipTextoSeleccionado: {
-    color: '#FFF',
+    color: Colors.blancoTexto
   },
   botonesContenedor: {
   paddingHorizontal: 20,
-  paddingBottom: 20,
-  backgroundColor: '#0B0F2F',
-  gap: 10,
-},
-pasosContenedor: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  marginBottom: 20,
-  gap: 10,
+  paddingBottom: 10,
+  backgroundColor: Colors.fondo,
+  gap: 5,
 },
 pasoActivo: {
-  backgroundColor: '#FF6D3B',
+  backgroundColor: Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
@@ -83,18 +77,18 @@ pasoActivo: {
 pasoInactivo: {
   backgroundColor: 'transparent',
   borderWidth: 1,
-  borderColor: '#FF6D3B',
+  borderColor: Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
 },
 pasoTextoActivo: {
-  color: 'white',
+  color: Colors.blancoTexto,
   fontWeight: 'bold',
   fontSize: 14,
 },
 pasoTextoInactivo: {
-  color: '#FF6D3B',
+  color: Colors.naranja,
   fontWeight: 'bold',
   fontSize: 14,
 },
@@ -102,7 +96,7 @@ pasosWrapper: {
   flexDirection: 'row',
   justifyContent: 'center',
   alignSelf: 'center',
-  backgroundColor: '#1D233B',
+  backgroundColor: Colors.fondo,
   borderRadius: 30,
   paddingVertical: 8,
   paddingHorizontal: 12,

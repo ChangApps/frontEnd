@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +22,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -180,7 +181,7 @@ const EditarPerfil = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosEditarPerfil.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosEditarPerfil.safeContainer}>
         <ScrollView contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />

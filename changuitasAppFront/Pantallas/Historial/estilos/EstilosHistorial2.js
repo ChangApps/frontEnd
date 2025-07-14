@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../assets/Colors';
 
 const EstilosHistorial2 = StyleSheet.create({
-  contenedor: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: '#191A2E',
+    backgroundColor: Colors.fondo,
   },
   encabezado: {
     flexDirection: 'row',
@@ -116,48 +117,48 @@ const EstilosHistorial2 = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
   },
-nombreConEstadoContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  flexWrap: 'nowrap',
-},
+  nombreConEstadoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+  },
 
-name: {
-  fontSize: 16,
-  fontWeight: '600',
-  color: '#333',
-  marginRight: 8, // separa el nombre del cartel
-},
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginRight: 8, // separa el nombre del cartel
+  },
 
-estadoCriticoContainer: {
-  backgroundColor: '#ff4d4d', // rojo claro
-  paddingHorizontal: 8,
-  paddingVertical: 4,
-  borderRadius: 5,
-  marginTop: 0,
-  alignSelf: 'flex-start',
-},
+  estadoCriticoContainer: {
+    backgroundColor: '#ff4d4d', // rojo claro
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 5,
+    marginTop: 0,
+    alignSelf: 'flex-start',
+  },
 
-estadoCriticoText: {
-  color: 'white',
-  fontWeight: 'bold',
-},
+  estadoCriticoText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   estadoNormal: {
     marginTop: 4,
     fontStyle: 'italic',
     color: '#555',
   },
   emptyContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
 
   textoVacio: {
-    textAlign: 'center',  
-    fontSize: 18,         
-    color: '#333',        
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#333',
   },
   fecha: {
     fontSize: 12,
@@ -165,8 +166,8 @@ estadoCriticoText: {
     marginTop: 2,
   },
   noResultsContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   noResultsImage: {
@@ -179,41 +180,41 @@ estadoCriticoText: {
     color: 'grey',
     textAlign: 'center',
   },
-    pasoActivo: {
-  backgroundColor: '#FF6D3B',
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-  borderRadius: 20,
-},
-pasoInactivo: {
-  backgroundColor: 'transparent',
-  borderWidth: 1,
-  borderColor: '#FF6D3B',
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-  borderRadius: 20,
-},
-pasoTextoActivo: {
-  color: 'white',
-  fontWeight: 'bold',
-  fontSize: 14,
-},
-pasoTextoInactivo: {
-  color: '#FF6D3B',
-  fontWeight: 'bold',
-  fontSize: 14,
-},
-pasosWrapper: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignSelf: 'center',
-  backgroundColor: '#1D233B',
-  borderRadius: 30,
-  paddingVertical: 8,
-  paddingHorizontal: 12,
-  marginBottom: 20,
-  gap: 10,
-},
+  pasoActivo: {
+    backgroundColor: '#FF6D3B',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  pasoInactivo: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#FF6D3B',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  pasoTextoActivo: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  pasoTextoInactivo: {
+    color: '#FF6D3B',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  pasosWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#1D233B',
+    borderRadius: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 20,
+    gap: 10,
+  },
 });
 
 export default EstilosHistorial2;

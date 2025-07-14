@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
 
 const EstilosHome = StyleSheet.create({
-  contenedor: {
+  safeContainer: {
     flex: 1,
     backgroundColor: Colors.fondo,
   },
@@ -24,7 +24,7 @@ const EstilosHome = StyleSheet.create({
     color: Colors.blancoTexto,
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop:20,
+    marginTop: 20,
   },
   scrollContenido: {
     paddingBottom: 100,
@@ -51,8 +51,8 @@ const EstilosHome = StyleSheet.create({
     borderRadius: 20,
   },
   subtituloSeccion: {
-   // color: '#FF6A00',
-    color:Colors.naranja, 
+    // color: '#FF6A00',
+    color: Colors.naranja,
     fontSize: 16,
     fontWeight: 'bold',
     marginHorizontal: 20,
@@ -64,23 +64,23 @@ const EstilosHome = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginLeft: 20,
-    width: 200, 
-    flexDirection: 'row', 
-    alignItems: 'center',  
+    width: 200,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   avatarPlaceholder: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: '#ccc',
-    marginRight: 10, 
+    marginRight: 10,
   },
   nombrePersona: {
     color: Colors.blancoTexto,
     fontWeight: 'bold',
     fontSize: 14,
-    marginLeft: 0,  
-    marginTop: 0,   
+    marginLeft: 0,
+    marginTop: 0,
   },
   oficioPersona: {
     color: '#ccc',
@@ -114,11 +114,11 @@ const EstilosHome = StyleSheet.create({
     color: Colors.blancoTexto,
   },
   mensajeVacio: {
-  fontSize: 16,
-  color: Colors.blancoTexto,
-  marginLeft: 20,
-  marginTop: 8,
-}
+    fontSize: 16,
+    color: Colors.blancoTexto,
+    marginLeft: 20,
+    marginTop: 8,
+  }
 });
 
 export default EstilosHome;

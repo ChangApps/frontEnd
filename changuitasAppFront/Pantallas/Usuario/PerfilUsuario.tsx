@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, ActivityIndicator, Linking, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, Linking, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -16,6 +16,7 @@ import ImagenPerfilUsuario from '../../componentes/perfilesUsuarios/ImagenPerfil
 import ResumenServiciosUsuario from '../../componentes/perfilesUsuarios/ResumenServiciosUsuarios';
 import DatosPersonalesUsuario from '../../componentes/perfilesUsuarios/DatosPersonales';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -162,7 +163,7 @@ const PerfilUsuario: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosPerfilUsuario.contenedor}>
+      <SafeAreaView edges={['top']} style={EstilosPerfilUsuario.safeContainer}>
         <ScrollView contentContainerStyle={EstilosPerfilUsuario.scrollContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
@@ -182,7 +183,7 @@ const PerfilUsuario: React.FC = () => {
           trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
           puntaje={(usuario as any)?.puntaje ?? 0}
         />
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
         {usuario && <DatosPersonalesUsuario usuario={usuario} />}
         </ScrollView>
         {/* Barra de navegación inferior */}
