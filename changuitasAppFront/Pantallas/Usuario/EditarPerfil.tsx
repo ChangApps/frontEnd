@@ -21,6 +21,7 @@ import PasswordInput from '../../componentes/inputs/PasswordInput';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { Button } from '../../componentes/Buttons';
+import Colors from '../../assets/Colors';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -381,8 +382,8 @@ const EditarPerfil = () => {
                   setVisible
                 )
               }
-              backgroundColor="#FC6A30"
-              textColor="#191A2E"
+              backgroundColor={Colors.naranja}
+              textColor={Colors.negro}
               textSize={16}
               padding={12}
               borderRadius={50}
