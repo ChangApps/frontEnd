@@ -74,6 +74,7 @@ const RecuperarContrasena1 = () => {
               showBackButton={true}
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
+              titleSize={25}
             />
 
             <Text style={EstilosRecuperarContrasena1.instruccion}>

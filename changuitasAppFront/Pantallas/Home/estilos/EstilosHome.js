@@ -31,7 +31,7 @@ const EstilosHome = StyleSheet.create({
   },
   barraBusqueda: {
     flexDirection: 'row',
-    backgroundColor: '#1E1E3F',
+    backgroundColor: Colors.azulBoxes,
     marginHorizontal: 20,
     borderRadius: 25,
     alignItems: 'center',
@@ -51,7 +51,6 @@ const EstilosHome = StyleSheet.create({
     borderRadius: 20,
   },
   subtituloSeccion: {
-    // color: '#FF6A00',
     color: Colors.naranja,
     fontSize: 16,
     fontWeight: 'bold',
@@ -60,7 +59,7 @@ const EstilosHome = StyleSheet.create({
     marginBottom: 10,
   },
   cardPersona: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: Colors.azulBoxes,
     padding: 12,
     borderRadius: 10,
     marginLeft: 20,
@@ -87,7 +86,7 @@ const EstilosHome = StyleSheet.create({
     fontSize: 12,
   },
   cardCategoria: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: Colors.azulBoxes,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,

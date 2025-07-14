@@ -72,6 +72,7 @@ const RecuperarNombreUsuario = () => {
               showBackButton={true}
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
+              titleSize={25}
             />
 
             {/* Paso de verificación */}

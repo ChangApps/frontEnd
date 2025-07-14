@@ -1,4 +1,4 @@
-import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback } from "react-native";
+import { Alert, Platform, Image, SafeAreaView, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
 import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';

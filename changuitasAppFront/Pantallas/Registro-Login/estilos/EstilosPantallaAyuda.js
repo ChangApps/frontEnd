@@ -4,7 +4,6 @@ import Colors from '../../../assets/Colors';
 const EstilosPantallaAyuda = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: Colors.fondo,
   },
   degradado: {
     flex: 1,
@@ -43,7 +42,7 @@ const EstilosPantallaAyuda = StyleSheet.create({
   color: Colors.grisTextoAyuda,
   marginBottom: 5,
   textAlign: 'justify',
-  paddingLeft: 20, // sangría visual
+  paddingLeft: 20,
 },
 
 });
