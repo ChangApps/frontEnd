@@ -133,8 +133,8 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
   await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
-  useEffect(() => {
-    const init = async () => {
+useEffect(() => {
+  const init = async () => {
     try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
@@ -142,7 +142,6 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
         setAccessToken(storedToken);
         const resultado = await obtenerCategorias(); 
         setCategorias(resultado);
-      //  await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
       } else {
         console.log('No se encontró token');
@@ -153,26 +152,29 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       setCargandoContenido(false);
     }
   };
-    init();
 
-    const interval = setInterval(async () => {
-      try {
-        const nuevoToken = await renovarToken();
-        if (nuevoToken) {
-          setAccessToken(nuevoToken);
-          await AsyncStorage.setItem('accessToken', nuevoToken);
-        } else {
-          logout();
-        }
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error("Error al renovar token:", error.message);
+  init();
+}, []);
+
+ useEffect(() => {
+  const interval = setInterval(async () => {
+    try {
+      const nuevoToken = await renovarToken();
+      if (nuevoToken) {
+        setAccessToken(nuevoToken);
+        await AsyncStorage.setItem('accessToken', nuevoToken);
+      } else {
         logout();
       }
-    }, 60000);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error("Error al renovar token:", error.message);
+      logout();
+    }
+  }, 60000); // cada 60 segundos
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval); // limpia cuando se desmonta
+}, []);
 
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
@@ -189,6 +191,8 @@ if (cargandoContenido) return <PantallaCarga />;
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
+
+        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} />
 
         {/* Encabezado */}
         <View style={EstilosHome.encabezado}>
