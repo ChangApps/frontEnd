@@ -174,13 +174,17 @@ const UsuariosBloqueados = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                   <View style={EstilosUsuariosBloqueados.usuarioBloqueado}>
-                    <Image
-                      source={{ uri: item.foto || 'https://via.placeholder.com/50' }}
-                      style={EstilosUsuariosBloqueados.image}
-                    />
-                    <Text>{item.nombre}</Text>
-                    <TouchableOpacity onPress={() => desbloquearUsuario(item.id)}>
-                      <Text style={EstilosUsuariosBloqueados.botonDesbloquear}>Desbloquear</Text>
+                    <View style={EstilosUsuariosBloqueados.infoUsuario}>
+                      <Image
+                        source={{ uri: item.foto || 'https://via.placeholder.com/50' }}
+                        style={EstilosUsuariosBloqueados.image}
+                      />
+                      <Text style={EstilosUsuariosBloqueados.nombreUsuarioBloqueado}>
+                        {item.nombre}
+                      </Text>
+                    </View>
+                    <TouchableOpacity onPress={() => desbloquearUsuario(item.id)} style={EstilosUsuariosBloqueados.botonDesbloquear}>
+                      <Text style={EstilosUsuariosBloqueados.botonTexto}>Desbloquear</Text>
                     </TouchableOpacity>
                   </View>
                 )}

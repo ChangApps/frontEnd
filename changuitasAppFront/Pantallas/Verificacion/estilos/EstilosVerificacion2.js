@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Colors from '../../../assets/Colors';
 
 const EstilosVerificacion2 = StyleSheet.create({
   areaSegura: {
@@ -23,7 +23,7 @@ const EstilosVerificacion2 = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: '#E6E6E6',
+    backgroundColor: Colors.blancoOscuroTexto,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -47,7 +47,7 @@ const EstilosVerificacion2 = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: Colors.negro,
   },
   imagenModal: {
     width: 200,
@@ -58,12 +58,12 @@ const EstilosVerificacion2 = StyleSheet.create({
     //Modal del recortador
     modalOverlay: {
       flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: Colors.negro,
       justifyContent: "center",
       alignItems: "center",
     },
     modalContent: {
-      backgroundColor: "white",
+      backgroundColor: Colors.blancoOscuroTexto,
       padding: 20,
       borderRadius: 10,
       shadowColor: "#000",
