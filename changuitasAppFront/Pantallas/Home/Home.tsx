@@ -160,26 +160,6 @@ useEffect(() => {
   init();
 }, []);
 
- useEffect(() => {
-  const interval = setInterval(async () => {
-    try {
-      const nuevoToken = await renovarToken();
-      if (nuevoToken) {
-        setAccessToken(nuevoToken);
-        await AsyncStorage.setItem('accessToken', nuevoToken);
-      } else {
-        logout();
-      }
-    } catch (err) {
-      const error = err as AxiosError;
-      console.error("Error al renovar token:", error.message);
-      logout();
-    }
-  }, 60000); // cada 60 segundos
-
-  return () => clearInterval(interval); // limpia cuando se desmonta
-}, []);
-
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
       const siguiente = trabajosNotificados[0];
