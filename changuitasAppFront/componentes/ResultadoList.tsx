@@ -27,6 +27,11 @@ type Props = {
   mensajeVacio: string;
 };
 
+const formatearFecha = (fechaISO: string): string => {
+  const [anio, mes, dia] = fechaISO.split('T')[0].split('-');
+  return `${dia}/${mes}/${anio}`;
+};
+
 const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeVacio }: Props) => {
   return (
     <FlatList
@@ -69,7 +74,7 @@ const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeV
               </View>
 
               <Text style={EstilosHistorial1.fecha}>
-                Fecha: {item.fechaSolicitud}
+                Fecha: {formatearFecha(item.fechaSolicitud)}
               </Text>
 
               <View style={EstilosHistorial1.ratingStars}>

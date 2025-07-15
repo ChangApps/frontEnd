@@ -9,16 +9,25 @@ interface Props {
   estilos: any;
 }
 
-const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, puntaje, estado, estilos }) => (
-  <View>
-    <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
-    <View style={estilos.datosPersonales}>
-      <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
-      <Text style={estilos.infoUsuario}>Fecha: {fecha}</Text>
-      <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
-      <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+const formatearFecha = (fechaISO: string): string => {
+  const [anio, mes, dia] = fechaISO.split('T')[0].split('-');
+  return `${dia}/${mes}/${anio}`;
+};
+
+const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, puntaje, estado, estilos }) => {
+  const fechaFormateada = formatearFecha(fecha);
+
+  return (
+    <View>
+      <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
+      <View style={estilos.datosPersonales}>
+        <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
+        <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
+        <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
+        <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 export default DatosTareaCompactos;

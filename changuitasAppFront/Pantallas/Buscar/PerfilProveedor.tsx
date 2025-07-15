@@ -47,6 +47,11 @@ const PerfilProveedor = () => {
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
 
+  const formatearFecha = (fecha: string): string => {
+  const [año, mes, dia] = fecha.split("-");
+  return `${dia}/${mes}/${año}`;
+  };
+
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
   };
@@ -459,7 +464,9 @@ const PerfilProveedor = () => {
           <View style={EstilosPerfilProveedor.datosPersonales}>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Nombre: {usuario?.first_name}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+            <Text style={EstilosPerfilProveedor.infoUsuario}>
+              Fecha de Nacimiento: {usuario?.fechaNacimiento ? formatearFecha(usuario.fechaNacimiento) : ""}
+            </Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Correo Electronico: {usuario?.email}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Telefono: {usuario?.telefono}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>

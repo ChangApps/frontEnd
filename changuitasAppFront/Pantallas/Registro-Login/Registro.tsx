@@ -51,6 +51,13 @@ const Registro = () => {
       return;
     }
 
+    const regexFecha = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regexFecha.test(fechaNacimiento)) {
+      Alert.alert('Error', 'Formato de fecha inválido. Usa el formato DD/MM/AAAA.');
+      setErrorMessage('Formato de fecha inválido. Usa el formato DD/MM/AAAA.');
+      return;
+    }
+
     // Reformatea fecha de nacimiento a 'YYYY-MM-DD'
     const fechaNacimientoFormatoCorrecto = fechaNacimiento.split('/').reverse().join('-');
 
@@ -231,7 +238,7 @@ const Registro = () => {
                 <View style={EstilosRegistro.campo}>
                   <Text style={EstilosRegistro.etiqueta}>Fecha de nacimiento</Text>
                   <Input
-                    placeholder="aaaa-mm-dd"
+                    placeholder="dd/mm/aaaa"
                     value={fechaNacimiento}
                     onChangeText={setFechaNacimiento}
                   />
