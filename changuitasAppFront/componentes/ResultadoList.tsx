@@ -72,16 +72,19 @@ const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeV
                 Fecha: {item.fechaSolicitud}
               </Text>
 
-              <View style={EstilosHistorial1.ratingStars}>
-                {Array.from({ length: 5 }, (_, i) => (
-                  <Ionicons
-                    key={i}
-                    name="star"
-                    size={16}
-                    color={i < puntaje ? "#FC6A30" : "#CCCCCC"}
-                  />
-                ))}
-              </View>
+              {item.estado === 'F' && (
+                <View style={EstilosHistorial1.ratingStars}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Ionicons
+                      key={i}
+                      name="star"
+                      size={16}
+                      color={i < puntaje ? "#FC6A30" : "#CCCCCC"}
+                    />
+                  ))}
+                </View>
+              )}
+
             </View>
 
             <TouchableOpacity
