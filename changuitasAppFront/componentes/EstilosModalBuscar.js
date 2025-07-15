@@ -29,13 +29,14 @@ modalContainer: {
 },
   tituloSeccion: {
     color: Colors.grisTexto,
-    marginTop: -25,
     fontSize: 14,
+    position: 'absolute',
+    top: 10, 
   },
     tituloRango: {
     color: Colors.grisTexto,
-    marginTop: 10,
     fontSize: 14,
+    marginTop: -5,
   },
   subtitulo: {
     color: Colors.naranja,

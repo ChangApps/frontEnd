@@ -12,6 +12,7 @@ export interface SolicitudHistorial {
   proveedor_id: number;
   nombreServicio: string;
   cliente_nombre: string;
+  servicio_id: number; 
 }
 
 export interface Solicitud {
