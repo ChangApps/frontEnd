@@ -5,6 +5,10 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../utils/API_URL';
 import EstilosModalBuscar from './EstilosModalBuscar';
+import axios from 'axios';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../navegacion/AppNavigator';
+import CustomSnackbar from './CustomSnackbar';
 
 interface Categoria {
   id: number;
@@ -22,9 +26,93 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
   const [subcategorias, setSubcategorias] = useState<Categoria[]>([]);
   const [subcategoriaSeleccionada, setSubcategoriaSeleccionada] = useState<number | null>(null);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState<string>('');
+  const [nombreServicio, setnombreServicio] = useState<string>('');
+  const [providers, setProviders] = useState([]);
   const horarios = ['Mañana', 'Tarde', 'Noche'];
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [snackbarVisible, setsnackbarVisible] = useState(false);
+  const [message, setMessage] = useState('');
 
-  // Cargar subcategorías al cambiar categoriaId o al abrir el modal
+  const handleBuscar = async () => {
+  try { 
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (!accessToken) {
+      throw new Error('No se encontró el token de acceso. Por favor, inicia sesión.');
+    }
+
+    const params = new URLSearchParams();
+    params.append('nombre_servicio', nombreServicio);
+
+    let desdeHora = '';
+    let hastaHora = '';
+
+    switch (horarioSeleccionado) {
+      case 'Mañana':
+        desdeHora = '08:00:00';
+        hastaHora = '12:00:00';
+        break;
+      case 'Tarde':
+        desdeHora = '12:05:00';
+        hastaHora = '18:00:00';
+        break;
+      case 'Noche':
+        desdeHora = '18:05:00';
+        hastaHora = '23:59:59';
+        break;
+      default:
+        break;
+    }
+
+    // Si se seleccionó horario, agregarlo para todos los días de momento
+    if (desdeHora && hastaHora) {
+    //  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      const diasSemana = ['Sábado', 'Domingo'];
+      diasSemana.forEach(dia => {
+        params.append('dias[]', dia);
+        params.append('desde_horas[]', desdeHora);
+        params.append('hasta_horas[]', hastaHora);
+      });
+    }
+
+    const response = await axios.get(`${API_URL}/buscar-proveedores/?${params.toString()}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    const todosLosProveedores = response.data.proveedores || [];
+
+    if (!userId) throw new Error('No se encontró el ID del usuario.');
+
+    const proveedoresFiltrados = todosLosProveedores.filter(
+      (proveedor: any) => proveedor.id !== parseInt(userId)
+    );
+
+    if (proveedoresFiltrados.length > 0) {
+      setProviders(proveedoresFiltrados);
+      console.log('Proveedores encontrados:', proveedoresFiltrados);
+      navigation.navigate('ResultadosBusqueda', { proveedores: proveedoresFiltrados, busquedaGeneral: false});
+    } else {
+      navigation.navigate('ResultadosBusqueda', {
+        proveedores: [],
+        error: 'No se encontraron proveedores para el servicio solicitado.',
+        busquedaGeneral: false
+      });
+    }
+
+  } catch (error: any) {
+    const mensajeError = error?.response?.data?.message;
+    navigation.navigate('ResultadosBusqueda', {
+      proveedores: [],
+      error: mensajeError || 'Error al buscar proveedores.',
+      busquedaGeneral: false
+    });
+  } 
+};
+
   useEffect(() => {
     const obtenerSubcategorias = async () => {
       if (!categoriaId) return;
@@ -72,7 +160,10 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
                   EstilosModalBuscar.opcion,
                   subcategoriaSeleccionada === sub.id && EstilosModalBuscar.opcionSeleccionada
                 ]}
-                onPress={() => setSubcategoriaSeleccionada(sub.id)}
+               onPress={() => {
+                  setSubcategoriaSeleccionada(sub.id);
+                  setnombreServicio(sub.nombre);
+                }}
               >
                 <Text style={EstilosModalBuscar.textoOpcion}>{sub.nombre}</Text>
               </TouchableOpacity>
@@ -106,13 +197,16 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
               <Text style={EstilosModalBuscar.textoEliminar}>Eliminar Filtros</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+        <TouchableOpacity
               style={[EstilosModalBuscar.botonFiltrado, EstilosModalBuscar.aplicar]}
               onPress={() => {
-                if (onAplicarFiltros) {
-                  onAplicarFiltros(subcategoriaSeleccionada, horarioSeleccionado);
+                if (!subcategoriaSeleccionada || !horarioSeleccionado) {
+                  setMessage("Debe aplicar todos los filtros para buscar");
+                  setsnackbarVisible(true); 
+                  return; // Salir sin hacer nada más
                 }
-                onClose();
+                handleBuscar(); 
+                onClose();     
               }}
             >
               <Text style={EstilosModalBuscar.textoAplicar}>Aplicar Filtrado</Text>
@@ -120,6 +214,7 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
           </View>
         </ScrollView>
       </View>
+       <CustomSnackbar visible={snackbarVisible} setVisible={setsnackbarVisible} message={message}/>
     </CustomModal>
   );
 };

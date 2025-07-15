@@ -144,65 +144,75 @@ const handleProveedorPress = (proveedor: any) => {
           </View>
         ) : (
           <ScrollView>
-            {busquedaGeneral
-              ? (
-                proveedoresFiltrados.map((item: any, index: number) => (
-                  <View key={index} style={EstilosResultadosBusqueda.resultItem}>
-                    <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
-                      <Image
-                        style={EstilosResultadosBusqueda.image}
-                        source={{ uri: obtenerFotoPerfil(item) }}
-                      />
-                    </TouchableOpacity>
+            {busquedaGeneral ? (
+              proveedoresFiltrados.map((item: any, index: number) => (
+                <View key={index} style={EstilosResultadosBusqueda.resultItem}>
+                  <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
+                    <Image
+                      style={EstilosResultadosBusqueda.image}
+                      source={{ uri: obtenerFotoPerfil(item) }}
+                    />
+                  </TouchableOpacity>
 
-                    <View style={EstilosResultadosBusqueda.resultDetails}>
-                      <Text style={EstilosResultadosBusqueda.name}>
-                        {item.first_name} {item.last_name}
-                      </Text>
+                  <View style={EstilosResultadosBusqueda.resultDetails}>
+                    <Text style={EstilosResultadosBusqueda.name}>
+                      {(item.nombre || item.first_name) ?? ''} {(item.apellido || item.last_name) ?? ''}
+                    </Text>
 
-                      {item.servicios?.map((servicio: any, idx: number) => (
+                    {item.servicios && item.servicios.length > 0 ? (
+                      item.servicios.map((servicio: any, idx: number) => (
                         <View key={idx} style={{ marginTop: 6 }}>
                           <Text style={{ color: Colors.naranja, fontWeight: 'bold' }}>{servicio.nombreServicio}</Text>
-                          {servicio.dias?.map((dia: any, diaIdx: number) => (
-                            <Text key={diaIdx} style={{ color: '#aaaaaa', fontSize: 12 }}>
-                              {dia.dia} de {dia.desdeHora} a {dia.hastaHora}
+                          {servicio.dias && servicio.dias.length > 0 && servicio.dias.map((horario: any, idx2: number) => (
+                            <Text key={idx2} style={{ color: '#aaaaaa', fontSize: 12 }}>
+                              {horario.dia} de {horario.desdeHora} a {horario.hastaHora}
                             </Text>
                           ))}
                         </View>
-                      ))}
-                    </View>
+                      ))
+                    ) : (
+                      <Text>No hay servicios disponibles</Text>
+                    )}
+                  </View>
 
-                    <TouchableOpacity
-                      onPress={() => handleProveedorPress(item)}
-                      style={EstilosResultadosBusqueda.arrowButton}
-                    >
-                      <Ionicons name="chevron-forward" size={20} color="#fff" />
-                    </TouchableOpacity>
-                  </View>
-                ))
-              ) : (
-                proveedoresFiltrados.map((item: any, index: number) => (
-                  <View key={index} style={EstilosResultadosBusqueda.resultItem}>
-                    <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
-                      <Image
-                        style={EstilosResultadosBusqueda.image}
-                        source={{ uri: obtenerFotoPerfil(item) }}
-                      />
-                    </TouchableOpacity>
-                    <View style={EstilosResultadosBusqueda.resultDetails}>
-                      <Text style={EstilosResultadosBusqueda.name}>{item.first_name} {item.last_name}</Text>
-                      <Text style={EstilosResultadosBusqueda.category}>
-                        {item.servicios?.[0]?.nombreServicio || "Categoría no especificada"}
+                  <TouchableOpacity
+                    onPress={() => handleProveedorPress(item)}
+                    style={EstilosResultadosBusqueda.arrowButton}
+                  >
+                    <Ionicons name="chevron-forward" size={20} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+              ))
+            ) : (
+              proveedoresFiltrados.map((item: any, index: number) => (
+                <View key={index} style={EstilosResultadosBusqueda.resultItem}>
+                  <TouchableOpacity onPress={() => handleImagePress(obtenerFotoPerfil(item))}>
+                    <Image
+                      style={EstilosResultadosBusqueda.image}
+                      source={{ uri: obtenerFotoPerfil(item) }}
+                    />
+                  </TouchableOpacity>
+                  <View style={EstilosResultadosBusqueda.resultDetails}>
+                    <Text style={EstilosResultadosBusqueda.name}>
+                      {(item.nombre || item.first_name) ?? ''} {(item.apellido || item.last_name) ?? ''}
+                    </Text>
+                   <Text style={{ color: Colors.naranja, fontWeight: 'bold' }}>
+                      {item.nombreServicio || (item.servicios?.[0]?.nombreServicio) || "Categoría no especificada"}
+                    </Text>
+                    {item.dias && item.dias.length > 0 && item.dias.map((horario: any, idx: number) => (
+                      <Text key={idx} style={{ color: '#aaaaaa', fontSize: 12 }}>
+                        {horario.dia} de {horario.desdeHora} a {horario.hastaHora}
                       </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => handleProveedorPress(item)}
-                      style={EstilosResultadosBusqueda.arrowButton}
-                    >
-                      <Ionicons name="chevron-forward" size={20} color="#fff" />
-                    </TouchableOpacity>
+                    ))}
                   </View>
-                ))
+                  <TouchableOpacity
+                    onPress={() => handleProveedorPress(item)}
+                    style={EstilosResultadosBusqueda.arrowButton}
+                  >
+                    <Ionicons name="chevron-forward" size={20} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+              ))
             )}
           </ScrollView>
         )}
@@ -225,7 +235,7 @@ const handleProveedorPress = (proveedor: any) => {
         onClose={() => setModalServiciosVisible(false)}
         servicios={serviciosModal}
         onSeleccionar={handleServicioSeleccionado}
-        />
+      />
 
       <NavBarInferior
         activeScreen="ResultadosBusqueda"
