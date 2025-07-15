@@ -27,16 +27,28 @@ const DatosPersonalesUsuario: React.FC<Props> = ({ usuario }) => (
   <>
     <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
     <View style={estilos.datosPersonales}>
-      <Text style={estilos.infoUsuario}>Nombre: {usuario.first_name}</Text>
-      <Text style={estilos.infoUsuario}>Apellido: {usuario.last_name}</Text>
-      <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {usuario.fechaNacimiento}</Text>
-      <Text style={estilos.infoUsuario}>Correo Electrónico: {usuario.email}</Text>
-      <Text style={estilos.infoUsuario}>Teléfono: {usuario.telefono}</Text>
-      <Text style={estilos.infoUsuario}>
-        Dirección: {usuario.direccion.calle}, {usuario.direccion.altura}{' '}
-        {usuario.direccion.piso ? `Piso ${usuario.direccion.piso}` : ''}{' '}
-        {usuario.direccion.nroDepto ? `Depto ${usuario.direccion.nroDepto}` : ''}, {usuario.direccion.barrio}
-      </Text>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>Nombre: {usuario.first_name}</Text>
+      </View>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>Apellido: {usuario.last_name}</Text>
+      </View>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>Fecha de nacimiento: {usuario.fechaNacimiento}</Text>
+      </View>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>Correo: {usuario.email}</Text>
+      </View>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>Teléfono: {usuario.telefono}</Text>
+      </View>
+      <View style={estilos.infoBox}>
+        <Text style={estilos.infoUsuario}>
+          Dirección: {usuario.direccion.calle}, {usuario.direccion.altura}{' '}
+          {usuario.direccion.piso ? `Piso ${usuario.direccion.piso}` : ''}{' '}
+          {usuario.direccion.nroDepto ? `Depto ${usuario.direccion.nroDepto}` : ''}, {usuario.direccion.barrio}
+        </Text>
+      </View>
     </View>
   </>
 );
