@@ -16,14 +16,17 @@ export const obtenerCategorias = async (): Promise<{ id: number; nombre: string 
     if (!res.ok) throw new Error('Error al obtener las categorías');
     const data = await res.json();
 
-    const categoriasFormateadas = data.map((cat: any) => ({
-      id: cat.id,
-      nombre: capitalizarPrimeraLetra(cat.nombre),
-    }));
+    // Filtramos solo las categorías de nivel superior (sin padre)
+    const categoriasFormateadas = data
+      .filter((cat: any) => cat.categoria_padre === null)
+      .map((cat: any) => ({
+        id: cat.id,
+        nombre: capitalizarPrimeraLetra(cat.nombre),
+      }));
 
     return categoriasFormateadas;
   } catch (error) {
     console.error('Error al cargar categorías:', error);
-    return []; // devolvé array vacío si falla
+    return [];
   }
 };

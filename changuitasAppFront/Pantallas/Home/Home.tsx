@@ -44,7 +44,9 @@ const PantallaHome = () => {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState('');
-const [cargandoContenido, setCargandoContenido] = useState(true);
+  const [cargandoContenido, setCargandoContenido] = useState(true);
+  const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
+
 
   
 
@@ -60,16 +62,17 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       });
 
         if (res.status === 204) {
-          console.log("No se encontraron resultados.");
-          
+          console.error("No se encontraron resultados.");
+          setTextoBusqueda('');
           return;
         }
 
-    if (!res.ok) throw new Error('Error al obtener los datos');
+    if (!res.ok) console.log('Error al obtener los datos');
 
       const data = await res.json();
 
       console.log('Datos obtenidos:', data);
+      setTextoBusqueda('');
       if (!data || data.length === 0) {
         navigation.navigate('ResultadosBusqueda', {
           proveedores: [],
@@ -84,6 +87,7 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       }
     } catch (error) {
       console.error('Error al obtener los datos:', error);
+      setTextoBusqueda('');
     }
   };
 
@@ -133,8 +137,8 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
   await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
-  useEffect(() => {
-    const init = async () => {
+useEffect(() => {
+  const init = async () => {
     try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
@@ -142,7 +146,6 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
         setAccessToken(storedToken);
         const resultado = await obtenerCategorias(); 
         setCategorias(resultado);
-      //  await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
       } else {
         console.log('No se encontró token');
@@ -153,26 +156,29 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       setCargandoContenido(false);
     }
   };
-    init();
 
-    const interval = setInterval(async () => {
-      try {
-        const nuevoToken = await renovarToken();
-        if (nuevoToken) {
-          setAccessToken(nuevoToken);
-          await AsyncStorage.setItem('accessToken', nuevoToken);
-        } else {
-          logout();
-        }
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error("Error al renovar token:", error.message);
+  init();
+}, []);
+
+ useEffect(() => {
+  const interval = setInterval(async () => {
+    try {
+      const nuevoToken = await renovarToken();
+      if (nuevoToken) {
+        setAccessToken(nuevoToken);
+        await AsyncStorage.setItem('accessToken', nuevoToken);
+      } else {
         logout();
       }
-    }, 60000);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error("Error al renovar token:", error.message);
+      logout();
+    }
+  }, 60000); // cada 60 segundos
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval); // limpia cuando se desmonta
+}, []);
 
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
@@ -189,6 +195,8 @@ if (cargandoContenido) return <PantallaCarga />;
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
+
+        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada}/>
 
         {/* Encabezado */}
         <View style={EstilosHome.encabezado}>
@@ -246,10 +254,13 @@ if (cargandoContenido) return <PantallaCarga />;
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
               columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-              renderItem={({ item }) => (
+        renderItem={({ item }) => (
                 <TouchableOpacity
                   style={EstilosHome.cardCategoria}
-                  onPress={() => setMostrarModalBuscar(true)}
+                  onPress={() => {
+                    setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
+                    setMostrarModalBuscar(true);         // ← muestra el modal
+                  }}
                 >
                   <Ionicons name="image" size={20} color={Colors.naranja} />
                   <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
