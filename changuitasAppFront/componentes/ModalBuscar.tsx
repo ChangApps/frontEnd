@@ -28,7 +28,7 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
   const [horarioSeleccionado, setHorarioSeleccionado] = useState<string>('');
   const [nombreServicio, setnombreServicio] = useState<string>('');
   const [providers, setProviders] = useState([]);
-  const horarios = ['Mañana', 'Tarde', 'Noche'];
+  const horarios = ['Madrugada', 'Mañana', 'Tarde', 'Noche'];
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [snackbarVisible, setsnackbarVisible] = useState(false);
   const [message, setMessage] = useState('');
@@ -49,6 +49,10 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
     let hastaHora = '';
 
     switch (horarioSeleccionado) {
+      case 'Madrugada':
+        desdeHora = '00:00:00';
+        hastaHora = '07:59:59';
+        break;
       case 'Mañana':
         desdeHora = '08:00:00';
         hastaHora = '12:00:00';
@@ -65,10 +69,8 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
         break;
     }
 
-    // Si se seleccionó horario, agregarlo para todos los días de momento
     if (desdeHora && hastaHora) {
-    //  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-      const diasSemana = ['Sábado', 'Domingo'];
+      const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
       diasSemana.forEach(dia => {
         params.append('dias[]', dia);
         params.append('desde_horas[]', desdeHora);
