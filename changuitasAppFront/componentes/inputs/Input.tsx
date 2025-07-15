@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextInput, StyleSheet, TextInputProps, View } from 'react-native';
+import Colors from '../../assets/Colors';
 
 interface InputProps extends TextInputProps {
   backgroundColor?: string;
@@ -9,7 +10,7 @@ interface InputProps extends TextInputProps {
 }
 
 const Input: React.FC<InputProps> = ({
-  backgroundColor = '#333237',
+  backgroundColor = Colors.grisBoxes,
   borderRadius = 15,
   padding = 15,
   fontSize = 16,
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    color: '#fff',
+    color: Colors.blancoTexto,
   },
 });
 

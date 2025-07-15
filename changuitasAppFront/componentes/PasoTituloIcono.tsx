@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '../assets/Colors';
 
 interface PasoTituloIconoProps {
   iconName: keyof typeof Ionicons.glyphMap;
@@ -13,9 +14,9 @@ interface PasoTituloIconoProps {
 const PasoTituloIcono: React.FC<PasoTituloIconoProps> = ({
   iconName,
   texto,
-  backgroundColor = '#FC6A30',
-  iconColor = '#F2F2F2',
-  textoColor = '#FC6A30',
+  backgroundColor = Colors.naranja,
+  iconColor = Colors.blancoOscuroTexto,
+  textoColor = Colors.naranja,
 }) => {
   return (
     <View style={styles.container}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
+import Colors from '../../assets/Colors';
 
 interface Props {
   value: string;
@@ -12,7 +13,7 @@ const CampoDescripcion: React.FC<Props> = ({ value, onChangeText, placeholder })
     <TextInput
       style={estilos.input}
       placeholder={placeholder || 'Descripción'}
-      placeholderTextColor="#999"
+      placeholderTextColor={Colors.grisTexto}
       value={value}
       onChangeText={onChangeText}
       multiline
@@ -24,7 +25,7 @@ const CampoDescripcion: React.FC<Props> = ({ value, onChangeText, placeholder })
 const estilos = StyleSheet.create({
   input: {
     borderWidth: 2,
-    borderColor: '#FF6D3B',
+    borderColor: Colors.naranja,
     borderRadius: 12,
     padding: 12,
     height: 120,

@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RootStackParamList } from '../navegacion/AppNavigator';
+import Colors from '../assets/Colors';
 
 interface Props {
   visible: boolean;
@@ -49,14 +50,14 @@ const styles = StyleSheet.create({
     top: 70,
     right: 18,
     width: 160,
-    backgroundColor: '#191a2e',
+    backgroundColor: Colors.azulBoxes,
     borderRadius: 16,
     paddingVertical: 10,
     elevation: 5,
     zIndex: 10,
   },
   opcionDesplegable: {
-    backgroundColor: '#2a2b45',
+    backgroundColor: Colors.azulClaroBoxes,
     marginVertical: 4,
     marginHorizontal: 10,
     paddingVertical: 10,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   },
   textoDesplegable: {
     fontSize: 16,
-    color: 'white',
+    color: Colors.blancoTexto,
   },
 });
 

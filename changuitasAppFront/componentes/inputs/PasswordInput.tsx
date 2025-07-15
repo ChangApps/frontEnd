@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, TextInputProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../assets/Colors';
 
 interface PasswordInputProps extends TextInputProps {
   backgroundColor?: string;
@@ -10,7 +11,7 @@ interface PasswordInputProps extends TextInputProps {
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
-  backgroundColor = '#333237',
+  backgroundColor = Colors.grisBoxes,
   borderRadius = 15,
   padding = 15,
   fontSize = 16,
@@ -33,7 +34,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
           style,
         ]}
         secureTextEntry={!mostrarContrasena}
-        placeholderTextColor="#666"
+        placeholderTextColor={Colors.grisTexto}
         {...rest}
       />
       <TouchableOpacity
@@ -43,7 +44,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         <Ionicons
           name={mostrarContrasena ? 'eye-outline' : 'eye-off-outline'}
           size={20}
-          color="#666"
+          color={Colors.grisTexto}
         />
       </TouchableOpacity>
     </View>

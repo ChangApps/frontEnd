@@ -2,6 +2,7 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '../assets/Colors';
 
 interface Props {
   visible: boolean;
@@ -27,8 +28,8 @@ const ModalCancelarChanguita: React.FC<Props> = ({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ width: '90%', backgroundColor: '#fff', borderRadius: 12, padding: 20 }}>
+      <View style={{ flex: 1, backgroundColor: Colors.negro, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: '90%', backgroundColor: Colors.blancoTexto, borderRadius: 12, padding: 20 }}>
           <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 15 }}>
             ¿Por qué querés cancelar la changuita?
           </Text>
@@ -42,7 +43,7 @@ const ModalCancelarChanguita: React.FC<Props> = ({
               <Ionicons
                 name={motivoSeleccionado === motivo ? 'radio-button-on' : 'radio-button-off'}
                 size={20}
-                color="#197278"
+                color={Colors.naranja}
                 style={{ marginRight: 10 }}
               />
               <Text style={{ fontSize: 16 }}>{motivo}</Text>
@@ -51,7 +52,7 @@ const ModalCancelarChanguita: React.FC<Props> = ({
 
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20 }}>
             <TouchableOpacity onPress={onClose} style={{ marginRight: 15 }}>
-              <Text style={{ color: '#888' }}>Cancelar</Text>
+              <Text style={{ color: Colors.grisTexto }}>Cancelar</Text>
             </TouchableOpacity>
             <TouchableOpacity
               disabled={!motivoSeleccionado}
