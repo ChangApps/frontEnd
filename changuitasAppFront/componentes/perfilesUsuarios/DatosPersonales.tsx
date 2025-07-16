@@ -23,13 +23,20 @@ interface Props {
   usuario: Usuario;
 }
 
+const formatFecha = (fecha: string) => {
+  const [anio, mes, dia] = fecha.split('-');
+  return `${dia}/${mes}/${anio}`;
+};
+
 const DatosPersonalesUsuario: React.FC<Props> = ({ usuario }) => (
   <>
     <Text style={estilos.tituloDatosPersonales}>DATOS PERSONALES</Text>
     <View style={estilos.datosPersonales}>
       <Text style={estilos.infoUsuario}>Nombre: {usuario.first_name}</Text>
       <Text style={estilos.infoUsuario}>Apellido: {usuario.last_name}</Text>
-      <Text style={estilos.infoUsuario}>Fecha de Nacimiento: {usuario.fechaNacimiento}</Text>
+      <Text style={estilos.infoUsuario}>
+        Fecha de Nacimiento: {formatFecha(usuario.fechaNacimiento)}
+      </Text>
       <Text style={estilos.infoUsuario}>Correo Electrónico: {usuario.email}</Text>
       <Text style={estilos.infoUsuario}>Teléfono: {usuario.telefono}</Text>
       <Text style={estilos.infoUsuario}>

@@ -9,11 +9,14 @@ import { AuthContext } from '../../autenticacion/auth';
 import EstilosPerfilProveedor from './estilos/EstilosPerfilProveedor';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { Button } from '../../componentes/Buttons';
+import { COLORES_APP, FUENTES, DIMENSIONES } from '../../componentes/estilosCompartidosPerfilesUsuarios';
 import { Direccion } from '../../types/interfaces';
 import { redirectAdmin } from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+
 
 const PerfilProveedor = () => {
 
@@ -43,6 +46,11 @@ const PerfilProveedor = () => {
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
+
+  const formatearFecha = (fecha: string): string => {
+  const [año, mes, dia] = fecha.split("-");
+  return `${dia}/${mes}/${año}`;
+  };
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -389,15 +397,42 @@ const PerfilProveedor = () => {
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
-            <TouchableOpacity style={EstilosPerfilProveedor.nextButton} onPress={iniciarChanguita}>
-              <Text style={EstilosPerfilProveedor.nextButtonText}>Iniciar changuita</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={EstilosPerfilProveedor.prevButton} onPress={handleChat}>
-              <Text style={EstilosPerfilProveedor.prevButtonText}>Chatear</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={EstilosPerfilProveedor.prevButton} onPress={() => bloquearUsuario(Number(route.params.id))}>
-              <Text style={EstilosPerfilProveedor.prevButtonText}>Bloquear</Text>
-            </TouchableOpacity>
+             <Button
+                titulo="Iniciar changuita"
+                onPress={iniciarChanguita}
+                backgroundColor={COLORES_APP.primario} 
+                textColor="String"        
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="40%"
+              />
+              
+              <Button
+                titulo="Chatear"
+                onPress={handleChat}
+                backgroundColor="transparent"
+                borderColor={COLORES_APP.primario}
+                borderWidth={1}
+                textColor={COLORES_APP.primario}
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="25%"
+              />
+
+              <Button
+                titulo="Bloquear"
+                onPress={() => bloquearUsuario(Number(route.params.id))}
+                backgroundColor="transparent"
+                borderColor={COLORES_APP.primario}
+                borderWidth={1}
+                textColor={COLORES_APP.primario}
+                textSize={FUENTES.normal}
+                padding={12}
+                borderRadius={DIMENSIONES.borderRadius}
+                width="25%"
+              />
           </View>
 
           {/* Datos adicionales */}
@@ -429,7 +464,9 @@ const PerfilProveedor = () => {
           <View style={EstilosPerfilProveedor.datosPersonales}>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Nombre: {usuario?.first_name}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Fecha de Nacimiento: {usuario?.fechaNacimiento}</Text>
+            <Text style={EstilosPerfilProveedor.infoUsuario}>
+              Fecha de Nacimiento: {usuario?.fechaNacimiento ? formatearFecha(usuario.fechaNacimiento) : ""}
+            </Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Correo Electronico: {usuario?.email}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Telefono: {usuario?.telefono}</Text>
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
