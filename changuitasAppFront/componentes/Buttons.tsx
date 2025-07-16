@@ -18,6 +18,8 @@ interface ButtonProps {
     iconName?: keyof typeof MaterialIcons.glyphMap;
     iconSize?: number;
     iconColor?: string;
+    borderColor?: string;
+    borderWidth?: number;
 }
 
 export function Button({
@@ -28,11 +30,13 @@ export function Button({
     textSize = 16,
     padding = 15,
     borderRadius = 25,
-    width = '100%',
+    width,
     showIcon = false,
     iconName = 'arrow-forward',
     iconSize = 20,
     iconColor = '#FFFFFF',
+    borderColor, 
+    borderWidth,
 }: ButtonProps) {
 
     const buttonStyles = [
@@ -42,6 +46,8 @@ export function Button({
             padding,
             borderRadius,
             width,
+            borderColor,
+            borderWidth,
         }
     ];
 

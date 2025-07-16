@@ -38,14 +38,7 @@ const DetalleTarea = () => {
   const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
   // Estados para el menú desplegable
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-
-  const motivosCancelacion = [
-    'No puedo asistir',
-    'Tuve un inconveniente personal',
-    'El cliente no responde',
-    'Cambio de planes',
-    'Otro motivo',
-  ];
+  const [cargando, setCargando] = useState(false);
 
   interface Usuario {
     username: string;
@@ -259,20 +252,20 @@ const DetalleTarea = () => {
             estilos={EstilosDetalleTarea}
           />
 
-          <ModalCancelarChanguita
-            visible={mostrarModalCancelar}
-            onClose={() => setMostrarModalCancelar(false)}
-            onConfirm={(motivo) => {
-              console.log('Changuita cancelada por:', motivo);
-              cancelarChanguita();
-              setMostrarModalCancelar(false);
-              setMotivoSeleccionado('');
-            }}
-            motivoSeleccionado={motivoSeleccionado}
-            setMotivoSeleccionado={setMotivoSeleccionado}
-            motivosCancelacion={motivosCancelacion}
-          />
-        </ScrollView>
+            <ModalCancelarChanguita
+              visible={mostrarModalCancelar}
+              onClose={() => setMostrarModalCancelar(false)}
+              onConfirm={(motivo) => {
+                console.log('Changuita cancelada por:', motivo);
+                cancelarChanguita();
+                setMostrarModalCancelar(false);
+                setMotivoSeleccionado('');
+              }}
+              motivoSeleccionado={motivoSeleccionado}
+              setMotivoSeleccionado={setMotivoSeleccionado}
+              rol={rol}
+            />
+          </ScrollView>
 
         <NavBarInferior
           activeScreen="DetalleTarea"
