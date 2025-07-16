@@ -42,7 +42,7 @@ const PerfilProveedor = () => {
   const [state, setState] = useContext(AuthContext);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
-  const [reseniasUserId, setreseniasUserId] = useState<any[]>([]);
+  const [reseniasUserId, setreseniasUserId] = useState<number|null>(null);
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
@@ -189,7 +189,7 @@ const PerfilProveedor = () => {
       const proveedorId = route.params.id; //solo para usar en esta funcion
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
       console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
-
+           setreseniasUserId(proveedorId);
       //  const idServicioString = await AsyncStorage.getItem('idServicio');
       //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
 

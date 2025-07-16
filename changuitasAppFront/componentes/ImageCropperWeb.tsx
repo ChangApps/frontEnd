@@ -3,7 +3,7 @@ import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import "react-image-crop/dist/ReactCrop.css";
 import { Text } from 'react-native';
-
+import Colors from "../assets/Colors";
 
 interface Props {
   imageUri: string;
@@ -126,17 +126,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   botonGuardar: {
-    backgroundColor: '#197278', 
+    backgroundColor:Colors.naranja, 
     borderWidth: 1,
-    borderColor: '#9BCDC8', 
+    borderColor: Colors.negro, 
   },
   botonCancelar: {
-    backgroundColor: '#197278', 
+    backgroundColor: Colors.naranja, 
     borderWidth: 1,
-    borderColor: '#197278', 
+    borderColor: Colors.negro, 
   },
   textoBoton: {
-    color: '#fff', 
+    color: Colors.blancoTexto, 
     fontSize: 16,
     fontWeight: 'bold',
   },
