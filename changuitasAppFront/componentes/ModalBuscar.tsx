@@ -28,7 +28,7 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
   const [horarioSeleccionado, setHorarioSeleccionado] = useState<string>('');
   const [nombreServicio, setnombreServicio] = useState<string>('');
   const [providers, setProviders] = useState([]);
-  const horarios = ['Madrugada', 'Mañana', 'Tarde', 'Noche'];
+  const horarios = ['Mañana', 'Tarde', 'Noche'];
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [snackbarVisible, setsnackbarVisible] = useState(false);
   const [message, setMessage] = useState('');
@@ -49,21 +49,17 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
     let hastaHora = '';
 
     switch (horarioSeleccionado) {
-      case 'Madrugada':
-        desdeHora = '00:00:00';
-        hastaHora = '07:59:59';
-        break;
       case 'Mañana':
-        desdeHora = '08:00:00';
-        hastaHora = '12:00:00';
+        desdeHora = '04:00:00';
+        hastaHora = '12:00:59';
         break;
       case 'Tarde':
-        desdeHora = '12:05:00';
-        hastaHora = '18:00:00';
+        desdeHora = '12:01:00';
+        hastaHora = '19:59:59';
         break;
       case 'Noche':
-        desdeHora = '18:05:00';
-        hastaHora = '23:59:59';
+        desdeHora = '20:00:00';
+        hastaHora = '03:59:59';
         break;
       default:
         break;

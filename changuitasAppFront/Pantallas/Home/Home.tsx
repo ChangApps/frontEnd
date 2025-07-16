@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions,  FlatList, TextInput} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AxiosError } from 'axios';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import {cerrarSesion} from '../../autenticacion/authService';
-import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
-import { Snackbar } from 'react-native-paper';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../../services/notificacionesService';
 import{ obtenerCategorias } from '../../services/categoriaService';
@@ -24,13 +21,14 @@ import API_URL from '../../utils/API_URL';
 import {redirectAdmin} from '../../utils/utils'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [accessToken, setAccessToken] = useState('');
   const [trabajoActual, setTrabajoActual] = useState<any | null>(null);
   const [trabajosNotificados, setTrabajosNotificados] = useState<any[]>([]);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -40,7 +38,7 @@ const PantallaHome = () => {
   { id: number; nombre: string; oficio: string }[]
 >([]);
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
-  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
+  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState('');
@@ -122,13 +120,6 @@ const PantallaHome = () => {
     } 
   };
 
-  const onDismissSnackbar = () => {
-    setSnackbarVisible(false);
-    setTimeout(() => {
-      setTrabajoActual(null);
-    }, 300);
-  };
-
   const fetchUsuarioLogueado = async () => {
     const userId = await AsyncStorage.getItem('userId');
     const token = await AsyncStorage.getItem('accessToken');
@@ -143,9 +134,9 @@ useEffect(() => {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
         console.log("El stored token es: ", storedToken);
-        setAccessToken(storedToken);
         const resultado = await obtenerCategorias(); 
         setCategorias(resultado);
+        await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
       } else {
         console.log('No se encontró token');
@@ -179,12 +170,17 @@ if (cargandoContenido) return <PantallaCarga />;
         <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada}/>
 
         {/* Encabezado */}
-        <View style={EstilosHome.encabezado}>
-          <Text style={EstilosHome.textoInicio}>ChangApp</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
-          </TouchableOpacity>
-        </View>
+            <NavBarSuperior
+              titulo="ChangApp"
+              showBackButton={false}            
+              rightButtonType="menu"            
+              onRightPress={toggleDesplegable}  
+              titleAlign="center"               
+              paddingHorizontal={16}            
+               iconSize={24}                   
+               navbarHeight={56}               
+            />
+
 
         <MenuDesplegable
           visible={mostrarDesplegable}
@@ -249,34 +245,18 @@ if (cargandoContenido) return <PantallaCarga />;
               contentContainerStyle={EstilosHome.scrollContenido}
             />
 
-        {/* Snackbar */}
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={onDismissSnackbar}
-          duration={Snackbar.DURATION_SHORT}
-          action={{
-            label: 'Tocá para ver',
-            onPress: () => {
-              setSnackbarVisible(false);
-              navigation.navigate('Historial2');
-            },
-          }}
-          style={{
-            position: 'absolute',
-            top: -150,
-            left: 0,
-            right: 0,
-            zIndex: 100000,
-          }}
-        >
-          {trabajoActual && (
-            <Text style={{ color: 'white' }}>
-              {trabajoActual.estado === 'PA'
-                ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
-                : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`}
-            </Text>
-          )}
-        </Snackbar>
+            {/* Snackbar */}
+            <CustomSnackbar
+              visible={snackbarVisible}
+              setVisible={setSnackbarVisible}
+              message={trabajoActual ? (
+                trabajoActual.estado === 'PA'
+                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
+              ) : 'Mensaje por defecto'}
+              actionLabel="Tocá para ver"
+              onActionPress={() => navigation.navigate('Historial2')}
+            />
 
           {/* NavBar Inferior */}
                  <NavBarInferior
