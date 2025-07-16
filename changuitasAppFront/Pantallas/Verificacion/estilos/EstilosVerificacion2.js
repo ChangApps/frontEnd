@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
+import Colors from '../../../assets/Colors';
 
 const EstilosVerificacion2 = StyleSheet.create({
-  areaSegura: {
+  safeContainer: {
     flex: 1,
+    backgroundColor: Colors.fondo,
   },
   contenedor: {
     flex: 1,

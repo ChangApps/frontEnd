@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View, ScrollView, Linking, Platform } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { Text, View, ScrollView, Linking, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
@@ -150,7 +149,7 @@ const DetalleTarea = () => {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'user/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });

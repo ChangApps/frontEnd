@@ -1,4 +1,4 @@
-import { Alert, SafeAreaView, Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -12,6 +12,7 @@ import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Verificacion1Mail = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -97,7 +98,7 @@ const Verificacion1Mail = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView style={EstilosVerificacion1Mail.areaSegura}>
+    <SafeAreaView edges={['top']} style={EstilosVerificacion1Mail.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion1Mail.degradado}>
         <View style={EstilosVerificacion1Mail.contenedor}>
           <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>
@@ -106,6 +107,7 @@ const Verificacion1Mail = () => {
               showBackButton={true}
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
+              paddingHorizontal={5}
             />
 
             <PasoTituloIcono

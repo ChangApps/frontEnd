@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,36 +12,25 @@ import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Colors from '../../assets/Colors';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { redirectAdmin } from '../../utils/utils';
+import {Servicio} from '../../types/interfaces';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  interface Servicio {
-    id: number;
-    nombreServicio: string;
-    descripcion: string;
-    dia?: string;
-    desdeHora?: string;
-    hastaHora?: string;
-    dias?: Array<{
-      dia: string;
-      desdeHora: string;
-      hastaHora: string;
-    }>;
-  }
 
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state, setState] = useContext(AuthContext);
   const [idServicioSeleccionado, setIdServicioSeleccionado] = useState(null);
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
-  };
-
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
   const logout = async () => {
@@ -51,14 +40,9 @@ const MisServicios = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+      setMessage('Error al cerrar sesion');
+      setVisible(true);
+    } 
   };
 
   const EliminarServicio = async (serviceId: any) => {
@@ -90,7 +74,8 @@ const MisServicios = () => {
         // Reinicia la variable de id a null después de borrar el servicio
         setIdServicioSeleccionado(null);
       } else {
-        alert("Error al eliminar el servicio");
+        setMessage('Error al eliminar servicio');
+        setVisible(true);
       }
     } catch (error) {
       console.error("Error eliminando el servicio:", error);
@@ -178,57 +163,59 @@ const MisServicios = () => {
     }
   };
 
-  return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
-      <SafeAreaView style={EstilosMisServicios.contenedor}>
-        <ScrollView contentContainerStyle={EstilosMisServicios.scrollContainer}>
-          {/* Header con Perfil*/}
-          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-
-          {/* Barra de pestañas */}
-          <BarraPestanasPerfil />
-
-          {/* Botón Agregar Servicio */}
-          <TouchableOpacity
-            style={EstilosMisServicios.botonAgregarServicio}
-            onPress={() => navigation.navigate('AgregarServicio1')}
-          >
-            <Ionicons name="add" size={20} color="#FC6A30" />
-            <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
-          </TouchableOpacity>
-
-          {/* Muestra la lista de Servicios y en caso de que aun no tenga ninguno muestra un mensaje */}
-          {loading ? (
-            <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
-          ) : services.length === 0 ? (
-            <View style={EstilosMisServicios.noResultsContainer}>
-              <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
-              <Image
-                source={require('./estilos/bored.png')}
-                style={EstilosMisServicios.noResultsImage}
-                resizeMode="contain"
-              />
-            </View>
-          ) : (
-            <FlatList
-              data={services}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderServiceItem}
-              contentContainerStyle={EstilosMisServicios.listaServicios}
-            />
-          )}
-        </ScrollView>
-        {/* Barra de navegación inferior */}
-        <NavBarInferior
-          activeScreen="MisServicios" // O el screen activo correspondiente
-          onNavigate={handleNavigation}
-        />
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+    const EmptyComponent = () => (
+    <View style={EstilosMisServicios.noResultsContainer}>
+      <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+      <Image
+        source={require('./estilos/bored.png')}
+        style={EstilosMisServicios.noResultsImage}
+        resizeMode="contain"
+      />
+    </View>
   );
+
+return (
+  <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={EstilosMisServicios.safeContainer}>
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
+        <BarraPestanasPerfil />
+
+        <TouchableOpacity
+          style={EstilosMisServicios.botonAgregarServicio}
+          onPress={() => navigation.navigate('AgregarServicio1')}
+        >
+          <Ionicons name="add" size={20} color={Colors.naranja} />
+          <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
+        </TouchableOpacity>
+
+        <FlatList
+          data={services}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderServiceItem}
+          contentContainerStyle={EstilosMisServicios.listaServicios}
+          ListEmptyComponent={!loading ? <EmptyComponent /> : null}
+          ListHeaderComponent={
+            loading ? (
+              <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
+            ) : null
+          }
+          showsVerticalScrollIndicator={true}
+        />
+
+        <NavBarInferior activeScreen="MisServicios" onNavigate={handleNavigation} />
+      </SafeAreaView>
+
+      <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+    </View>
+  </TouchableWithoutFeedback>
+);
 };
 
 export default MisServicios;

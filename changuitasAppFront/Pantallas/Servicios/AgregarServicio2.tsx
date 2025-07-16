@@ -247,11 +247,15 @@ const AgregarServicio2 = () => {
 
         {Object.keys(diasSeleccionados).map((dia) => (
           <View style={EstilosAgregarServicio2.filaDia} key={dia}>
-            <Switch
-              value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
-              onValueChange={() => cambiarDia(dia)}
-            />
-            <Text style={EstilosAgregarServicio2.textoDia}>{dia}</Text>
+            <View style={EstilosAgregarServicio2.switchYTextoDia}>
+              <Switch
+                value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
+                onValueChange={() => cambiarDia(dia)}
+                trackColor={{ false: Colors.grisTexto, true: Colors.naranja }}
+                thumbColor={diasSeleccionados[dia as keyof typeof diasSeleccionados] ? Colors.naranja : Colors.grisTexto}
+              />
+              <Text style={EstilosAgregarServicio2.textoDia}>{dia}</Text>
+            </View>
 
             {/* Picker para la hora de inicio */}
             <View style={EstilosAgregarServicio2.pickerContainer}>

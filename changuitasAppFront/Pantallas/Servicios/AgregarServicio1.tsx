@@ -1,10 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import EstilosAgregarServicio1 from './estilos/EstilosAgregarServicio1';
-import { AuthContext } from '../../autenticacion/auth';
-import { cerrarSesion } from '../../autenticacion/authService';
 import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
@@ -14,33 +12,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [state, setState] = useContext(AuthContext);
-
-  const toggleDesplegable = () => {
-    setMostrarDesplegable(!mostrarDesplegable);
-  };
-
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
-  const logout = async () => {
-    try {
-      setState({ token: "" });
-      await cerrarSesion(); // Simula el proceso de cierre de sesión
-      console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
-  };
 
   const handleSelectService = (service: string) => {
     // Seleccionar un solo servicio, desmarcando el anterior
@@ -99,7 +70,7 @@ const AgregarServicio1 = () => {
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", ["Gasista", "Electricista", "Plomero", "Carpintería", "Pintor", "Albañil", "Zinguería", "Gomería", "Electrodomésticos", "Calderista"], selectedService, handleSelectService)}
-        {renderCategory("CIUDADO DE PERSONAS", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
+        {renderCategory("CUIDADO DE PERSONAS", ["Niñera/o", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
         {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedService, handleSelectService)}
         {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedService, handleSelectService)}
         {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedService, handleSelectService)}
@@ -115,6 +86,7 @@ const AgregarServicio1 = () => {
             padding={14}
             borderRadius={25}
           />
+          
           <Button
             titulo="Cancelar"
             onPress={() => navigation.navigate('MisServicios')}

@@ -162,9 +162,7 @@ const Historial1 = () => {
         // Obtener datos de los proveedores
         const proveedores = solicitudesData.map((item: any) => item.proveedorId);
         await fetchMultipleProveedoresData(proveedores);
-      } else {
-        throw new Error('El historial está vacío');
-      }
+      } 
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error al cargar datos de la solicitud:', error.message);

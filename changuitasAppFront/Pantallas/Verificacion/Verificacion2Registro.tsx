@@ -146,8 +146,7 @@ const Verificacion2Registro = () => {
 const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView style={EstilosVerificacion2.areaSegura}>
-      <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion2.degradado}>
+    <SafeAreaView edges={['top']} style={EstilosVerificacion2.safeContainer}>
       <View style={EstilosVerificacion2.contenedor}>
       <View style={[EstilosVerificacion2.contenidoResponsivo, width > 600 && EstilosVerificacion2.contenidoWeb]}>
       <NavBarSuperior

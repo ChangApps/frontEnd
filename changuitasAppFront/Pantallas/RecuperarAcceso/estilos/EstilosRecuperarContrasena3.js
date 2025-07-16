@@ -2,13 +2,13 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
 
 const EstilosRecuperarContrasena3 = StyleSheet.create({
-  areaSegura: {
+  safeContainer: {
     flex: 1,
+    backgroundColor: Colors.fondo,
   },
   contenedor: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 70,
+    paddingHorizontal: 25,
   },
   degradado: {
       flex: 1,

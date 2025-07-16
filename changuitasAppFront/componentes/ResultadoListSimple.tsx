@@ -13,6 +13,7 @@ type Solicitud = {
   id: number;
   cliente?: number;
   proveedor_id?: number;
+  servicio_id?: number;
 };
 
 type Props = {
@@ -25,7 +26,6 @@ type Props = {
   estiloNombre?: TextStyle;
   estiloOficio?: TextStyle;
 };
-
 const ResultadoListSimple = ({
   historial,
   usuarios,
@@ -45,6 +45,7 @@ const ResultadoListSimple = ({
       renderItem={({ item }) => {
         const idUsuario = item[claveUsuario];
         const usuario = usuarios.find(u => u.id === idUsuario);
+        const servicioId = item.servicio_id;
 
         return (
           <View style={estiloCard}>
@@ -64,28 +65,20 @@ const ResultadoListSimple = ({
               {`${usuario?.first_name || 'Nombre'} ${usuario?.last_name || ''}`}
             </Text>
 
-          <TouchableOpacity
-            onPress={() => {
-              /*
-              navigation.navigate('DetalleTarea', {
-                id: usuario?.id?.toString() || 'No disponible',
-                idSolicitud: item.id.toString(),
-              });
-            }}
-              */
+            <TouchableOpacity
+              onPress={() => {
                 navigation.navigate('PerfilProveedor', {
-                id: usuario?.id?.toString() || 'No disponible',
-              });
-            }}
-            style={{
-              paddingLeft: 10,
-            }}
-          >
-          <Ionicons name="chevron-forward" size={20} color="white" />
-        </TouchableOpacity>
-              </View>
-            );
-          }}
+                  id: usuario?.id?.toString() || 'No disponible',
+                  servicio: servicioId, 
+                });
+              }}
+              style={{ paddingLeft: 10 }}
+            >
+              <Ionicons name="chevron-forward" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+        );
+      }}
     />
   );
 };

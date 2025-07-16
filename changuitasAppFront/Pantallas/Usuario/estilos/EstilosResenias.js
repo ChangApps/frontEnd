@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
+import Colors from '../../../assets/Colors';
 
 const EstilosResenias = StyleSheet.create({
-    safeArea: {
+    safeContainer: {
         flex: 1,
+        backgroundColor: Colors.fondo,
         backgroundColor: Colors.fondo,
     },
     container: {
@@ -11,6 +13,21 @@ const EstilosResenias = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 20,
         marginTop:30,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginLeft: 10,
+        flex: 1,  // Esto permite que el título se quede en el medio y el toggle se mueva a la derecha
+    },
+    toggleContainer: {
+        marginLeft: 30,  // Asegura que el toggle se alinee a la derecha
     },
     reseniaItem: {
         backgroundColor: Colors.grisBoxes,
@@ -67,12 +84,12 @@ const EstilosResenias = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         elevation: 5,
         zIndex: 10,
-      },
-      opcionDesplegable: {
+    },
+    opcionDesplegable: {
         paddingVertical: 10,
         paddingHorizontal: 15,
-      },
-      textoDesplegable: {
+    },
+    textoDesplegable: {
         fontSize: 16,
         color: Colors.negro,
       },

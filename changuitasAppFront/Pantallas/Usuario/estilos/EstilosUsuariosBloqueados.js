@@ -2,9 +2,75 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
 
 const EstilosUsuariosBloqueados = StyleSheet.create({
-  contenedor: {
+  safeContainer: {
     flex: 1,
     backgroundColor: Colors.fondo,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: 'white',
+    marginTop: 5,
+  },
+  textoEncabezado: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginRight: 300,
+  },
+  encabezado: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  barraPestanas: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    marginBottom: 20,
+  },
+  pestanaActiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#197278',
+  },
+  pestanaInactiva: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  textoPestanaActiva: {
+    fontSize: 16,
+    color: '#197278',
+  },
+  textoPestanaInactiva: {
+    fontSize: 16,
+    color: '#666',
+  },
+  opcion: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  opcionSeleccionada: {
+    color: '#197278',
+    fontWeight: '600',
+  },
+  cargando: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginVertical: 20,
+    color: '#197278',
+  },
+  sinServicios: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+    marginVertical: 20,
   },
   listaUsuarios: {
     paddingHorizontal: 15,

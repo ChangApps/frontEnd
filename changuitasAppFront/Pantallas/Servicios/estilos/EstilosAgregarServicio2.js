@@ -15,8 +15,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
   },
   contenedorDesplazable: {
     paddingHorizontal: 20,
-    paddingBottom: 80,
-    marginTop: 20,
+    paddingBottom: 10,
   },
   etiqueta: {
     color: Colors.blancoTexto,
@@ -27,28 +26,49 @@ const EstilosAgregarServicio2 = StyleSheet.create({
   encabezadoDias: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 20,       // agrega separación desde arriba (recuadro de descripción)
     marginBottom: 10,
   },
   etiquetaDia: {
-    fontSize: 14,
+    fontSize: 20,
     color: Colors.grisTexto,
     fontWeight: '600',
   },
   etiquetaHora: {
-    fontSize: 14,
+    fontSize: 20,
     color: Colors.grisTexto,
     fontWeight: '600',
   },
   filaDia: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    justifyContent: 'space-between',
+    marginVertical: 8,
+    width: '100%',
   },
+
+  switchYTextoDia: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '31%',       // ocupa 30% de la fila
+  },
+
   textoDia: {
     fontSize: 16,
     color: Colors.blancoTexto,
-    marginLeft: 8,
-    flex: 1,
+    marginLeft: 1,
+    flexShrink: 1,
+    flexWrap: 'nowrap',
+  },
+
+  campoHora: {
+    borderWidth: 1,
+    borderColor: Colors.grisBoxes,
+    borderRadius: 4,
+    width: 60,
+    textAlign: 'center',
+    marginHorizontal: 5,
+    padding: 5,
   },
   textoSeparador: {
     fontSize: 16,
@@ -61,8 +81,12 @@ const EstilosAgregarServicio2 = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: 121,
-    marginVertical: 10,
+    width: 111.5,
+    marginVertical: 2,
+  },
+  pickerItem: {
+    fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
+    paddingVertical: 10, // Da más espacio entre las opciones
   },
   pickerContainer: {
     borderWidth: 1,
@@ -74,6 +98,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
+    marginHorizontal: 1,       // espaciado lateral
   },
   pasosWrapper: {
     flexDirection: 'row',

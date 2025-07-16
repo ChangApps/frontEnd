@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -11,6 +11,7 @@ import Colors from "../../assets/Colors";
 import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const RecuperarNombreUsuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -61,8 +62,7 @@ const RecuperarNombreUsuario = () => {
   const { width } = useWindowDimensions();
 
   return (
-
-    <SafeAreaView style={EstilosRecuperarNombreUsuario.areaSegura}>
+    <SafeAreaView edges={['top']} style={EstilosRecuperarNombreUsuario.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarNombreUsuario.degradado}>
         <View style={EstilosRecuperarNombreUsuario.contenedor}>
           <View style={[EstilosRecuperarNombreUsuario.contenidoResponsivo, width > 600 && EstilosRecuperarNombreUsuario.contenidoWeb]}>
@@ -72,7 +72,7 @@ const RecuperarNombreUsuario = () => {
               showBackButton={true}
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
-              titleSize={25}
+              paddingHorizontal={5}
             />
 
             {/* Paso de verificación */}

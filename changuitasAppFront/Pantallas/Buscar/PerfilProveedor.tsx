@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Snackbar } from 'react-native-paper';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from '../../utils/API_URL';
 import { cerrarSesion } from '../../autenticacion/authService';
@@ -13,8 +11,9 @@ import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { Direccion } from '../../types/interfaces';
 import { redirectAdmin } from '../../utils/utils';
-import Colors from '../../assets/Colors';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 
 const PerfilProveedor = () => {
 
@@ -139,7 +138,7 @@ const PerfilProveedor = () => {
         const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
         setMessage(errorMsg);
         setVisible(true);
-        }
+      }
     } catch (error) {
       console.error("Error inesperado al iniciar changuita:", error);
       setMessage("Ocurrió un error al enviar la solicitud.");
@@ -181,13 +180,13 @@ const PerfilProveedor = () => {
 
       const proveedorId = route.params.id; //solo para usar en esta funcion
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
-      console.log('PerfilProveedor: ID usuario recibido',proveedorId,' ID del servicio obtenido:', idServicio);
+      console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
 
-    //  const idServicioString = await AsyncStorage.getItem('idServicio');
-    //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
+      //  const idServicioString = await AsyncStorage.getItem('idServicio');
+      //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
 
       // Realiza la solicitud al backend para obtener los ProveedorServicio
-     // console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
+      // console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
       const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${idServicio}/`, {
         method: 'GET',
         headers: {
@@ -206,7 +205,7 @@ const PerfilProveedor = () => {
       const proveedor = Array.isArray(dataProveedor) ? dataProveedor[0] : dataProveedor;
       setIdProveedorServicio(proveedor?.id);
     } catch (error) {
-       console.log('Error al cargar los datos del proveedor de servicio:', error); 
+      console.log('Error al cargar los datos del proveedor de servicio:', error);
     }
   };
 
@@ -335,22 +334,23 @@ const PerfilProveedor = () => {
     }
   };
 
+  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosPerfilProveedor.safeContainer}>
+      <SafeAreaView edges={['top']} style={EstilosPerfilProveedor.safeContainer}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
           {/* Encabezado con opciones de menú */}
-          <View style={EstilosPerfilProveedor.encabezado}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="arrow-back" size={24} color={Colors.blancoTexto} />
-            </TouchableOpacity>
-            <Text style={EstilosPerfilProveedor.textoEncabezado}>Perfil de {usuario?.first_name}</Text>
-            <TouchableOpacity onPress={toggleDesplegable}>
-              <Ionicons name="ellipsis-horizontal" size={24} color={Colors.blancoTexto} />
-            </TouchableOpacity>
-          </View>
+          <NavBarSuperior
+            titulo="Perfil del proveedor"
+            titleSize={titleSizeNavbarSuperior}
+            showBackButton={true}
+            onBackPress={() => { navigation.goBack(); }}
+            rightButtonType="menu"
+            onRightPress={() => { toggleDesplegable(); }}
+          />
 
           {/* Menú Desplegable */}
           <MenuDesplegable
@@ -359,7 +359,6 @@ const PerfilProveedor = () => {
             onLogout={logout}
             onRedirectAdmin={redirectAdmin}
           />
-
 
           {/* Información del Usuario */}
           <View style={EstilosPerfilProveedor.seccionUsuario}>
@@ -386,7 +385,7 @@ const PerfilProveedor = () => {
           </Modal>
 
           {/* Snackbar para mostrar mensajes */}
-         <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
@@ -436,11 +435,11 @@ const PerfilProveedor = () => {
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
           </View>
         </ScrollView>
-          {/* Barra de navegación inferior */}
-          <NavBarInferior
-            activeScreen="PerfilProveedor" // O el screen activo correspondiente
-            onNavigate={handleNavigation}
-          />
+        {/* Barra de navegación inferior */}
+        <NavBarInferior
+          activeScreen="PerfilProveedor" // O el screen activo correspondiente
+          onNavigate={handleNavigation}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

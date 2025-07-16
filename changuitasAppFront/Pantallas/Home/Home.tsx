@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Linking, useWindowDimensions,  FlatList, ScrollView, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions,  FlatList, TextInput} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AxiosError } from 'axios';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import {cerrarSesion} from '../../autenticacion/authService';
-import { renovarToken } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
-import { Snackbar } from 'react-native-paper';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../../services/notificacionesService';
 import{ obtenerCategorias } from '../../services/categoriaService';
@@ -24,13 +21,14 @@ import API_URL from '../../utils/API_URL';
 import {redirectAdmin} from '../../utils/utils'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [accessToken, setAccessToken] = useState('');
   const [trabajoActual, setTrabajoActual] = useState<any | null>(null);
   const [trabajosNotificados, setTrabajosNotificados] = useState<any[]>([]);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -40,11 +38,13 @@ const PantallaHome = () => {
   { id: number; nombre: string; oficio: string }[]
 >([]);
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
-  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); //Estado para guardar las solicitudes 
+  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); 
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState('');
-const [cargandoContenido, setCargandoContenido] = useState(true);
+  const [cargandoContenido, setCargandoContenido] = useState(true);
+  const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
+
 
   
 
@@ -60,16 +60,17 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       });
 
         if (res.status === 204) {
-          console.log("No se encontraron resultados.");
-          
+          console.error("No se encontraron resultados.");
+          setTextoBusqueda('');
           return;
         }
 
-    if (!res.ok) throw new Error('Error al obtener los datos');
+    if (!res.ok) console.log('Error al obtener los datos');
 
       const data = await res.json();
 
       console.log('Datos obtenidos:', data);
+      setTextoBusqueda('');
       if (!data || data.length === 0) {
         navigation.navigate('ResultadosBusqueda', {
           proveedores: [],
@@ -84,6 +85,7 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       }
     } catch (error) {
       console.error('Error al obtener los datos:', error);
+      setTextoBusqueda('');
     }
   };
 
@@ -115,19 +117,7 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       await cerrarSesion();
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-    } finally {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'InicioDeSesion' }],
-      });
-    }
-  };
-
-  const onDismissSnackbar = () => {
-    setSnackbarVisible(false);
-    setTimeout(() => {
-      setTrabajoActual(null);
-    }, 300);
+    } 
   };
 
   const fetchUsuarioLogueado = async () => {
@@ -138,16 +128,15 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
   await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
-  useEffect(() => {
-    const init = async () => {
+useEffect(() => {
+  const init = async () => {
     try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       if (storedToken) {
         console.log("El stored token es: ", storedToken);
-        setAccessToken(storedToken);
         const resultado = await obtenerCategorias(); 
         setCategorias(resultado);
-      //  await fetchUsuarioLogueado();
+        await fetchUsuarioLogueado();
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
       } else {
         console.log('No se encontró token');
@@ -158,26 +147,9 @@ const [cargandoContenido, setCargandoContenido] = useState(true);
       setCargandoContenido(false);
     }
   };
-    init();
 
-    const interval = setInterval(async () => {
-      try {
-        const nuevoToken = await renovarToken();
-        if (nuevoToken) {
-          setAccessToken(nuevoToken);
-          await AsyncStorage.setItem('accessToken', nuevoToken);
-        } else {
-          logout();
-        }
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error("Error al renovar token:", error.message);
-        logout();
-      }
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, []);
+  init();
+}, []);
 
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
@@ -195,13 +167,20 @@ if (cargandoContenido) return <PantallaCarga />;
       <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
 
+        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada}/>
+
         {/* Encabezado */}
-        <View style={EstilosHome.encabezado}>
-          <Text style={EstilosHome.textoInicio}>ChangApp</Text>
-          <TouchableOpacity onPress={toggleDesplegable}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="#F2F2F2" />
-          </TouchableOpacity>
-        </View>
+            <NavBarSuperior
+              titulo="ChangApp"
+              showBackButton={false}            
+              rightButtonType="menu"            
+              onRightPress={toggleDesplegable}  
+              titleAlign="center"               
+              paddingHorizontal={16}            
+               iconSize={24}                   
+               navbarHeight={56}               
+            />
+
 
         <MenuDesplegable
           visible={mostrarDesplegable}
@@ -251,10 +230,13 @@ if (cargandoContenido) return <PantallaCarga />;
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
               columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-              renderItem={({ item }) => (
+        renderItem={({ item }) => (
                 <TouchableOpacity
                   style={EstilosHome.cardCategoria}
-                  onPress={() => setMostrarModalBuscar(true)}
+                  onPress={() => {
+                    setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
+                    setMostrarModalBuscar(true);         // ← muestra el modal
+                  }}
                 >
                   <Ionicons name="image" size={20} color={Colors.naranja} />
                   <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
@@ -263,34 +245,18 @@ if (cargandoContenido) return <PantallaCarga />;
               contentContainerStyle={EstilosHome.scrollContenido}
             />
 
-        {/* Snackbar */}
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={onDismissSnackbar}
-          duration={Snackbar.DURATION_SHORT}
-          action={{
-            label: 'Tocá para ver',
-            onPress: () => {
-              setSnackbarVisible(false);
-              navigation.navigate('Historial2');
-            },
-          }}
-          style={{
-            position: 'absolute',
-            top: -150,
-            left: 0,
-            right: 0,
-            zIndex: 100000,
-          }}
-        >
-          {trabajoActual && (
-            <Text style={{ color: 'white' }}>
-              {trabajoActual.estado === 'PA'
-                ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
-                : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`}
-            </Text>
-          )}
-        </Snackbar>
+            {/* Snackbar */}
+            <CustomSnackbar
+              visible={snackbarVisible}
+              setVisible={setSnackbarVisible}
+              message={trabajoActual ? (
+                trabajoActual.estado === 'PA'
+                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
+              ) : 'Mensaje por defecto'}
+              actionLabel="Tocá para ver"
+              onActionPress={() => navigation.navigate('Historial2')}
+            />
 
           {/* NavBar Inferior */}
                  <NavBarInferior

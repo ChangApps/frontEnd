@@ -12,6 +12,7 @@ export interface SolicitudHistorial {
   proveedor_id: number;
   nombreServicio: string;
   cliente_nombre: string;
+  servicio_id: number; 
 }
 
 export interface Solicitud {
@@ -45,3 +46,17 @@ export interface Proveedor {
   bloqueados: number[];
   is_verified: boolean;
 }
+
+  export interface Servicio {
+    id: number;
+    nombreServicio: string;
+    descripcion: string;
+    dia?: string;
+    desdeHora?: string;
+    hastaHora?: string;
+    dias?: Array<{
+      dia: string;
+      desdeHora: string;
+      hastaHora: string;
+    }>;
+  }

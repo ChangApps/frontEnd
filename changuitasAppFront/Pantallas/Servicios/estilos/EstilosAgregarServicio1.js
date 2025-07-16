@@ -8,7 +8,7 @@ const EstilosAgregarServicio1 = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 15,
   },
   categoriaContenedor: {
     marginBottom: 25,
@@ -45,15 +45,9 @@ const EstilosAgregarServicio1 = StyleSheet.create({
   },
   botonesContenedor: {
   paddingHorizontal: 20,
-  paddingBottom: 20,
+  paddingBottom: 10,
   backgroundColor: Colors.fondo,
-  gap: 10,
-},
-pasosContenedor: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  marginBottom: 20,
-  gap: 10,
+  gap: 5,
 },
 pasoActivo: {
   backgroundColor: Colors.naranja,
