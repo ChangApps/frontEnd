@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
-import Colors from '../../../assets/Colors';
 
 const EstilosResenias = StyleSheet.create({
     safeContainer: {

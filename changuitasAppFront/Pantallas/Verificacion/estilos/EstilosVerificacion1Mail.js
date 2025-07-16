@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../../assets/Colors';
-import Colors from '../../../assets/Colors';
 
 const EstilosVerificacion1Mail = StyleSheet.create({
   safeContainer: {
@@ -10,6 +9,8 @@ const EstilosVerificacion1Mail = StyleSheet.create({
   contenedor: {
     flex: 1,
     paddingHorizontal: 25,
+    paddingTop: 50,
+    alignItems: 'flex-start',
   },
   degradado: {
     flex: 1,
