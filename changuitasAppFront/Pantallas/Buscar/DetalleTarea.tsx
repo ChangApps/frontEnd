@@ -17,7 +17,6 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
-import PantallaCarga from '../../componentes/PantallaCarga';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -39,7 +38,6 @@ const DetalleTarea = () => {
   const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
   // Estados para el menú desplegable
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
-  const [cargando, setCargando] = useState(false);
 
   const motivosCancelacion = [
     'No puedo asistir',
@@ -146,7 +144,6 @@ const DetalleTarea = () => {
 
   const finalizarChanguita = async () => {
     try {
-      setCargando(true);
       const token = await AsyncStorage.getItem('accessToken');
       await fetch(`${API_URL}/finalizar-changuita/`, {
         method: 'POST',
@@ -156,10 +153,8 @@ const DetalleTarea = () => {
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });
-      setCargando(false);
       navigation.navigate('CalificarTarea', { idSolicitud });
     } catch {
-      setCargando(false);
       setMessage('Error al finalizar la changuita.');
       setVisible(true);
     }
@@ -206,88 +201,85 @@ const DetalleTarea = () => {
   
   return (
     <SafeAreaView edges={['top']} style={EstilosDetalleTarea.safeContainer}>
-      {cargando ? (
-        <PantallaCarga />
-      ) : (
-        <View style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={{ paddingBottom: 100 }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <NavBarSuperior
-              titulo="Detalle de la tarea"
-              titleSize={titleSizeNavbarSuperior}
-              showBackButton={true}
-              onBackPress={() => { navigation.goBack(); }}
-              rightButtonType="menu"
-              onRightPress={() => { toggleDesplegable(); }}
-            />
-
-            {/* Menú Desplegable */}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
-
-            <View style={EstilosDetalleTarea.seccionUsuario}>
-              <ImagenPerfilUsuario
-                imageUri={imageUri}
-                modalVisible={modalVisible}
-                onImagePress={() => setModalVisible(true)}
-                onCloseModal={() => setModalVisible(false)}
-              />
-              <Text style={EstilosDetalleTarea.nombreCompleto}>
-                {usuario?.username}
-              </Text>
-            </View>
-
-            <ImagenConModal
-              uri={imageUri}
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              estiloImagen={EstilosDetalleTarea.imagenModal}
-            />
-
-            <DatosTareaCompactos
-              servicio={servicio}
-              fecha={fecha}
-              puntaje={puntaje}
-              estado={estado}
-              estilos={EstilosDetalleTarea}
-            />
-
-            <AccionesTarea
-              rol={rol}
-              estado={estado}
-              aceptarChanguita={aceptarChanguita}
-              setMostrarModal={setMostrarModalCancelar}
-              finalizarSolicitud={finalizarChanguita}
-              estilos={EstilosDetalleTarea}
-            />
-
-            <ModalCancelarChanguita
-              visible={mostrarModalCancelar}
-              onClose={() => setMostrarModalCancelar(false)}
-              onConfirm={(motivo) => {
-                console.log('Changuita cancelada por:', motivo);
-                cancelarChanguita();
-                setMostrarModalCancelar(false);
-                setMotivoSeleccionado('');
-              }}
-              motivoSeleccionado={motivoSeleccionado}
-              setMotivoSeleccionado={setMotivoSeleccionado}
-              motivosCancelacion={motivosCancelacion}
-            />
-          </ScrollView>
-
-          <NavBarInferior
-            activeScreen="DetalleTarea"
-            onNavigate={handleNavigation}
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 100 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <NavBarSuperior
+            titulo="Detalle de la tarea"
+            titleSize={titleSizeNavbarSuperior}
+            showBackButton={true}
+            onBackPress={() => { navigation.goBack(); }}
+            rightButtonType="menu"
+            onRightPress={() => { toggleDesplegable(); }}
           />
-        </View>
-      )}
+
+          {/* Menú Desplegable */}
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
+
+          <View style={EstilosDetalleTarea.seccionUsuario}>
+            <ImagenPerfilUsuario
+              imageUri={imageUri}
+              modalVisible={modalVisible}
+              onImagePress={() => setModalVisible(true)}
+              onCloseModal={() => setModalVisible(false)}
+            />
+            <Text style={EstilosDetalleTarea.nombreCompleto}>
+              {usuario?.username}
+            </Text>
+          </View>
+
+          <ImagenConModal
+            uri={imageUri}
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            estiloImagen={EstilosDetalleTarea.imagenModal}
+          />
+
+          <DatosTareaCompactos
+            servicio={servicio}
+            fecha={fecha}
+            puntaje={puntaje}
+            estado={estado}
+            estilos={EstilosDetalleTarea}
+          />
+
+          <AccionesTarea
+            rol={rol}
+            estado={estado}
+            aceptarChanguita={aceptarChanguita}
+            setMostrarModal={setMostrarModalCancelar}
+            finalizarSolicitud={finalizarChanguita}
+            estilos={EstilosDetalleTarea}
+          />
+
+          <ModalCancelarChanguita
+            visible={mostrarModalCancelar}
+            onClose={() => setMostrarModalCancelar(false)}
+            onConfirm={(motivo) => {
+              console.log('Changuita cancelada por:', motivo);
+              cancelarChanguita();
+              setMostrarModalCancelar(false);
+              setMotivoSeleccionado('');
+            }}
+            motivoSeleccionado={motivoSeleccionado}
+            setMotivoSeleccionado={setMotivoSeleccionado}
+            motivosCancelacion={motivosCancelacion}
+          />
+        </ScrollView>
+
+        <NavBarInferior
+          activeScreen="DetalleTarea"
+          onNavigate={handleNavigation}
+        />
+      </View>
+
       {/* Snackbar*/}
       <CustomSnackbar
         visible={visible}
