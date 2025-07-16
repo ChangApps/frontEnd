@@ -41,14 +41,6 @@ const DetalleTarea = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [cargando, setCargando] = useState(false);
 
-  const motivosCancelacion = [
-    'No puedo asistir',
-    'Tuve un inconveniente personal',
-    'El cliente no responde',
-    'Cambio de planes',
-    'Otro motivo',
-  ];
-
   interface Usuario {
     username: string;
     first_name: string;
@@ -278,7 +270,7 @@ const DetalleTarea = () => {
               }}
               motivoSeleccionado={motivoSeleccionado}
               setMotivoSeleccionado={setMotivoSeleccionado}
-              motivosCancelacion={motivosCancelacion}
+              rol={rol}
             />
           </ScrollView>
 

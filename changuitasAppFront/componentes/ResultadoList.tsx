@@ -13,7 +13,7 @@ type Usuario = {
 
 type Solicitud = {
   id: number;
-  fechaSolicitud: string;
+  fechaSolicitud: string | null;
   estado: 'PA' | 'I' | 'F' | 'C';
   cliente?: number;       // opcional
   proveedor_id?: number;  // opcional
@@ -27,9 +27,22 @@ type Props = {
   mensajeVacio: string;
 };
 
-const formatearFecha = (fechaISO: string): string => {
-  const [anio, mes, dia] = fechaISO.split('T')[0].split('-');
-  return `${dia}/${mes}/${anio}`;
+const formatearFecha = (fechaISO: string | null | undefined): string => {
+  if (!fechaISO) {
+    return 'Fecha no disponible';// Si la fecha es null o undefined, retorna un string por defecto
+  }
+  if (fechaISO.trim() === '') {// Aseguro que la cadena no esté vacía antes de intentar split
+    return 'Fecha inválida';
+  }
+ 
+  try {
+    const [fechaParte] = fechaISO.split('T'); // Obtener solo la parte de la fecha (YYYY-MM-DD)
+    const [anio, mes, dia] = fechaParte.split('-');
+    return `${dia}/${mes}/${anio}`;
+  } catch (e) {
+    console.error("Error al formatear la fecha:", fechaISO, e);
+    return 'Formato de fecha inválido'; // Mensaje de error si el formato es incorrecto
+  }
 };
 
 const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeVacio }: Props) => {
