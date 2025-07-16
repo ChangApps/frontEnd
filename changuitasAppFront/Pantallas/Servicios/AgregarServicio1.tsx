@@ -70,7 +70,7 @@ const AgregarServicio1 = () => {
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", ["Gasista", "Electricista", "Plomero", "Carpintería", "Pintor", "Albañil", "Zinguería", "Gomería", "Electrodomésticos", "Calderista"], selectedService, handleSelectService)}
-        {renderCategory("CIUDADO DE PERSONAS", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
+        {renderCategory("CUIDADO DE PERSONAS", ["Niñera/o", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
         {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedService, handleSelectService)}
         {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedService, handleSelectService)}
         {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedService, handleSelectService)}

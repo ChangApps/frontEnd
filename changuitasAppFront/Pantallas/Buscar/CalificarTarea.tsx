@@ -15,7 +15,6 @@ import { AuthContext } from '../../autenticacion/auth';
 import { cerrarSesion } from '../../autenticacion/authService';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
-import PantallaCarga from '../../componentes/PantallaCarga';
 
 const CalificarTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -25,7 +24,6 @@ const CalificarTarea = () => {
   const [calificacion, setCalificacion] = useState(0);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
-  const [cargando, setCargando] = useState(false);
 
   // Estados para el menú desplegable
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -43,7 +41,6 @@ const CalificarTarea = () => {
     }
 
     try {
-      setCargando(true);
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) throw new Error('No se encontró el token de acceso');
 
@@ -62,21 +59,13 @@ const CalificarTarea = () => {
         }),
       });
 
-      if (!response.ok) {
-        let errorMsg = 'Error al actualizar la solicitud';
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.error) errorMsg = errorData.error;
-        } catch (e) {}
-        throw new Error(errorMsg);
-      }
+      if (!response.ok) throw new Error('Error al actualizar la solicitud');
 
-      setCargando(false);
+      console.log("Solicitud actualizada correctamente");
       navigation.navigate('Home');
-    } catch (error: any) {
-      setCargando(false);
+    } catch (error) {
       console.error('Error al actualizar la solicitud:', error);
-      setMessage(error.message || 'Error al actualizar la solicitud.');
+      setMessage('Error al actualizar la solicitud.');
       setVisible(true);
     }
   };
@@ -133,95 +122,94 @@ const CalificarTarea = () => {
 
   return (
     <SafeAreaView edges={['top']} style={styles.safeContainer}>
-      {cargando ? (
-        <PantallaCarga />
-      ) : (
-        <TouchableWithoutFeedback onPress={() => {
-          if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-        }}>
-          <View style={styles.container}>
-            {/* NavBar Superior */}
-            <NavBarSuperior
-              titulo="Calificar tarea"
-              titleSize={titleSizeNavbarSuperior}
-              showBackButton={true}
-              onBackPress={() => { navigation.goBack(); }}
-              rightButtonType="menu"
-              onRightPress={() => { toggleDesplegable(); }}
-            />
+      <TouchableWithoutFeedback onPress={() => {
+        if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
+      }}>
+        <View style={styles.container}>
+          {/* NavBar Superior */}
+          <NavBarSuperior
+            titulo="Calificar tarea"
+            titleSize={titleSizeNavbarSuperior}
+            showBackButton={true}
+            onBackPress={() => { navigation.goBack(); }}
+            rightButtonType="menu"
+            onRightPress={() => { toggleDesplegable(); }}
+          />
 
-            {/* Menú Desplegable */}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
+          {/* Menú Desplegable */}
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
 
-            {/* Contenido Principal con ScrollView */}
-            <ScrollView
-              style={styles.scrollContainer}
-              contentContainerStyle={styles.scrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              {/* Contenido Principal */}
-              <View style={styles.content}>
-                {/* Calificación */}
-                <Text style={styles.label}>Puntúe el trabajo realizado:</Text>
-                <View style={styles.rating}>
-                  {[...Array(5)].map((_, i) => (
-                    <TouchableOpacity key={i} onPress={() => setCalificacion(i + 1)}>
-                      <Ionicons
-                        name={i < calificacion ? "star" : "star-outline"}
-                        size={startSize}
-                        color={i < calificacion ? "#FFD700" : Colors.blancoTexto}
-                        style={styles.star}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                {/* Comentario */}
-                <Text style={styles.label}>Escriba más detalles (Opcional):</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Descripción"
-                  placeholderTextColor="#999999"
-                  multiline
-                  textAlignVertical="top"
-                  value={comentario}
-                  onChangeText={setComentario}
-                />
-
-                {/* Botón Calificar */}
-                <View style={styles.buttonContainer}>
-                  <Button
-                    titulo="Calificar"
-                    onPress={actualizarSolicitud}
-                    backgroundColor={Colors.naranja}
-                    textColor={Colors.fondo}
-                    textSize={20}
-                    borderRadius={25}
-                    padding={15}
-                  />
-                </View>
+          {/* Contenido Principal con ScrollView */}
+          <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Contenido Principal */}
+            <View style={styles.content}>
+              {/* Calificación */}
+              <Text style={styles.label}>Puntúe el trabajo realizado:</Text>
+              <View style={styles.rating}>
+                {[...Array(5)].map((_, i) => (
+                  <TouchableOpacity key={i} onPress={() => setCalificacion(i + 1)}>
+                    <Ionicons
+                      name={i < calificacion ? "star" : "star-outline"}
+                      size={startSize}
+                      color={i < calificacion ? "#FFD700"     // estrellas marcadas en amarillo
+                        : Colors.blancoTexto  // contorno blanco en las vacías
+                      }
+                      style={styles.star}
+                    />
+                  </TouchableOpacity>
+                ))}
               </View>
-            </ScrollView>
 
-            {/* NavBar Inferior */}
-            <NavBarInferior
-              activeScreen="CalificarTarea"
-              onNavigate={handleNavigation}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      )}
-      {/* CustomSnackbar */}
-      <CustomSnackbar
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-      />
+              {/* Comentario */}
+              <Text style={styles.label}>Escriba más detalles (Opcional):</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Descripción"
+                placeholderTextColor="#999999"
+                multiline
+                textAlignVertical="top"
+                value={comentario}
+                onChangeText={setComentario}
+              />
+
+              {/* Botón Calificar */}
+              <View style={styles.buttonContainer}>
+                <Button
+                  titulo="Calificar"
+                  onPress={actualizarSolicitud}
+                  backgroundColor={Colors.naranja}
+                  textColor={Colors.fondo}
+                  textSize={20}
+                  borderRadius={25}
+                  padding={15}
+                />
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* NavBar Inferior */}
+          <NavBarInferior
+            activeScreen="CalificarTarea" // O el screen activo correspondiente
+            onNavigate={handleNavigation}
+          />
+
+          {/* CustomSnackbar */}
+          <CustomSnackbar
+            visible={visible}
+            setVisible={setVisible}
+            message={message}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
