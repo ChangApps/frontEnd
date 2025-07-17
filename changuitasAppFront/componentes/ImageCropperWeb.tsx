@@ -5,7 +5,6 @@ import "react-image-crop/dist/ReactCrop.css";
 import { Text } from 'react-native';
 import Colors from "../assets/Colors";
 
-
 interface Props {
   imageUri: string;
   setImageUri: (uri: string) => void;
@@ -127,14 +126,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   botonGuardar: {
-    backgroundColor: Colors.naranja, 
+    backgroundColor:Colors.naranja, 
     borderWidth: 1,
-    borderColor: '#cdc09bff', 
+    borderColor: Colors.negro, 
   },
   botonCancelar: {
     backgroundColor: Colors.naranja, 
     borderWidth: 1,
-    borderColor: Colors.naranja, 
+    borderColor: Colors.negro, 
   },
   textoBoton: {
     color: Colors.blancoTexto, 

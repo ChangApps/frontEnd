@@ -1,21 +1,21 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import Colors from '../../../assets/Colors';
+
+// Obtener dimensiones de la pantalla
+const { width: screenWidth } = Dimensions.get('window');
+const isWeb = Platform.OS === 'web';
+const isDesktop = isWeb && screenWidth > 768;
 
 const EstilosAgregarServicio2 = StyleSheet.create({
   safeContainer: {
     flex: 1,
     backgroundColor: Colors.fondo,
   },
-  contenedorEncabezado: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.naranja, // Color de fondo de la barra
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
   contenedorDesplazable: {
-    paddingHorizontal: 20,
+    paddingHorizontal: isDesktop ? Math.min(screenWidth * 0.30, 300) : 20,
     paddingBottom: 10,
+    maxWidth: isDesktop ? 1000 : '100%',
+    alignSelf: isDesktop ? 'center' : 'stretch',
   },
   etiqueta: {
     color: Colors.blancoTexto,
@@ -23,11 +23,22 @@ const EstilosAgregarServicio2 = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
   },
+  campoDescripcion: {
+    borderWidth: 1,
+    borderColor: Colors.fondo,
+    borderRadius: 8,
+    padding: 10,
+    height: 100,
+    textAlignVertical: 'top',
+    marginBottom: isDesktop ? 15 : 20,
+  },
   encabezadoDias: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,       // agrega separación desde arriba (recuadro de descripción)
-    marginBottom: 10,
+    marginTop: isDesktop ? 15 : 20,
+    marginBottom: isDesktop ? 8 : 10,
+    paddingHorizontal:isDesktop ? 0 :5,
+    // REMOVIDO: paddingHorizontal: 0 - esto causaba el problema
   },
   etiquetaDia: {
     fontSize: 20,
@@ -43,24 +54,24 @@ const EstilosAgregarServicio2 = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 8,
+    marginVertical: isDesktop ? 6 : 8,
     width: '100%',
+    paddingHorizontal: 0
+    // REMOVIDO: paddingHorizontal: 0 - esto causaba el problema
   },
-
   switchYTextoDia: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '31%',       // ocupa 30% de la fila
+    width: isDesktop ? '35%' : '31%',
+    minWidth: isDesktop ? 120 : 0,
   },
-
   textoDia: {
     fontSize: 16,
     color: Colors.blancoTexto,
-    marginLeft: 1,
+    marginLeft: isDesktop ? 10 : 1,
     flexShrink: 1,
     flexWrap: 'nowrap',
   },
-
   campoHora: {
     borderWidth: 1,
     borderColor: Colors.grisBoxes,
@@ -73,20 +84,21 @@ const EstilosAgregarServicio2 = StyleSheet.create({
   textoSeparador: {
     fontSize: 16,
     color: Colors.blancoTexto,
+    marginHorizontal: isDesktop ? 8 : 2,
   },
   contenedorBotones: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 20,
+    paddingVertical: isDesktop ? 15 : 20,
   },
   picker: {
     height: 50,
-    width: 111.5,
+    width: isDesktop ? 120 : 111.5,
     marginVertical: 2,
   },
   pickerItem: {
-    fontSize: 50, // Aumenta el tamaño de la fuente para que sea más fácil de leer
-    paddingVertical: 10, // Da más espacio entre las opciones
+    fontSize: 50,
+    paddingVertical: 10,
   },
   pickerContainer: {
     borderWidth: 1,
@@ -98,7 +110,6 @@ const EstilosAgregarServicio2 = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
-    marginHorizontal: 1,       // espaciado lateral
   },
   pasosWrapper: {
     flexDirection: 'row',
@@ -108,7 +119,7 @@ const EstilosAgregarServicio2 = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    marginVertical: 15,
+    marginVertical: isDesktop ? 10 : 15,
     gap: 10,
   },
   pasoActivo: {

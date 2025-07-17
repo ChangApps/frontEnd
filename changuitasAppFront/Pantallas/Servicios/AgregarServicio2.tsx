@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Switch, Alert } from 'react-native';
+import { View, Text, ScrollView, Switch, Alert, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Picker } from '@react-native-picker/picker';
@@ -12,6 +12,7 @@ import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ReactSwitch from 'react-switch';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -248,12 +249,26 @@ const AgregarServicio2 = () => {
         {Object.keys(diasSeleccionados).map((dia) => (
           <View style={EstilosAgregarServicio2.filaDia} key={dia}>
             <View style={EstilosAgregarServicio2.switchYTextoDia}>
-              <Switch
-                value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
-                onValueChange={() => cambiarDia(dia)}
-                trackColor={{ false: Colors.grisTexto, true: Colors.naranja }}
-                thumbColor={diasSeleccionados[dia as keyof typeof diasSeleccionados] ? Colors.naranja : Colors.grisTexto}
-              />
+              {Platform.OS === 'web' ? (
+                <ReactSwitch
+                  checked={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
+                  onChange={() => cambiarDia(dia)}
+                  onColor={Colors.naranja}
+                  offColor={Colors.grisTexto}
+                  checkedIcon={false}
+                  uncheckedIcon={false}
+                  height={24}
+                  width={48}
+                  handleDiameter={22}
+                />
+              ) : (
+                <Switch
+                  value={diasSeleccionados[dia as keyof typeof diasSeleccionados]}
+                  onValueChange={() => cambiarDia(dia)}
+                  trackColor={{ false: Colors.grisTexto, true: Colors.naranja }}
+                  thumbColor={diasSeleccionados[dia as keyof typeof diasSeleccionados] ? Colors.naranja : Colors.grisTexto}
+                />
+              )}
               <Text style={EstilosAgregarServicio2.textoDia}>{dia}</Text>
             </View>
 

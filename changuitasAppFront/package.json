@@ -29,7 +29,8 @@
     "react-native-image-picker": "^8.2.0",
     "react-native-paper": "^5.13.4",
     "react-native-safe-area-context": "^5.4.0",
-    "react-native-web": "^0.20.0"
+    "react-native-web": "^0.20.0",
+    "react-switch": "^7.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

@@ -171,7 +171,7 @@ const handleProveedorPress = (proveedor: any) => {
                         </View>
                       ))
                     ) : (
-                      <Text>No hay servicios disponibles</Text>
+                    <Text style={{ color: Colors.naranja }}>No hay servicios disponibles</Text>
                     )}
                   </View>
 

@@ -1,5 +1,9 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import Colors from '../../../assets/Colors';
+
+const { width: screenWidth } = Dimensions.get('window');
+const isWeb = Platform.OS === 'web';
+const isDesktop = isWeb && screenWidth > 768;
 
 const EstilosAgregarServicio1 = StyleSheet.create({
   safeContainer: {
@@ -7,7 +11,7 @@ const EstilosAgregarServicio1 = StyleSheet.create({
     backgroundColor: Colors.fondo,
   },
   scrollContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: isDesktop ?400:20,
     paddingBottom: 15,
   },
   categoriaContenedor: {
