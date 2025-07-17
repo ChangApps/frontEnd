@@ -116,11 +116,11 @@ const EstilosMisServicios = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderWidth: 1,
-    borderColor: '#FC6A30',
+    borderColor: Colors.naranja,
     borderRadius: 50,
   },
   textoBoton: {
-    color: '#FC6A30',
+    color: Colors.naranja,
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 5,
@@ -128,20 +128,20 @@ const EstilosMisServicios = StyleSheet.create({
   cargando: {
     textAlign: 'center',
     marginTop: 20,
-    color: 'gray'
+    color: Colors.grisTexto,
   },
   listaServicios: { paddingHorizontal: 16 },
-  servicioCard: { padding: 16, marginBottom: 8, backgroundColor: '#333237', borderRadius: 8, elevation: 2 },
-  nombreServicio: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
-  descripcion: { fontSize: 14, color: 'gray' },
-  horario: { fontSize: 12, color: '#FC6A30' },
+  servicioCard: { padding: 16, marginBottom: 8, backgroundColor: Colors.grisBoxes, borderRadius: 8, elevation: 2 },
+  nombreServicio: { fontSize: 16, fontWeight: 'bold', color: Colors.blancoTexto },
+  descripcion: { fontSize: 14, color: Colors.grisTexto },
+  horario: { fontSize: 12, color: Colors.naranja },
   sinServicios: { textAlign: 'center', marginTop: 20, color: 'grey', fontSize: 18 },
 
   botonEliminar: {
     padding: 8,
     borderRadius: 8,
     backgroundColor: "#ffe5e5",
-    alignSelf: 'flex-end', // Lo posiciona a la derecha
+    alignSelf: 'flex-end',
     marginTop: -40,
   },
   noResultsContainer: {

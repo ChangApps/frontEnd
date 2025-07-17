@@ -166,15 +166,15 @@ const EstilosEditarPerfil = StyleSheet.create({
   //Modal del recortador
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: Colors.negro,
     justifyContent: "center",
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: Colors.blancoTexto,
     padding: 20,
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: Colors.negro,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,

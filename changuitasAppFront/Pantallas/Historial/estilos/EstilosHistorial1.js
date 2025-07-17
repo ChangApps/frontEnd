@@ -6,47 +6,10 @@ const EstilosHistorial1 = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.fondo,
   },
-  encabezado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: 'white',
-    marginTop: 50,
-  },
-  textoEncabezado: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  barraPestanas: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    marginBottom: 20,
-  },
-  pestanaActiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: '#197278',
-  },
-  pestanaInactiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  textoPestanaActiva: {
-    fontSize: 16,
-    color: '#197278',
-  },
-  textoPestanaInactiva: {
-    fontSize: 16,
-    color: '#666',
-  },
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2a2b45',
+    backgroundColor: Colors.azulClaroBoxes,
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -57,7 +20,7 @@ const EstilosHistorial1 = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 5,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: Colors.blancoOscuroTexto,
   },
   resultDetails: {
     flex: 1,
@@ -68,11 +31,10 @@ const EstilosHistorial1 = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'nowrap', // para que no haga wrap en cel
   },
-
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fd6b2f',
+    color: Colors.naranja,
     marginRight: 8, // espacio entre nombre y cartel rojo
   },
     estadoCriticoContainer: {
@@ -100,85 +62,16 @@ const EstilosHistorial1 = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  category: {
-    fontSize: 14,
-    color: '#666',
-  },
-  rating: {
-    flexDirection: 'row',
-    marginTop: 5,
-  },
   arrowButton: {
     paddingLeft: 10,
-  },
-  seccionUsuario: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  imagenUsuario: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#f0f0f0',
-    marginBottom: 10,
-  },
-  nombreCompleto: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  rolUsuario: {
-    fontSize: 16,
-    color: '#666',
-  },
-  datosExtras: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
-  },
-  datoItem: {
-    alignItems: 'center',
-  },
-  datoNumero: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  datoLabel: {
-    fontSize: 14,
-    color: '#666',
-  },
-  tituloDatosPersonales: {
-    fontSize: 18,
-    color: '#197278',
-    textAlign: 'center',
-    marginVertical: 10,
-  },
-  datosPersonales: {
-    paddingHorizontal: 20,
-  },
-  infoUsuario: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 5,
   },
   ratingStars: {
     flexDirection: 'row',
     marginTop: 5,
   },
-  emptyContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 20,
-  },
-
-  textoVacio: {
-    textAlign: 'center',  
-    fontSize: 18,         
-    color: '#333',        
-  },
   fecha: {
     fontSize: 12,
-    color: 'white',
+    color: Colors.blancoTexto,
     marginTop: 2,
   },
   noResultsContainer: {
@@ -193,11 +86,11 @@ const EstilosHistorial1 = StyleSheet.create({
   },
   mensajeNoUsuarios: {
     fontSize: 18,
-    color: 'grey',
+    color: Colors.grisTexto,
     textAlign: 'center',
   },
   pasoActivo: {
-  backgroundColor: '#FF6D3B',
+  backgroundColor: Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
@@ -205,18 +98,18 @@ const EstilosHistorial1 = StyleSheet.create({
 pasoInactivo: {
   backgroundColor: 'transparent',
   borderWidth: 1,
-  borderColor: '#FF6D3B',
+  borderColor: Colors.naranja,
   paddingHorizontal: 12,
   paddingVertical: 6,
   borderRadius: 20,
 },
 pasoTextoActivo: {
-  color: 'white',
+  color: Colors.blancoTexto,
   fontWeight: 'bold',
   fontSize: 14,
 },
 pasoTextoInactivo: {
-  color: '#FF6D3B',
+  color: Colors.naranja,
   fontWeight: 'bold',
   fontSize: 14,
 },
@@ -224,7 +117,7 @@ pasosWrapper: {
   flexDirection: 'row',
   justifyContent: 'center',
   alignSelf: 'center',
-  backgroundColor: '#1D233B',
+  backgroundColor: Colors.grisBoxes,
   borderRadius: 30,
   paddingVertical: 8,
   paddingHorizontal: 12,

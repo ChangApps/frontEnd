@@ -15,48 +15,22 @@ const EstilosVerificacion2 = StyleSheet.create({
   degradado: {
       flex: 1,
     },
-  botonAtras: {
-    marginRight: 10,
-    padding: 5,
-    marginLeft:-10,
-    marginTop:10,
-  },
-  titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    marginRight:10,
-    marginLeft:32,
-    marginTop:-38
-  },
-  textoPaso: {
-    fontSize: 16,
-    color: '#FC6A30',
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitulo: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 20,
-  },
   instruccion: {
       fontSize: 14,
-      color: '#F2F2F2',
+      color: Colors.blancoTexto,
       marginBottom: 15,
     },
   contenedorImagenPerfil: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: '#E6E6E6',
+    backgroundColor: Colors.blancoOscuroTexto,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 15,
     borderWidth: 5, 
-    borderColor: '#FC6A30',
+    borderColor: Colors.naranja,
     marginTop:10,
   },
   imagenPerfil: {
@@ -66,30 +40,15 @@ const EstilosVerificacion2 = StyleSheet.create({
   },
   textoOpcion: {
     fontSize: 16,
-    color: '#FC6A30',
+    color: Colors.naranja,
     marginBottom: 10,
     textDecorationLine: 'underline',
-  },
-  botonContenedor: {
-    marginTop: 30,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: '#FC6A30',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  textoBoton: {
-    color: '#FC6A30',
-    fontSize: 18,
-    fontWeight: '600',
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: Colors.negro,
   },
   imagenModal: {
     width: 200,
@@ -100,12 +59,12 @@ const EstilosVerificacion2 = StyleSheet.create({
     //Modal del recortador
     modalOverlay: {
       flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: Colors.negro,
       justifyContent: "center",
       alignItems: "center",
     },
     modalContent: {
-      backgroundColor: "white",
+      backgroundColor: Colors.blancoOscuroTexto,
       padding: 20,
       borderRadius: 10,
       shadowColor: "#000",

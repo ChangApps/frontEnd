@@ -190,13 +190,18 @@ const EstilosCompartidos = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
   },
+  infoBox: {
+    backgroundColor: Colors.grisBoxes,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
   datosPersonales: {
     paddingHorizontal: DIMENSIONES.paddingHorizontal,
   },
   infoUsuario: {
     fontSize: FUENTES.normal,
-    color: COLORES_APP.blancoTexto,
-    marginBottom: 5,
+    color: COLORES_APP.blancoOscuroTexto,
+    margin: 15,
   },
 
   // Botones

@@ -55,13 +55,6 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     marginBottom: Platform.OS === 'web' ? 15 : 60,
   },
-  snackbar: {
-    position: 'absolute',
-    top: 100,
-    left: 20,
-    right: 20,
-    zIndex: 100000,
-  },
 });
 
 export default styles;

@@ -10,28 +10,9 @@ const EstilosAgregarServicio1 = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.fondo,
   },
-  title: {
-    color: Colors.blancoTexto,
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 15,
-  },
   scrollContainer: {
     paddingHorizontal: isDesktop ?400:20,
     paddingBottom: 15,
-  },
-  selectorBoton: {
-    backgroundColor: Colors.naranja,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 15,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginBottom: 20,
-  },
-  selectorTexto: {
-    color: Colors.blancoTexto,
-    fontWeight: 'bold',
   },
   categoriaContenedor: {
     marginBottom: 25,
