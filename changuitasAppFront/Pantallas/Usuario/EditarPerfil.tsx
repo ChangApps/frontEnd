@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +11,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import { mostrarOpcionesSelectorImagen } from '../../utils/seleccionImagen';
 import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
 import { ImageCropperWeb } from '../../componentes/ImageCropperWeb';
-import { guardarCambios } from './auxiliar/guardarCambios';
+import { guardarCambios, guardarImagen } from './auxiliar/guardarCambios';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import CustomModal from '../../componentes/CustomModal';
 import estilosModal from '../../componentes/estilosModal';
@@ -23,6 +23,7 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { redirectAdmin } from '../../utils/utils';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -44,6 +45,7 @@ const EditarPerfil = () => {
   const [mostrarDatosContacto, setMostrarDatosContacto] = useState(true);
   const [mostrarDireccion, setMostrarDireccion] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
 
   const datosOriginales: { [key: string]: any } = {
     first_name: '',
@@ -76,10 +78,6 @@ const EditarPerfil = () => {
     }
   });
 
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
   };
@@ -95,14 +93,7 @@ const EditarPerfil = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } 
   };
 
   // Función para obtener la foto de perfil desde el backend
@@ -126,9 +117,16 @@ const EditarPerfil = () => {
       setImageUriOriginal(uri); // Guardar la original para compararla
     } catch (error) {
       console.error('Error al obtener la foto de perfil:', error);
-      Alert.alert('Error', 'No se pudo cargar la imagen de perfil.');
+      setMessage('Error: No se pudo cargar la imagen de perfil.');
+      setVisible(true); 
     }
   };
+
+  // Función que maneja la URI luego de seleccionar la imagen
+    const manejarImagenSeleccionada = async (uri: string) => {
+      setImageUri(uri);
+      await guardarImagen(uri, imageUriOriginal, setMessage, setVisible);
+    };
 
   // Llama a obtenerFotoPerfil al montar el componente
   useEffect(() => {
@@ -205,17 +203,17 @@ const EditarPerfil = () => {
                 style={EstilosEditarPerfil.imagenUsuario}
               />
             </TouchableOpacity>
-            {Platform.OS === 'web' ? (
+           {Platform.OS === 'web' ? (
               <>
                 <TouchableOpacity
                   onPress={() =>
-                    mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+                    mostrarOpcionesSelectorImagen(setImagenSeleccionada, setImageFile, setCropperVisible)
                   }
                 >
                   <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
                 </TouchableOpacity>
 
-                <Modal
+              <Modal
                   animationType="fade"
                   transparent={true}
                   visible={cropperVisible}
@@ -223,25 +221,31 @@ const EditarPerfil = () => {
                 >
                   <View style={EstilosEditarPerfil.modalOverlay}>
                     <View style={EstilosEditarPerfil.modalContent}>
-                      <ImageCropperWeb
-                        imageUri={imageUri}
-                        setImageUri={setImageUri}
-                        setCropperVisible={setCropperVisible}
-                      />
+                      {imagenSeleccionada && (
+                        <ImageCropperWeb
+                          imageUri={imagenSeleccionada}
+                          setImageUri={(recortadaUri) => {
+                            setImageUri(recortadaUri);
+                            setCropperVisible(false);
+                            setImagenSeleccionada(null);
+                            guardarImagen(recortadaUri,imageUriOriginal,setMessage,setVisible);
+                          }}
+                          setCropperVisible={setCropperVisible}
+                        />
+                      )}
                     </View>
                   </View>
                 </Modal>
               </>
             ) : (
-              <TouchableOpacity
-                onPress={() =>
-                  mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
-                }
-              >
-                <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                mostrarOpcionesSelectorImagen(manejarImagenSeleccionada, setImageFile, setCropperVisible)
+              }}
+            >
+              <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+            </TouchableOpacity>
             )}
-
           </View>
 
 

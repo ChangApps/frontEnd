@@ -84,7 +84,23 @@ export const ImageCropperWeb: React.FC<Props> = ({
   };
 
   return (
-    <div style={{ position: "relative", padding: "20px" }}>
+   <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // fondo modal
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+      boxSizing: "border-box",
+      zIndex: 1000,
+    }}
+  >
       <ReactCrop
         crop={crop}
         onChange={(newCrop) => {
@@ -97,21 +113,32 @@ export const ImageCropperWeb: React.FC<Props> = ({
       >
         <img
           src={imageUri}
-          alt="Imagen a recortar"
-          onLoad={(e) => {
-            onImageLoad(e.currentTarget);
+          onLoad={(e) => onImageLoad(e.currentTarget)}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "70vh",
+            display: "block",
+            borderRadius: "8px",
+            border: "1px solid #ddd",
+            objectFit: "contain",
           }}
-          style={{ maxWidth: "100%", borderRadius: "8px", border: "1px solid #ddd" }}
         />
       </ReactCrop>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <TouchableOpacity onPress={handleSave} style={[styles.boton, styles.botonGuardar]}>
-        <Text style={styles.textoBoton}>Guardar</Text>
-      </TouchableOpacity>
-
+         <div
+      style={{
+        marginTop: 20,
+        display: "flex",
+        gap: 10,
+      }}
+    >
       <TouchableOpacity onPress={() => setCropperVisible(false)} style={[styles.boton, styles.botonCancelar]}>
         <Text style={styles.textoBoton}>Cancelar</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={handleSave} style={[styles.boton, styles.botonGuardar]}>
+        <Text style={styles.textoBoton}>Guardar</Text>
+      </TouchableOpacity>
+        </div>
     </div>
   );
 };
