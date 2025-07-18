@@ -182,3 +182,55 @@ export const guardarCambios = async (
     }
   }
 };
+
+export const guardarImagen = async (
+  imageUri: string,
+  imageUriOriginal: string | null,
+  setMessage: (msg: string) => void,
+  setVisible: (visible: boolean) => void
+) => {
+  try {
+    if (!imageUri || imageUri === imageUriOriginal) return;
+
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const userId = await AsyncStorage.getItem('userId');
+
+    if (!accessToken || !userId) {
+      throw new Error('No se encontraron credenciales de usuario');
+    }
+
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    const fileType = blob.type.split('/')[1] || 'jpg';
+
+    const formData = new FormData();
+    if (Platform.OS === 'web') {
+      formData.append('fotoPerfil', blob, `photo.${fileType}`);
+    } else {
+      formData.append('fotoPerfil', {
+        uri: imageUri,
+        name: `photo.${fileType}`,
+        type: blob.type,
+      });
+    }
+
+    const res = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (res.status === 200) {
+      setMessage('Imagen actualizada correctamente.');
+      setVisible(true);
+    } else {
+      setMessage('No se pudo cambiar la imagen.');
+      setVisible(true);
+    }
+  } catch (error: any) {
+    setMessage('Error al guardar la imagen');
+    setVisible(true);
+    console.error(error);
+  }
+};

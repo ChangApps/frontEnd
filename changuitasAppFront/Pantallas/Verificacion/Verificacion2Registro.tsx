@@ -17,6 +17,8 @@ import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 import { Button } from "../../componentes/Buttons";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { guardarImagen } from "../Usuario/auxiliar/guardarCambios";
+import CustomSnackbar from "../../componentes/CustomSnackbar";
 
 
 const Verificacion2Registro = () => {
@@ -32,6 +34,10 @@ const Verificacion2Registro = () => {
   const [usuario, setUsuario] = useState(route.params?.datosUsuario || {});
   const [state, setState] = useContext(AuthContext);
   const [cropperVisible, setCropperVisible] = useState<boolean>(false);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
+  const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -187,7 +193,7 @@ const { width } = useWindowDimensions();
           <>
             <TouchableOpacity
               onPress={() =>
-                mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+                mostrarOpcionesSelectorImagen(setImagenSeleccionada, setImageFile, setCropperVisible)
               }
             >
               <Text style={EstilosVerificacion2.textoOpcion}>Seleccionar Imagen</Text>
@@ -201,11 +207,17 @@ const { width } = useWindowDimensions();
             >
               <View style={EstilosVerificacion2.modalOverlay}>
                 <View style={EstilosVerificacion2.modalContent}>
-                  <ImageCropperWeb
-                    imageUri={imageUri}
-                    setImageUri={setImageUri}
-                    setCropperVisible={setCropperVisible}
-                  />
+                        {imagenSeleccionada && (
+                                         <ImageCropperWeb
+                                           imageUri={imagenSeleccionada}
+                                           setImageUri={(recortadaUri) => {
+                                             setImageUri(recortadaUri);
+                                             setCropperVisible(false);
+                                             setImagenSeleccionada(null);
+                                           }}
+                                           setCropperVisible={setCropperVisible}
+                                         />
+                   )}
                 </View>
               </View>
             </Modal>
@@ -240,6 +252,14 @@ const { width } = useWindowDimensions();
       </View>
       </View>
       </LinearGradient>
+
+      {/* CustomSnackbar */}
+          <CustomSnackbar
+            visible={visible}
+            setVisible={setVisible}
+            message={message}
+          />
+
     </SafeAreaView>
   );
 };

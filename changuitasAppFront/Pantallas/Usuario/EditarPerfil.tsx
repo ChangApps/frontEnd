@@ -11,7 +11,7 @@ import { AuthContext } from '../../autenticacion/auth';
 import { mostrarOpcionesSelectorImagen } from '../../utils/seleccionImagen';
 import BarraPestanasPerfil from '../../utils/BarraPestanasPerfil';
 import { ImageCropperWeb } from '../../componentes/ImageCropperWeb';
-import { guardarCambios } from './auxiliar/guardarCambios';
+import { guardarCambios, guardarImagen } from './auxiliar/guardarCambios';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import CustomModal from '../../componentes/CustomModal';
 import estilosModal from '../../componentes/estilosModal';
@@ -45,6 +45,7 @@ const EditarPerfil = () => {
   const [mostrarDatosContacto, setMostrarDatosContacto] = useState(true);
   const [mostrarDireccion, setMostrarDireccion] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
 
   const datosOriginales: { [key: string]: any } = {
     first_name: '',
@@ -121,6 +122,12 @@ const EditarPerfil = () => {
     }
   };
 
+  // Función que maneja la URI luego de seleccionar la imagen
+    const manejarImagenSeleccionada = async (uri: string) => {
+      setImageUri(uri);
+      await guardarImagen(uri, imageUriOriginal, setMessage, setVisible);
+    };
+
   // Llama a obtenerFotoPerfil al montar el componente
   useEffect(() => {
     obtenerFotoPerfil();
@@ -196,17 +203,17 @@ const EditarPerfil = () => {
                 style={EstilosEditarPerfil.imagenUsuario}
               />
             </TouchableOpacity>
-            {Platform.OS === 'web' ? (
+           {Platform.OS === 'web' ? (
               <>
                 <TouchableOpacity
                   onPress={() =>
-                    mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
+                    mostrarOpcionesSelectorImagen(setImagenSeleccionada, setImageFile, setCropperVisible)
                   }
                 >
                   <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
                 </TouchableOpacity>
 
-                <Modal
+              <Modal
                   animationType="fade"
                   transparent={true}
                   visible={cropperVisible}
@@ -214,25 +221,31 @@ const EditarPerfil = () => {
                 >
                   <View style={EstilosEditarPerfil.modalOverlay}>
                     <View style={EstilosEditarPerfil.modalContent}>
-                      <ImageCropperWeb
-                        imageUri={imageUri}
-                        setImageUri={setImageUri}
-                        setCropperVisible={setCropperVisible}
-                      />
+                      {imagenSeleccionada && (
+                        <ImageCropperWeb
+                          imageUri={imagenSeleccionada}
+                          setImageUri={(recortadaUri) => {
+                            setImageUri(recortadaUri);
+                            setCropperVisible(false);
+                            setImagenSeleccionada(null);
+                            guardarImagen(recortadaUri,imageUriOriginal,setMessage,setVisible);
+                          }}
+                          setCropperVisible={setCropperVisible}
+                        />
+                      )}
                     </View>
                   </View>
                 </Modal>
               </>
             ) : (
-              <TouchableOpacity
-                onPress={() =>
-                  mostrarOpcionesSelectorImagen(setImageUri, setImageFile, setCropperVisible)
-                }
-              >
-                <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                mostrarOpcionesSelectorImagen(manejarImagenSeleccionada, setImageFile, setCropperVisible)
+              }}
+            >
+              <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+            </TouchableOpacity>
             )}
-
           </View>
 
 
