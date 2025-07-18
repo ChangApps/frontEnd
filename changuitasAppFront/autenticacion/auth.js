@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
           }
         }
       } catch (e) {
-        console.error("Error al cargar datos del almacenamiento", e);
+        console.log("Error al cargar datos del almacenamiento", e);
       }
     };
 
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
           logout(); // Si no hay token nuevo, cerrar sesión
         }
       } catch (err) {
-        console.error("Error al renovar token:", err);
+        console.log("Error al renovar token:", err);
         logout();
       }
     }, 60000); // Cada 60 segundos
