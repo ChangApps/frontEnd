@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform, Modal, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,6 +23,7 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { redirectAdmin } from '../../utils/utils';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -76,10 +77,6 @@ const EditarPerfil = () => {
     }
   });
 
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
   };
@@ -95,14 +92,7 @@ const EditarPerfil = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } 
   };
 
   // Función para obtener la foto de perfil desde el backend
@@ -126,7 +116,8 @@ const EditarPerfil = () => {
       setImageUriOriginal(uri); // Guardar la original para compararla
     } catch (error) {
       console.error('Error al obtener la foto de perfil:', error);
-      Alert.alert('Error', 'No se pudo cargar la imagen de perfil.');
+      setMessage('Error: No se pudo cargar la imagen de perfil.');
+      setVisible(true); 
     }
   };
 
