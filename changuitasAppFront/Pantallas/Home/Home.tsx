@@ -44,6 +44,7 @@ const PantallaHome = () => {
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
+  const [message, setMessage] = useState<string>('');
 
 
   
@@ -140,9 +141,11 @@ useEffect(() => {
         await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
       } else {
         console.log('No se encontró token');
+        setMessage('Error al cargar el contenido');
       }
     } catch (err) {
       console.error("Error en init:", err);
+      setMessage('Error al cargar el contenido');
     } finally {
       setCargandoContenido(false);
     }
@@ -159,8 +162,6 @@ useEffect(() => {
       setSnackbarVisible(true);
     }
   }, [trabajosNotificados, snackbarVisible, trabajoActual]);
-
-if (cargandoContenido) return <PantallaCarga />;
 
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
@@ -189,61 +190,68 @@ if (cargandoContenido) return <PantallaCarga />;
           onRedirectAdmin={redirectAdmin}
         />
 
-          
-              <FlatList
-              ListHeaderComponent={
-                <>
-                  {/* Buscador */}
-                  <View style={EstilosHome.barraBusqueda}>
-                    <TextInput
-                      style={EstilosHome.inputBusqueda}
-                      placeholder="Buscar..."
-                      placeholderTextColor="#ccc"
-                      value={textoBusqueda}
-                      onChangeText={setTextoBusqueda}
-                    />
-                    <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
-                      <FontAwesome6 name="magnifying-glass" size={20} color="black" />
-                    </TouchableOpacity>
-                  </View>
+        {cargandoContenido ? (
+          <PantallaCarga />
+        ) : message ? (
+          <Text style={EstilosHome.mensajeVacio}>{message}</Text>
+        ) : (
+          <>
+            <FlatList
+            ListHeaderComponent={
+              <>
+                {/* Buscador */}
+                <View style={EstilosHome.barraBusqueda}>
+                  <TextInput
+                    style={EstilosHome.inputBusqueda}
+                    placeholder="Buscar..."
+                    placeholderTextColor="#ccc"
+                    value={textoBusqueda}
+                    onChangeText={setTextoBusqueda}
+                  />
+                  <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
+                    <FontAwesome6 name="magnifying-glass" size={20} color="black" />
+                  </TouchableOpacity>
+                </View>
 
-                  {/* Últimas personas */}
-                  <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
-                  {personasContratadas.length === 0 ? (
-                    <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
-                  ) : (
-                    <ResultadoListSimple
-                      historial={historial}
-                      usuarios={proveedores}
-                      navigation={navigation}
-                      claveUsuario="proveedor_id"
-                      estiloCard={EstilosHome.cardPersona}
-                      estiloAvatar={EstilosHome.avatarPlaceholder}
-                      estiloNombre={EstilosHome.nombrePersona}
-                    />
-                  )}
+                {/* Últimas personas */}
+                <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
+                {personasContratadas.length === 0 ? (
+                  <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
+                ) : (
+                  <ResultadoListSimple
+                    historial={historial}
+                    usuarios={proveedores}
+                    navigation={navigation}
+                    claveUsuario="proveedor_id"
+                    estiloCard={EstilosHome.cardPersona}
+                    estiloAvatar={EstilosHome.avatarPlaceholder}
+                    estiloNombre={EstilosHome.nombrePersona}
+                  />
+                )}
 
-                  <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
-                </>
-              }
-              data={categorias}
-              keyExtractor={(item) => item.id.toString()}
-              numColumns={2}
-              columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-        renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={EstilosHome.cardCategoria}
-                  onPress={() => {
-                    setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
-                    setMostrarModalBuscar(true);         // ← muestra el modal
-                  }}
-                >
-                  <Ionicons name="image" size={20} color={Colors.naranja} />
-                  <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
-                </TouchableOpacity>
-              )}
-              contentContainerStyle={EstilosHome.scrollContenido}
-            />
+                <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+              </>
+            }
+            data={categorias}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
+      renderItem={({ item }) => (
+              <TouchableOpacity
+                style={EstilosHome.cardCategoria}
+                onPress={() => {
+                  setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
+                  setMostrarModalBuscar(true);         // ← muestra el modal
+                }}
+              >
+                <Ionicons name="image" size={20} color={Colors.naranja} />
+                <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={EstilosHome.scrollContenido}
+          />
+          </>
+        )}
 
             {/* Snackbar */}
             <CustomSnackbar
