@@ -128,7 +128,7 @@ const EstilosMisServicios = StyleSheet.create({
   cargando: {
     textAlign: 'center',
     marginTop: 20,
-    color: Colors.grisTexto,
+    color: Colors.naranja,
   },
   listaServicios: { paddingHorizontal: 16 },
   servicioCard: { padding: 16, marginBottom: 8, backgroundColor: Colors.grisBoxes, borderRadius: 8, elevation: 2 },
