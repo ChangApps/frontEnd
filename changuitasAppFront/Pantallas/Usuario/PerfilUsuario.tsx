@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Linking, ScrollView } from 'react-native';
+import { View, Text, Linking, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -133,10 +133,6 @@ const PerfilUsuario: React.FC = () => {
     }
   };
 
-   if (cargando) {
-    return <PantallaCarga frase="Cargando perfil..." />;
-  }
-
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
@@ -164,23 +160,31 @@ const PerfilUsuario: React.FC = () => {
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
         <BarraPestanasPerfil />
-        <View style={EstilosPerfilUsuario.seccionUsuario}>
-          <ImagenPerfilUsuario
-            imageUri={imageUri}
-            modalVisible={modalVisible}
-            onImagePress={handleImagePress}
-            onCloseModal={handleCloseModal}
-          />
-          <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
-        </View>
-        <ResumenServiciosUsuario
-          usuarioId={usuarioId}
-          contratados={(usuario as any)?.cantServiciosContratados ?? 0}
-          trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
-          puntaje={(usuario as any)?.puntaje ?? 0}
-        />
+        {cargando ? (
+          <PantallaCarga frase="Cargando perfil..." />
+        ) : message ? (
+          <Text style={EstilosPerfilUsuario.mensajeVacio}>{message}</Text>
+        ) : (
+          <>
+            <View style={EstilosPerfilUsuario.seccionUsuario}>
+              <ImagenPerfilUsuario
+                imageUri={imageUri}
+                modalVisible={modalVisible}
+                onImagePress={handleImagePress}
+                onCloseModal={handleCloseModal}
+              />
+              <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
+            </View>
+            <ResumenServiciosUsuario
+              usuarioId={usuarioId}
+              contratados={(usuario as any)?.cantServiciosContratados ?? 0}
+              trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
+              puntaje={(usuario as any)?.puntaje ?? 0}
+            />
+            {usuario && <DatosPersonalesUsuario usuario={usuario} />}
+          </>
+        )}
         <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
-        {usuario && <DatosPersonalesUsuario usuario={usuario} />}
         </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
