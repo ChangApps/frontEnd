@@ -17,6 +17,7 @@ import ResumenServiciosUsuario from '../../componentes/perfilesUsuarios/ResumenS
 import DatosPersonalesUsuario from '../../componentes/perfilesUsuarios/DatosPersonales';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -24,7 +25,7 @@ const PerfilUsuario: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
   const [usuarioId, setUsuarioId] = useState("");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [cargando, setCargando] = useState<boolean>(true);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -128,17 +129,12 @@ const PerfilUsuario: React.FC = () => {
       setMessage('Error al cargar datos del usuario');
       setVisible(true);
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   };
 
-  if (loading) {
-    return (
-      <View style={EstilosPerfilUsuario.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Cargando perfil...</Text>
-      </View>
-    );
+   if (cargando) {
+    return <PantallaCarga frase="Cargando perfil..." />;
   }
 
   const handleNavigation = (screen: string) => {
