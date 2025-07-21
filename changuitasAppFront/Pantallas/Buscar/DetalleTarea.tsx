@@ -17,6 +17,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -96,6 +97,7 @@ const DetalleTarea = () => {
   };
 
   const aceptarChanguita = async () => {
+    setCargando(true);
     try {
       const token = await AsyncStorage.getItem('accessToken');
       const res = await fetch(`${API_URL}/aceptar-changuita/`, {
@@ -110,14 +112,17 @@ const DetalleTarea = () => {
       if (!res.ok) throw new Error();
       setMessage('¡Changuita aceptada!');
       setVisible(true);
-      fetchDatosSolicitud();
+      await fetchDatosSolicitud();
     } catch {
       setMessage('Error al aceptar changuita');
       setVisible(true);
+    } finally {
+      setCargando(false);
     }
   };
 
   const cancelarChanguita = async () => {
+    setCargando(true);
     try {
       const token = await AsyncStorage.getItem('accessToken');
       await fetch(`${API_URL}/cancelar-changuita/`, {
@@ -128,14 +133,17 @@ const DetalleTarea = () => {
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });
+      setCargando(false);
       navigation.navigate('Home');
     } catch {
       setMessage('Error al cancelar la changuita.');
       setVisible(true);
+      setCargando(false);
     }
   };
 
   const finalizarChanguita = async () => {
+    setCargando(true);
     try {
       const token = await AsyncStorage.getItem('accessToken');
       await fetch(`${API_URL}/finalizar-changuita/`, {
@@ -146,10 +154,12 @@ const DetalleTarea = () => {
         },
         body: JSON.stringify({ solicitud_id: idSolicitud })
       });
+      setCargando(false);
       navigation.navigate('CalificarTarea', { idSolicitud });
     } catch {
       setMessage('Error al finalizar la changuita.');
       setVisible(true);
+      setCargando(false);
     }
   };
 
@@ -191,6 +201,9 @@ const DetalleTarea = () => {
 
   const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
 
+  if (cargando) {
+    return <PantallaCarga frase="Procesando..." />;
+  }
   
   return (
     <SafeAreaView edges={['top']} style={EstilosDetalleTarea.safeContainer}>

@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions,  FlatList, TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
-import {cerrarSesion} from '../../autenticacion/authService';
+import { cerrarSesion } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { verificarSolicitudesAceptadas, verificarTrabajosPendientes } from '../../services/notificacionesService';
-import{ obtenerCategorias } from '../../services/categoriaService';
+import { obtenerCategorias } from '../../services/categoriaService';
 import { SolicitudHistorial, Solicitud, Proveedor } from '../../types/interfaces';
 import { fetchUHistorial } from '../../services/historialService';
 import ResultadoListSimple from '../../componentes/ResultadoListSimple';
@@ -18,7 +18,7 @@ import Colors from '../../assets/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import ModalBuscar from '../../componentes/ModalBuscar';
 import API_URL from '../../utils/API_URL';
-import {redirectAdmin} from '../../utils/utils'
+import { redirectAdmin } from '../../utils/utils'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
@@ -35,10 +35,10 @@ const PantallaHome = () => {
   const [state, setState] = useContext(AuthContext);
   const [categorias, setCategorias] = useState<{ id: number; nombre: string }[]>([]);
   const [personasContratadas, setPersonasContratadas] = useState<
-  { id: number; nombre: string; oficio: string }[]
->([]);
+    { id: number; nombre: string; oficio: string }[]
+  >([]);
   const [historial, setHistorial] = useState<SolicitudHistorial[]>([]);
-  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]); 
+  const [solicitudesInfo, setSolicitudesInfo] = useState<Solicitud[]>([]);
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [mostrarModalBuscar, setMostrarModalBuscar] = useState(false);
   const [textoBusqueda, setTextoBusqueda] = useState('');
@@ -46,7 +46,7 @@ const PantallaHome = () => {
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
 
 
-  
+
 
   const handleBuscar = async () => {
     console.log("Buscando por:", textoBusqueda);
@@ -59,13 +59,13 @@ const PantallaHome = () => {
         },
       });
 
-        if (res.status === 204) {
-          console.error("No se encontraron resultados.");
-          setTextoBusqueda('');
-          return;
-        }
+      if (res.status === 204) {
+        console.error("No se encontraron resultados.");
+        setTextoBusqueda('');
+        return;
+      }
 
-    if (!res.ok) console.log('Error al obtener los datos');
+      if (!res.ok) console.log('Error al obtener los datos');
 
       const data = await res.json();
 
@@ -117,39 +117,39 @@ const PantallaHome = () => {
       await cerrarSesion();
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-    } 
+    }
   };
 
   const fetchUsuarioLogueado = async () => {
     const userId = await AsyncStorage.getItem('userId');
     const token = await AsyncStorage.getItem('accessToken');
     if (!userId || !token) return logout();
-  await verificarTrabajosPendientes(userId,token, setTrabajosNotificados);
-  await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
+    await verificarTrabajosPendientes(userId, token, setTrabajosNotificados);
+    await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
-useEffect(() => {
-  const init = async () => {
-    try {
-      const storedToken = await AsyncStorage.getItem('accessToken');
-      if (storedToken) {
-        console.log("El stored token es: ", storedToken);
-        const resultado = await obtenerCategorias(); 
-        setCategorias(resultado);
-        await fetchUsuarioLogueado();
-        await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
-      } else {
-        console.log('No se encontró token');
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('accessToken');
+        if (storedToken) {
+          console.log("El stored token es: ", storedToken);
+          const resultado = await obtenerCategorias();
+          setCategorias(resultado);
+          await fetchUsuarioLogueado();
+          await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
+        } else {
+          console.log('No se encontró token');
+        }
+      } catch (err) {
+        console.error("Error en init:", err);
+      } finally {
+        setCargandoContenido(false);
       }
-    } catch (err) {
-      console.error("Error en init:", err);
-    } finally {
-      setCargandoContenido(false);
-    }
-  };
+    };
 
-  init();
-}, []);
+    init();
+  }, []);
 
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
@@ -160,27 +160,26 @@ useEffect(() => {
     }
   }, [trabajosNotificados, snackbarVisible, trabajoActual]);
 
-if (cargandoContenido) return <PantallaCarga />;
+  if (cargandoContenido) return <PantallaCarga />;
 
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
 
-        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada}/>
+        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada} />
 
         {/* Encabezado */}
-            <NavBarSuperior
-              titulo="ChangApp"
-              showBackButton={false}            
-              rightButtonType="menu"            
-              onRightPress={toggleDesplegable}  
-              titleAlign="center"               
-              paddingHorizontal={16}            
-               iconSize={24}                   
-               navbarHeight={56}               
-            />
-
+        <NavBarSuperior
+          titulo="ChangApp"
+          showBackButton={false}
+          rightButtonType="menu"
+          onRightPress={toggleDesplegable}
+          titleAlign="center"
+          paddingHorizontal={16}
+          iconSize={24}
+          navbarHeight={56}
+        />
 
         <MenuDesplegable
           visible={mostrarDesplegable}
@@ -189,8 +188,11 @@ if (cargandoContenido) return <PantallaCarga />;
           onRedirectAdmin={redirectAdmin}
         />
 
-          
-              <FlatList
+        {cargandoContenido ? (
+          <PantallaCarga />
+        ) : (
+          <>
+            <FlatList
               ListHeaderComponent={
                 <>
                   {/* Buscador */}
@@ -230,7 +232,7 @@ if (cargandoContenido) return <PantallaCarga />;
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
               columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-        renderItem={({ item }) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity
                   style={EstilosHome.cardCategoria}
                   onPress={() => {
@@ -258,11 +260,13 @@ if (cargandoContenido) return <PantallaCarga />;
               onActionPress={() => navigation.navigate('Historial2')}
             />
 
-          {/* NavBar Inferior */}
-                 <NavBarInferior
-                   activeScreen="Home" // O el screen activo correspondiente
-                   onNavigate={handleNavigation}
-                 />
+            {/* NavBar Inferior */}
+            <NavBarInferior
+              activeScreen="Home" // O el screen activo correspondiente
+              onNavigate={handleNavigation}
+            />
+          </>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
