@@ -16,6 +16,7 @@ import { redirectAdmin } from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 
 const PerfilProveedor = () => {
@@ -46,6 +47,7 @@ const PerfilProveedor = () => {
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
+  const [cargando, setCargando] = useState(false);
 
   const formatearFecha = (fecha: string): string => {
   const [año, mes, dia] = fecha.split("-");
@@ -110,12 +112,14 @@ const PerfilProveedor = () => {
 
   //Agregar errores al snackbar 
   const iniciarChanguita = async () => {
+    setCargando(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
 
       if (!accessToken) {
         setMessage("Error");
         setVisible(true);
+        setCargando(false);
         return;
       }
       const response = await fetch(`${API_URL}/iniciar-changuita/`, {
@@ -140,17 +144,19 @@ const PerfilProveedor = () => {
         const idSolicitud = responseJson.id_solicitud;
         console.log("ID solicitud detalle: ", idSolicitud);
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
+        setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
-
       } else {
         const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
         setMessage(errorMsg);
         setVisible(true);
+        setCargando(false);
       }
     } catch (error) {
       console.error("Error inesperado al iniciar changuita:", error);
       setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
+      setCargando(false);
     }
   };
 
@@ -291,6 +297,10 @@ const PerfilProveedor = () => {
         <Text>{error}</Text>
       </SafeAreaView>
     );
+  }
+
+  if (cargando) {
+    return <PantallaCarga frase="Procesando..." />;
   }
 
   const bloquearUsuario = async (idUsuario: number) => {
