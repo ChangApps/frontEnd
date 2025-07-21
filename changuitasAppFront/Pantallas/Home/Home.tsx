@@ -45,9 +45,6 @@ const PantallaHome = () => {
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
 
-
-
-
   const handleBuscar = async () => {
     console.log("Buscando por:", textoBusqueda);
 
@@ -58,17 +55,13 @@ const PantallaHome = () => {
           Authorization: `Bearer ${storedToken}`,
         },
       });
-
       if (res.status === 204) {
         console.error("No se encontraron resultados.");
         setTextoBusqueda('');
         return;
       }
-
       if (!res.ok) console.log('Error al obtener los datos');
-
       const data = await res.json();
-
       console.log('Datos obtenidos:', data);
       setTextoBusqueda('');
       if (!data || data.length === 0) {

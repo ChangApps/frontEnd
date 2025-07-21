@@ -284,11 +284,7 @@ const PerfilProveedor = () => {
 
   // Mostrar la vista de carga o error
   if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </SafeAreaView>
-    );
+    return <PantallaCarga frase="Cargando perfil del proveedor" />;
   }
 
   if (error) {
@@ -320,7 +316,8 @@ const PerfilProveedor = () => {
       if (response.ok) {
         setMessage("Usuario bloqueado correctamente.");
         setVisible(true);
-        navigation.navigate('Home');
+        setTimeout(()=>{
+        navigation.navigate('Home');},1000);
       } else {
         setMessage("No se pudo bloquear al usuario.");
         setVisible(true);
@@ -402,9 +399,6 @@ const PerfilProveedor = () => {
             </TouchableWithoutFeedback>
           </Modal>
 
-          {/* Snackbar para mostrar mensajes */}
-          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
-
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
              <Button
@@ -482,6 +476,8 @@ const PerfilProveedor = () => {
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
           </View>
         </ScrollView>
+        {/* Snackbar para mostrar mensajes */}
+          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="PerfilProveedor" // O el screen activo correspondiente
