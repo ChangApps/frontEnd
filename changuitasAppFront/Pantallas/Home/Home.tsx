@@ -60,7 +60,12 @@ const PantallaHome = () => {
       });
 
         if (res.status === 204) {
-          console.error("No se encontraron resultados.");
+          console.log("No se encontraron resultados.");
+          navigation.navigate('ResultadosBusqueda', {
+          proveedores: [],
+          error: 'No se encontraron resultados para tu búsqueda.',
+          busquedaGeneral: false
+        });
           setTextoBusqueda('');
           return;
         }
@@ -84,7 +89,7 @@ const PantallaHome = () => {
         });
       }
     } catch (error) {
-      console.error('Error al obtener los datos:', error);
+      console.log('Error al obtener los datos:', error);
       setTextoBusqueda('');
     }
   };
