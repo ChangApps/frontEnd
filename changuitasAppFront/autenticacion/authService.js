@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../utils/API_URL';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 /**
  * Inicia sesión con el nombre de usuario y contraseña proporcionados.
  * @param {string} username 
@@ -88,20 +88,28 @@ export const renovarToken = async () => {
       await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
       return data.access;
     } else {
+       if ( Platform.OS=='web'){
+        alert('Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.');
+       }else{
         Alert.alert(
       'Error de conexión',
       'Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.',
       [{ text: 'Aceptar' }]
     );
+     }
       return null;
     }
   } catch (error) {
-      Alert.alert(
-      'Error de conexión',
-      'Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.',
-      [{ text: 'Aceptar' }]
-    );
-
+      if ( Platform.OS=='web'){
+        console.log("Catch");
+        alert('Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.');
+        }else{
+          Alert.alert(
+          'Error de conexión',
+          'Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.',
+          [{ text: 'Aceptar' }]
+            );
+      }
     return null;
   }
 }; 
