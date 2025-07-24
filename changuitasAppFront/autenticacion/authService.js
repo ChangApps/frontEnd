@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../utils/API_URL';
-
+import { Alert, Platform } from 'react-native';
 /**
  * Inicia sesión con el nombre de usuario y contraseña proporcionados.
  * @param {string} username 
@@ -30,7 +30,7 @@ export const handleLogin = async (username, password) => {
         throw new Error(data.detail || 'Nombre de usuario o contraseña incorrectos');
       }
     } catch (error) {
-      console.error('Error en handleLogin:', error.message);
+      console.log('Error en handleLogin:', error.message);
       throw error;
     }
   };
@@ -57,11 +57,11 @@ export const cerrarSesion = async () => {
       await AsyncStorage.clear();
     } else {
       const errorData = await response.json();
-      console.error('Error al cerrar sesión:', errorData);
+      console.log('Error al cerrar sesión:', errorData);
       throw new Error(errorData.detail || 'Error al cerrar sesión');
     }
   } catch (error) {
-    console.error('Error al realizar la solicitud de logout:', error);
+    console.log('Error al realizar la solicitud de logout:', error);
     await AsyncStorage.clear();
     throw error;
   }
@@ -88,12 +88,28 @@ export const renovarToken = async () => {
       await AsyncStorage.setItem('accessToken', data.access); // Almacena el nuevo token
       return data.access;
     } else {
-      const errorData = await response.json();
-      console.error('Error al renovar el token:', errorData);
+       if ( Platform.OS=='web'){
+        alert('Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.');
+       }else{
+        Alert.alert(
+      'Error de conexión',
+      'Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.',
+      [{ text: 'Aceptar' }]
+    );
+     }
       return null;
     }
   } catch (error) {
-    console.error('Error al intentar renovar el token:', error);
+      if ( Platform.OS=='web'){
+        console.log("Catch");
+        alert('Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.');
+        }else{
+          Alert.alert(
+          'Error de conexión',
+          'Ocurrió un error al intentar renovar tu sesión. Por favor, revisa tu conexión o vuelve a iniciar sesión.',
+          [{ text: 'Aceptar' }]
+            );
+      }
     return null;
   }
 }; 
