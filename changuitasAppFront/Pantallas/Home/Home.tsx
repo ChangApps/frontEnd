@@ -55,12 +55,20 @@ const PantallaHome = () => {
           Authorization: `Bearer ${storedToken}`,
         },
       });
-      if (res.status === 204) {
-        console.error("No se encontraron resultados.");
-        setTextoBusqueda('');
-        return;
-      }
-      if (!res.ok) console.log('Error al obtener los datos');
+
+        if (res.status === 204) {
+          console.log("No se encontraron resultados.");
+          navigation.navigate('ResultadosBusqueda', {
+          proveedores: [],
+          error: 'No se encontraron resultados para tu búsqueda.',
+          busquedaGeneral: false
+        });
+          setTextoBusqueda('');
+          return;
+        }
+
+    if (!res.ok) console.log('Error al obtener los datos');
+
       const data = await res.json();
       console.log('Datos obtenidos:', data);
       setTextoBusqueda('');
@@ -77,7 +85,7 @@ const PantallaHome = () => {
         });
       }
     } catch (error) {
-      console.error('Error al obtener los datos:', error);
+      console.log('Error al obtener los datos:', error);
       setTextoBusqueda('');
     }
   };
