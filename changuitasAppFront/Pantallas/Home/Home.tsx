@@ -157,7 +157,7 @@ const PantallaHome = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView edges={['top']} style={EstilosHome.safeContainer}>
+      <SafeAreaView style={EstilosHome.safeContainer}>
         <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
 
         <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada} />
