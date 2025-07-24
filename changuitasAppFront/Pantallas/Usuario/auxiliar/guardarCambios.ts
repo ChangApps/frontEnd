@@ -10,10 +10,11 @@ export const guardarCambios = async (
   imageUri: string,
   imageUriOriginal: string | null,
   showPasswordFields: boolean,
-  navigation: any,
   setMessage: (msg: string) => void,
-  setVisible: (visible: boolean) => void
+  setVisible: (visible: boolean) => void,
+  setCargando: (loading: boolean) => void // Nuevo parámetro
 ) => {
+  // Validaciones previas - si fallan, retorna inmediatamente sin success
   const quiereCambiarPassword =
     camposModificados.password ||
     camposModificados.password2 ||
@@ -27,13 +28,13 @@ export const guardarCambios = async (
     ) {
       setMessage('Por favor, complete todos los campos de contraseña.');
       setVisible(true);
-      return;
+      return { success: false };
     }
 
     if (camposModificados.password !== camposModificados.password2) {
       setMessage('Las contraseñas nuevas no coinciden.');
       setVisible(true);
-      return;
+      return { success: false };
     }
   }
 
@@ -42,7 +43,9 @@ export const guardarCambios = async (
     const userId = await AsyncStorage.getItem('userId');
 
     if (!accessToken || !userId) {
-      throw new Error('No se encontraron credenciales de usuario');
+      setMessage('No se encontraron credenciales de usuario');
+      setVisible(true);
+      return { success: false };
     }
 
     const formData = new FormData();
@@ -97,7 +100,7 @@ export const guardarCambios = async (
       (!imageUri || imageUri === imageUriOriginal)
     ) {
       Alert.alert('Sin cambios', 'No hay campos modificados para guardar.');
-      return;
+      return { success: false };
     }
 
     Object.keys(datosActualizados).forEach(key => {
@@ -113,6 +116,10 @@ export const guardarCambios = async (
       }
     });
 
+    // Realizar la petición al backend - AQUÍ es donde se muestra la pantalla de carga
+    // SOLO mostrar la pantalla de carga cuando vamos a hacer la petición real
+    setCargando(true);
+    
     const response = await axios.patch(`${API_URL}/usuarios/${userId}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -120,13 +127,22 @@ export const guardarCambios = async (
       },
     });
 
+    // Ocultar pantalla de carga después de la petición
+    setCargando(false);
+
     if (response.status === 200) {
-      Alert.alert('Éxito', 'Datos actualizados correctamente.');
-      navigation.navigate('Home');
+      setMessage('Cambios guardados exitosamente');
+      setVisible(true);
+      return { success: true };
     } else {
-      Alert.alert('Error', 'No se pudieron guardar los cambios.');
+      setMessage('No se pudieron guardar los cambios.');
+      setVisible(true);
+      return { success: false };
     }
   } catch (error: any) {
+    // Asegurar que se oculte la pantalla de carga si hubo error durante la petición
+    setCargando(false);
+    
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       const errorData = error.response.data;
       let errorMessage = '';
@@ -172,13 +188,16 @@ export const guardarCambios = async (
       errorMessage = translateErrors(errorData).trim();
       setMessage(errorMessage);
       setVisible(true);
+      return { success: false };
     } else if (error.message) {
       setMessage(error.message);
       setVisible(true);
+      return { success: false };
     } else {
       setMessage('Ocurrió un error inesperado.');
       setVisible(true);
       Alert.alert('Error', 'Ocurrió un problema con la conexión.');
+      return { success: false };
     }
   }
 };
