@@ -32,3 +32,6 @@ npm install @react-native-picker/picker
 #Dependencias
  npm install react-native-gesture-handler
  npm install form-data
+
+#Para cambiar el color de barra de navegacion
+ npx expo install expo-navigation-bar
