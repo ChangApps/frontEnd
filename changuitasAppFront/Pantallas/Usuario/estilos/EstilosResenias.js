@@ -10,8 +10,6 @@ const EstilosResenias = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 20,
-        marginTop:30,
     },
     header: {
         flexDirection: 'row',

@@ -134,7 +134,7 @@ const CalificarTarea = () => {
   return (
     <SafeAreaView edges={['top']} style={styles.safeContainer}>
       {cargando ? (
-        <PantallaCarga />
+        <PantallaCarga frase="Procesando..."/>
       ) : (
         <TouchableWithoutFeedback onPress={() => {
           if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú

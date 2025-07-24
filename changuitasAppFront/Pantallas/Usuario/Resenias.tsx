@@ -12,6 +12,8 @@ import { NavBarSuperior } from "../../componentes/NavBarSuperior";
 import { NavBarInferior } from "../../componentes/NavBarInferior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from "../../componentes/PantallaCarga";
+
 
 const Resenias = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -155,7 +157,7 @@ const Resenias = () => {
                 )}
 
                 {loading ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <PantallaCarga frase="Cargando reseñas..." />
                 ) : message ? (
                     <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
                 ) : (

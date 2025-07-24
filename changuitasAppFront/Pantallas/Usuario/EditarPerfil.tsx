@@ -24,6 +24,7 @@ import { Button } from '../../componentes/Buttons';
 import Colors from '../../assets/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -46,6 +47,7 @@ const EditarPerfil = () => {
   const [mostrarDireccion, setMostrarDireccion] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(false);
 
   const datosOriginales: { [key: string]: any } = {
     first_name: '',
@@ -93,7 +95,7 @@ const EditarPerfil = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-    } 
+    }
   };
 
   // Función para obtener la foto de perfil desde el backend
@@ -118,15 +120,15 @@ const EditarPerfil = () => {
     } catch (error) {
       console.error('Error al obtener la foto de perfil:', error);
       setMessage('Error: No se pudo cargar la imagen de perfil.');
-      setVisible(true); 
+      setVisible(true);
     }
   };
 
   // Función que maneja la URI luego de seleccionar la imagen
-    const manejarImagenSeleccionada = async (uri: string) => {
-      setImageUri(uri);
-      await guardarImagen(uri, imageUriOriginal, setMessage, setVisible);
-    };
+  const manejarImagenSeleccionada = async (uri: string) => {
+    setImageUri(uri);
+    await guardarImagen(uri, imageUriOriginal, setMessage, setVisible);
+  };
 
   // Llama a obtenerFotoPerfil al montar el componente
   useEffect(() => {
@@ -175,6 +177,10 @@ const EditarPerfil = () => {
     }
   };
 
+  if (cargando) {
+    return <PantallaCarga frase="Guardando cambios..." />;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -185,7 +191,6 @@ const EditarPerfil = () => {
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
           <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
           <BarraPestanasPerfil />
-
 
           {/* Menú Desplegable */}
           <MenuDesplegable
@@ -203,7 +208,7 @@ const EditarPerfil = () => {
                 style={EstilosEditarPerfil.imagenUsuario}
               />
             </TouchableOpacity>
-           {Platform.OS === 'web' ? (
+            {Platform.OS === 'web' ? (
               <>
                 <TouchableOpacity
                   onPress={() =>
@@ -213,7 +218,7 @@ const EditarPerfil = () => {
                   <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
                 </TouchableOpacity>
 
-              <Modal
+                <Modal
                   animationType="fade"
                   transparent={true}
                   visible={cropperVisible}
@@ -228,7 +233,7 @@ const EditarPerfil = () => {
                             setImageUri(recortadaUri);
                             setCropperVisible(false);
                             setImagenSeleccionada(null);
-                            guardarImagen(recortadaUri,imageUriOriginal,setMessage,setVisible);
+                            guardarImagen(recortadaUri, imageUriOriginal, setMessage, setVisible);
                           }}
                           setCropperVisible={setCropperVisible}
                         />
@@ -238,13 +243,13 @@ const EditarPerfil = () => {
                 </Modal>
               </>
             ) : (
-            <TouchableOpacity
-              onPress={() => {
-                mostrarOpcionesSelectorImagen(manejarImagenSeleccionada, setImageFile, setCropperVisible)
-              }}
-            >
-              <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  mostrarOpcionesSelectorImagen(manejarImagenSeleccionada, setImageFile, setCropperVisible)
+                }}
+              >
+                <Text style={EstilosEditarPerfil.cambiarFotoTexto}>Cambiar foto</Text>
+              </TouchableOpacity>
             )}
           </View>
 
@@ -333,7 +338,6 @@ const EditarPerfil = () => {
               </>
             )}
 
-
             <TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
 
               {/* Botón para mostrar/ocultar campos de contraseña */}
@@ -368,7 +372,6 @@ const EditarPerfil = () => {
                     onChangeText={(valor) => manejarCambioCampo('password', valor)}
                   />
 
-
                   <Text style={EstilosEditarPerfil.label}>Confirmar nueva contraseña</Text>
 
                   <PasswordInput
@@ -384,22 +387,36 @@ const EditarPerfil = () => {
 
           {/* Botón de Guardar Cambios*/}
           {/* Condición para mostrar el botón solo si el Snackbar no está visible */}
-          {!visible && (
-            <View style={{ alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <Button
               titulo="Guardar Cambios"
-              onPress={() =>
-                guardarCambios(
-                  camposModificados,
-                  datosOriginales,
-                  imageUri,
-                  imageUriOriginal,
-                  showPasswordFields,
-                  navigation,
-                  setMessage,
-                  setVisible
-                )
-              }
+              onPress={async () => {
+                try {
+                  const resultado = await guardarCambios(
+                    camposModificados,
+                    datosOriginales,
+                    imageUri,
+                    imageUriOriginal,
+                    showPasswordFields,
+                    setMessage,
+                    setVisible,
+                    setCargando // Pasamos setCargando a la función
+                  );
+
+                  // Si fue exitoso, navegar al home inmediatamente
+                  if (resultado && resultado.success) {
+                    // Esperar para que el usuario vea el mensaje de éxito
+                    setTimeout(() => {
+                      navigation.navigate('Home');
+                    }, 1500);
+                  }
+                  // Si hubo error, el mensaje ya se muestra via setMessage/setVisible
+
+                } catch (error) {
+                  setMessage('Ocurrió un error inesperado.');
+                  setVisible(true);
+                }
+              }}
               backgroundColor={Colors.naranja}
               textColor={Colors.negro}
               textSize={16}
@@ -407,16 +424,15 @@ const EditarPerfil = () => {
               borderRadius={50}
               width="80%"
             />
-            </View>
-          )}
-
-          {/* CustomSnackbar */}
-          <CustomSnackbar
-            visible={visible}
-            setVisible={setVisible}
-            message={message}
-          />
+          </View>
         </ScrollView>
+
+        {/* CustomSnackbar */}
+        <CustomSnackbar
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
+        />
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="EditarPerfil" // O el screen activo correspondiente

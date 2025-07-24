@@ -2,11 +2,11 @@ import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import Colors from '../assets/Colors';
 
-const PantallaCarga = () => {
+const PantallaCarga = ({ frase = "Cargando..." }) => {
   return (
     <View style={styles.contenedor}>
       <ActivityIndicator size="large" color={Colors.naranja} />
-      <Text style={styles.texto}>Cargando...</Text>
+      <Text style={styles.texto}>{frase}</Text>
     </View>
   );
 };

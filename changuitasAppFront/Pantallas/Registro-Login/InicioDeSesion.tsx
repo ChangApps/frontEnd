@@ -13,6 +13,7 @@ import PasswordInput from "../../componentes/inputs/PasswordInput";
 import { Button } from "../../componentes/Buttons";
 import Colors from "../../assets/Colors";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from "../../componentes/PantallaCarga";
 
 const InicioDeSesion = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -22,6 +23,7 @@ const InicioDeSesion = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { width } = useWindowDimensions();
   const [state, setState] = useContext(AuthContext);
+  const [cargando, setCargando] = useState(false);
 
 
   const login = async () => {
@@ -30,7 +32,7 @@ const InicioDeSesion = () => {
       setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.');
       return;
     }
-
+    setCargando(true);
     try {
       // Realiza la solicitud POST a la api
       const { data } = await axios.post(`${API_URL}/login/`, { username, password });
@@ -43,6 +45,7 @@ const InicioDeSesion = () => {
         } else {
           setErrorMessage(data.error);  // Muestra cualquier otro error que pueda venir
         }
+        setCargando(false);
         return;  // Sale si hay un error en los datos recibidos
       }
 
@@ -82,8 +85,14 @@ const InicioDeSesion = () => {
         // Si ocurre un error inesperado o de red
         setErrorMessage(error.message || 'Error de red o servidor.');
       }
+    } finally {
+      setCargando(false);
     }
   };
+
+  if (cargando) {
+    return <PantallaCarga frase="Iniciando sesión..." />;
+  }
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosInicioDeSesion.degradado}>
