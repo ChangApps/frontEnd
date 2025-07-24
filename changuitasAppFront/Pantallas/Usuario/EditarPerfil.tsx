@@ -266,7 +266,12 @@ const EditarPerfil = () => {
 
 
             <TouchableOpacity onPress={() => setMostrarDatosContacto(!mostrarDatosContacto)}>
-              <Text style={EstilosEditarPerfil.tituloSeccion}>Datos de Contacto</Text>
+              <Text style={EstilosEditarPerfil.tituloSeccion}>
+                Datos de Contacto
+                  <Text style={EstilosEditarPerfil.flechaGris}>
+                    {mostrarDatosContacto ? '  ˄' : '  ˅'}
+                  </Text>
+              </Text>
             </TouchableOpacity>
             {mostrarDatosContacto && (
               <>
@@ -286,7 +291,12 @@ const EditarPerfil = () => {
             )}
 
             <TouchableOpacity onPress={() => setMostrarDireccion(!mostrarDireccion)}>
-              <Text style={EstilosEditarPerfil.tituloSeccion}>Dirección</Text>
+              <Text style={EstilosEditarPerfil.tituloSeccion}>
+                Dirección
+                  <Text style={EstilosEditarPerfil.flechaGris}>
+                    {mostrarDireccion ? '  ˄' : '  ˅'}
+                  </Text>
+              </Text>
             </TouchableOpacity>
             {mostrarDireccion && (
               <>
@@ -333,6 +343,9 @@ const EditarPerfil = () => {
               >
                 <Text style={[EstilosEditarPerfil.tituloSeccion, { alignSelf: 'flex-start' }]}>
                   {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
+                  <Text style={EstilosEditarPerfil.flechaGris}>
+                    {showPasswordFields ? '  ˄' : '  ˅'}
+                  </Text>
                 </Text>
               </TouchableOpacity>
 

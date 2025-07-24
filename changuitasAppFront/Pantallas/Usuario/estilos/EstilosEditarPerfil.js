@@ -181,6 +181,9 @@ const EstilosEditarPerfil = StyleSheet.create({
     elevation: 5,
     maxWidth: "90%",
   },
+  flechaGris:{
+    color:Colors.grisTexto,
+  }
 });
 
 export default EstilosEditarPerfil;

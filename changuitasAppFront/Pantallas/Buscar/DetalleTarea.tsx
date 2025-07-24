@@ -117,7 +117,7 @@ const DetalleTarea = () => {
     }
   };
 
-  const cancelarChanguita = async () => {
+  const cancelarChanguita = async (motivo:string) => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
       await fetch(`${API_URL}/cancelar-changuita/`, {
@@ -126,7 +126,10 @@ const DetalleTarea = () => {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ solicitud_id: idSolicitud })
+        body: JSON.stringify({ 
+          solicitud_id: idSolicitud,
+          motivo,
+        })
       });
       navigation.navigate('Home');
     } catch {
@@ -255,9 +258,8 @@ const DetalleTarea = () => {
             <ModalCancelarChanguita
               visible={mostrarModalCancelar}
               onClose={() => setMostrarModalCancelar(false)}
-              onConfirm={(motivo) => {
-                console.log('Changuita cancelada por:', motivo);
-                cancelarChanguita();
+              onConfirm={async(motivo) => {
+                await cancelarChanguita(motivo);
                 setMostrarModalCancelar(false);
                 setMotivoSeleccionado('');
               }}
