@@ -13,6 +13,7 @@ import { NavBarInferior } from "../../componentes/NavBarInferior";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from "../../componentes/PantallaCarga";
+import Colors from "../../assets/Colors";
 
 
 const Resenias = () => {
@@ -30,16 +31,11 @@ const Resenias = () => {
             setState({ token: "" });
             await cerrarSesion(); // Simula el proceso de cierre de sesión
             console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-        } catch (error: any) {
-            console.log('Error en el cierre de sesión:', error.message);
-            Alert.alert("Error", error.message);
-        } finally {
-            console.log("Intentando ir al iniciar sesion ");
-            navigation.reset({
-                index: 0,
-                routes: [{ name: "InicioDeSesion" }],
-            });
-        }
+        } catch (error) {
+            console.log('Error en el cierre de sesión:', error);
+            setMessage('Error al cerrar sesion');
+            setVisible(true);
+        } 
     };
 
     const toggleDesplegable = () => {
@@ -68,6 +64,13 @@ const Resenias = () => {
                 },
             });
 
+         
+               if (responseSolicitudUsuario.status === 404) {
+                console.log("No hay reseñas disponibles");
+                setMessage('No hay reseñas disponibles');
+                return; // Opcional salir de la funcion 
+                }
+
             if (!responseSolicitudUsuario.ok) {
                 throw new Error('Error en la respuesta del servidor');
             }
@@ -84,9 +87,8 @@ const Resenias = () => {
                 setVisible(true);
             }
 
-        } catch (error: any) {
-            setMessage('No hay reseñas disponibles');
-            setVisible(true);
+        } catch (error) {
+           console.log("Error al obtener las resenias");
         } finally {
             setLoading(false);
         }
@@ -97,8 +99,12 @@ const Resenias = () => {
             <View style={EstilosResenias.headerResenia}>
                 <Text style={EstilosResenias.categoria}>Nombre del servicio: {item.nombreServicio}</Text>
                 <Text style={EstilosResenias.categoria}>Calificado por: {item.cliente_nombre}</Text>
-                <Text style={EstilosResenias.categoria}>Comentario: {item.comentario}</Text>
-                <Text style={EstilosResenias.fecha}>Fecha de Valoración: {item.fechaValoracion}</Text>
+                  <Text style={EstilosResenias.categoria}>
+                    Comentario: {item.comentario ? item.comentario : 'Sin comentarios'}
+                </Text>
+                <Text style={EstilosResenias.fecha}>
+                    Fecha de Valoración: {item.fechaValoracion ? item.fechaValoracion : 'No disponible'}
+                </Text>
             </View>
             <View style={EstilosResenias.rating}>
                 <Text style={EstilosResenias.valoracion}>Valoración: {item.valoracion}</Text>
@@ -108,7 +114,7 @@ const Resenias = () => {
                         key={i}
                         name="star"
                         size={16}
-                        color={i < item.valoracion ? "FC6A30" : "#CCCCCC"} // Estrella llena o vacía
+                        color={i < item.valoracion ? Colors.naranja : Colors.grisTexto} // Estrella llena o vacía
                     />
                 ))}
             </View>

@@ -30,6 +30,7 @@ const AuthProvider = ({ children }) => {
 
   // Renueva el token automáticamente cada 60 segundos
   useEffect(() => {
+    if (!state.token || !state.usuario) return; // No hacer nada si no hay sesión activa
     const interval = setInterval(async () => {
       try {
         const nuevoToken = await renovarToken(); 
