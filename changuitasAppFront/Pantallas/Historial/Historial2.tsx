@@ -276,7 +276,7 @@ const Historial2 = () => {
           usuarios={clientes}
           navigation={navigation}
           claveUsuario="cliente"
-          mensajeVacio="No haz realizado ningún trabajo."
+          mensajeVacio="No haz realizado ningún trabajo"
         />
 
         <CustomSnackbar

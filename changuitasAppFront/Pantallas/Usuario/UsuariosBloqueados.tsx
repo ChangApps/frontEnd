@@ -166,7 +166,7 @@ const UsuariosBloqueados = () => {
                   style={EstilosUsuariosBloqueados.noResultsImage}
                   resizeMode="contain"
                 />
-                <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text>
+                <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tenés usuarios bloqueados</Text>
               </View>
 
             ) : (

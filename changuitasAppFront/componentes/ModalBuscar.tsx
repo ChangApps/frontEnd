@@ -105,7 +105,7 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
     const mensajeError = error?.response?.data?.message;
     navigation.navigate('ResultadosBusqueda', {
       proveedores: [],
-      error: mensajeError || 'Error al buscar proveedores.',
+      error: mensajeError || 'No se encontraron proveedores para los filtros seleccionados',
       busquedaGeneral: false
     });
   } 

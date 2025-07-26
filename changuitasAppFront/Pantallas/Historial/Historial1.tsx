@@ -281,7 +281,7 @@ const Historial1 = () => {
           usuarios={proveedores}
           navigation={navigation}
           claveUsuario="proveedor_id"
-          mensajeVacio="No haz contratado ningún trabajo."
+          mensajeVacio="No haz contratado ningún trabajo"
         />
 
         <CustomSnackbar
