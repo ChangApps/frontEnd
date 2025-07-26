@@ -118,7 +118,7 @@ const handleProveedorPress = (proveedor: any) => {
   const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosResultadosBusqueda.safeContainer}>
+    <SafeAreaView style={EstilosResultadosBusqueda.safeContainer}>
       <View style={EstilosResultadosBusqueda.container}>
         <NavBarSuperior
           titulo="Resultados"
@@ -128,8 +128,15 @@ const handleProveedorPress = (proveedor: any) => {
         />
 
         {error ? (
-          <View style={EstilosResultadosBusqueda.errorContainer}>
-            <Text style={EstilosResultadosBusqueda.errorText}>{error}</Text>
+          <View style={EstilosResultadosBusqueda.noResultsContainer}>
+            <Image
+              source={require('./estilos/list-is-empty.png')}
+              style={EstilosResultadosBusqueda.noResultsImage}
+              resizeMode="contain"
+            />
+            <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>
+              {error}
+            </Text>
           </View>
         ) : proveedoresFiltrados.length === 0 ? (
           <View style={EstilosResultadosBusqueda.noResultsContainer}>
@@ -139,7 +146,7 @@ const handleProveedorPress = (proveedor: any) => {
               resizeMode="contain"
             />
             <Text style={EstilosResultadosBusqueda.mensajeNoUsuarios}>
-              No se encontraron proveedores para los filtros seleccionados.
+              No se encontraron proveedores para los filtros seleccionados
             </Text>
           </View>
         ) : (

@@ -98,7 +98,7 @@ const Verificacion1Mail = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosVerificacion1Mail.safeContainer}>
+    <SafeAreaView style={EstilosVerificacion1Mail.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion1Mail.degradado}>
         <View style={EstilosVerificacion1Mail.contenedor}>
           <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>

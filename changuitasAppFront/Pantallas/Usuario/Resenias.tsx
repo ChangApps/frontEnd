@@ -142,7 +142,7 @@ const Resenias = () => {
     };
 
     return (
-        <SafeAreaView edges={['top']} style={EstilosResenias.safeContainer}>
+        <SafeAreaView style={EstilosResenias.safeContainer}>
             <View style={EstilosResenias.container}>
                 {/* NavBar Superior */}
                 <NavBarSuperior

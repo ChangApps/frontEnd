@@ -147,7 +147,7 @@ const UsuariosBloqueados = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosUsuariosBloqueados.safeContainer}>
+      <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
         <ScrollView contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
@@ -166,7 +166,7 @@ const UsuariosBloqueados = () => {
                   style={EstilosUsuariosBloqueados.noResultsImage}
                   resizeMode="contain"
                 />
-                <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tienes usuarios bloqueados.</Text>
+                <Text style={EstilosUsuariosBloqueados.mensajeNoUsuarios}>No tenés usuarios bloqueados</Text>
               </View>
 
             ) : (

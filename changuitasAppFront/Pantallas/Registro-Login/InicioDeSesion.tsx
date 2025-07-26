@@ -96,7 +96,7 @@ const InicioDeSesion = () => {
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosInicioDeSesion.degradado}>
-      <SafeAreaView edges={['top']} style={EstilosInicioDeSesion.safeContainer}>
+      <SafeAreaView style={EstilosInicioDeSesion.safeContainer}>
         <View style={[EstilosInicioDeSesion.contenedor, width > 600 && EstilosInicioDeSesion.contenedorWeb]}>
           <View style={EstilosInicioDeSesion.encabezado}>
             <Text style={EstilosInicioDeSesion.titulo}>Iniciar sesión</Text>

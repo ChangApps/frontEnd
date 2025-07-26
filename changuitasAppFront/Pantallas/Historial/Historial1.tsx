@@ -248,7 +248,7 @@ const Historial1 = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosHistorial1.safeContainer}>
+      <SafeAreaView style={EstilosHistorial1.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
           titulo="Historial"
@@ -281,7 +281,7 @@ const Historial1 = () => {
           usuarios={proveedores}
           navigation={navigation}
           claveUsuario="proveedor_id"
-          mensajeVacio="No haz contratado ningún trabajo."
+          mensajeVacio="No haz contratado ningún trabajo"
         />
 
         <CustomSnackbar

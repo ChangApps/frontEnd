@@ -62,7 +62,7 @@ const RecuperarNombreUsuario = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosRecuperarNombreUsuario.safeContainer}>
+    <SafeAreaView style={EstilosRecuperarNombreUsuario.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarNombreUsuario.degradado}>
         <View style={EstilosRecuperarNombreUsuario.contenedor}>
           <View style={[EstilosRecuperarNombreUsuario.contenidoResponsivo, width > 600 && EstilosRecuperarNombreUsuario.contenidoWeb]}>

@@ -210,7 +210,7 @@ const DetalleTarea = () => {
   }
   
   return (
-    <SafeAreaView edges={['top']} style={EstilosDetalleTarea.safeContainer}>
+    <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
       <View style={{ flex: 1 }}>
         <ScrollView
           contentContainerStyle={{ paddingBottom: 100 }}

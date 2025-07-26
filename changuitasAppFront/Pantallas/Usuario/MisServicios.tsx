@@ -165,7 +165,7 @@ const MisServicios = () => {
 
     const EmptyComponent = () => (
     <View style={EstilosMisServicios.noResultsContainer}>
-      <Text style={EstilosMisServicios.sinServicios}>Aún no tienes servicios vinculados.</Text>
+      <Text style={EstilosMisServicios.sinServicios}>Aún no tenés servicios vinculados</Text>
       <Image
         source={require('./estilos/bored.png')}
         style={EstilosMisServicios.noResultsImage}

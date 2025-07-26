@@ -217,7 +217,7 @@ const AgregarServicio2 = () => {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosAgregarServicio2.safeContainer}>
+    <SafeAreaView style={EstilosAgregarServicio2.safeContainer}>
       {/* NavBar Superior */}
       <NavBarSuperior
         titulo="Agregar un servicio"

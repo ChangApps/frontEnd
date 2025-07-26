@@ -97,7 +97,7 @@ const RecuperarContrasena2 = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosRecuperarContrasena2.safeContainer}>
+    <SafeAreaView style={EstilosRecuperarContrasena2.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRecuperarContrasena2.degradado}>
         <View style={EstilosRecuperarContrasena2.contenedor}>
           <View style={[EstilosRecuperarContrasena2.contenidoResponsivo, width > 600 && EstilosRecuperarContrasena2.contenidoWeb]}>

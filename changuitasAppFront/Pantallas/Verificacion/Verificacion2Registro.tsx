@@ -153,7 +153,7 @@ const Verificacion2Registro = () => {
 const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosVerificacion2.safeContainer}>
+    <SafeAreaView style={EstilosVerificacion2.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion2.degradado}>
       <View style={EstilosVerificacion2.contenedor}>
       <View style={[EstilosVerificacion2.contenidoResponsivo, width > 600 && EstilosVerificacion2.contenidoWeb]}>
