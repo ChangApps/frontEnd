@@ -242,7 +242,7 @@ const Historial2 = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosHistorial2.safeContainer}>
+      <SafeAreaView style={EstilosHistorial2.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
           titulo="Historial"

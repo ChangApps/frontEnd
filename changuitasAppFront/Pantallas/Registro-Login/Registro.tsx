@@ -190,7 +190,7 @@ const Registro = () => {
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
-      <SafeAreaView edges={['top']} style={EstilosRegistro.safeContainer}>
+      <SafeAreaView style={EstilosRegistro.safeContainer}>
         <ScrollView>
           <View style={EstilosRegistro.contenedor}>
             <View style={[EstilosRegistro.contenidoResponsivo, width > 600 && EstilosRegistro.contenidoWeb]}>

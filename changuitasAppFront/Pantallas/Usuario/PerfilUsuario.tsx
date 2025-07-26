@@ -155,7 +155,7 @@ const PerfilUsuario: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
-      <SafeAreaView edges={['top']} style={EstilosPerfilUsuario.safeContainer}>
+      <SafeAreaView style={EstilosPerfilUsuario.safeContainer}>
         <ScrollView contentContainerStyle={EstilosPerfilUsuario.scrollContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />

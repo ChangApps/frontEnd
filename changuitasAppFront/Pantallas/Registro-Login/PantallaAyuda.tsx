@@ -16,7 +16,7 @@ const PantallaAyuda = () => {
   const { width } = useWindowDimensions();
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosPantallaAyuda.safeContainer}>
+    <SafeAreaView style={EstilosPantallaAyuda.safeContainer}>
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosPantallaAyuda.degradado}>
         <ScrollView>
           <View style={[EstilosPantallaAyuda.contenidoResponsivo, width > 600 && EstilosPantallaAyuda.contenidoWeb]}>

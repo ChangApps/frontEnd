@@ -118,7 +118,7 @@ const handleProveedorPress = (proveedor: any) => {
   const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
 
   return (
-    <SafeAreaView edges={['top']} style={EstilosResultadosBusqueda.safeContainer}>
+    <SafeAreaView style={EstilosResultadosBusqueda.safeContainer}>
       <View style={EstilosResultadosBusqueda.container}>
         <NavBarSuperior
           titulo="Resultados"

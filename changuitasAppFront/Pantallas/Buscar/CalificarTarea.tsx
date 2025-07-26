@@ -132,7 +132,7 @@ const CalificarTarea = () => {
   const startSize = Platform.OS === 'web' ? 40 : 30;
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeContainer}>
+    <SafeAreaView style={styles.safeContainer}>
       {cargando ? (
         <PantallaCarga frase="Procesando..."/>
       ) : (

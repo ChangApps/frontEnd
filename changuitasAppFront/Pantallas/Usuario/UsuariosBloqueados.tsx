@@ -147,7 +147,7 @@ const UsuariosBloqueados = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosUsuariosBloqueados.safeContainer}>
+      <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
         <ScrollView contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />

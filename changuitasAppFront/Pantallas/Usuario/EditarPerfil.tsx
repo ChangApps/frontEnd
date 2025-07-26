@@ -185,7 +185,7 @@ const EditarPerfil = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosEditarPerfil.safeContainer}>
+      <SafeAreaView style={EstilosEditarPerfil.safeContainer}>
         <ScrollView contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
           {/* Header con Perfil*/}
           <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
