@@ -26,7 +26,7 @@ export const obtenerCategorias = async (): Promise<{ id: number; nombre: string 
 
     return categoriasFormateadas;
   } catch (error) {
-    console.error('Error al cargar categorías:', error);
+    console.log('Error al cargar categorías:', error);
     return [];
   }
 };

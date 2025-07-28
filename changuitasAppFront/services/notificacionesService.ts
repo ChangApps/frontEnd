@@ -39,7 +39,7 @@ export const verificarTrabajosPendientes = async (
       setTrabajosNotificados(nuevos);
     }
   } catch (error) {
-    console.error("Error al verificar trabajos pendientes:", error);
+    console.log("Error al verificar trabajos pendientes:", error);
   }
 };
 

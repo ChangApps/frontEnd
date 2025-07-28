@@ -18,6 +18,7 @@ import DatosPersonalesUsuario from '../../componentes/perfilesUsuarios/DatosPers
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import  {redirectAdmin} from '../../utils/utils';
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -68,23 +69,15 @@ const PerfilUsuario: React.FC = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
+      setMessage('Error al cerrar sesión');
+      setVisible(true);
+    } 
   };
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
-  };
-
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
   };
 
   useEffect(() => {
@@ -94,7 +87,7 @@ const PerfilUsuario: React.FC = () => {
   const fetchUsuario = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('Token obtenido de AsyncStorage:', accessToken);
+      console.log('PerfilUsuario: Token obtenido de AsyncStorage:', accessToken);
 
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -102,8 +95,6 @@ const PerfilUsuario: React.FC = () => {
 
       const userId = await AsyncStorage.getItem('userId');
       setUsuarioId(userId ?? ""); // Si es null, se asigna ""
-
-      console.log('ID del usuario extraído:', userId);
 
       const response = await fetch(`${API_URL}/usuarios/${userId}/`, {
         method: 'GET',
@@ -113,19 +104,17 @@ const PerfilUsuario: React.FC = () => {
         },
       });
 
-      console.log('Response status:', response.status);
-
+  
       if (!response.ok) {
         throw new Error(`Error al obtener el usuario: ${response.status}`);
       }
 
       const data: Usuario = await response.json();
-      console.log('Datos del usuario recibidos:', data);
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
 
-    } catch (error: any) {
-      console.error('Error al cargar datos del usuario:', error);
+    } catch (error) {
+      console.log('Error al cargar datos del usuario:', error);
       setMessage('Error al cargar datos del usuario');
       setVisible(true);
     } finally {

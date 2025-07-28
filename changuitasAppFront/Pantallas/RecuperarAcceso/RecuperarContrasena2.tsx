@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native";
+import {Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -26,7 +26,6 @@ const RecuperarContrasena2 = () => {
 
   // Mostrar los datos pasados desde la pantalla anterior
   useEffect(() => {
-    console.log('Entrando al useEffect de contrasena2');
     console.log('Email recibido:', email);
   }, [email]);
 
@@ -35,7 +34,8 @@ const RecuperarContrasena2 = () => {
     try {
       // Verifica que el email esté presente antes de hacer la solicitud
       if (!email) {
-        Alert.alert("Error", "El email es requerido.");
+        setMessage("Error, El email es requerido.");
+        setVisible(true);
         return;
       }
 
@@ -47,10 +47,9 @@ const RecuperarContrasena2 = () => {
 
       const data = await response.json();
       if (response.ok) {
-        console.log("idObtenido: ", data.id);
         navigation.navigate('RecuperarContrasena3', { id: data.id });
       } else {
-        Alert.alert("Error", "No se pudo obtener el ID.");
+        console.log("Error", "No se pudo obtener el ID.");
       }
     } catch (error) {
       setMessage("Error de conexión. Inténtalo de nuevo.");
@@ -64,7 +63,6 @@ const RecuperarContrasena2 = () => {
 
     // Verifica si el código es un número válido
     if (isNaN(codigoInt)) {
-      Alert.alert("Error", "Por favor ingresa un código válido.");
       setMessage("El código debe ser un número.");
       setVisible(true);
       return;
@@ -79,8 +77,6 @@ const RecuperarContrasena2 = () => {
 
       const data = await response.json();
       if (response.ok) {
-        console.log("Código válido");
-        Alert.alert("Éxito", "Código válido");
         setMessage("El código es válido");
         setVisible(true);
         obtenerId(); // Llama a la función obtenerId después de la validación

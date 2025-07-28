@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Switch, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, Switch, Platform } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { Picker } from '@react-native-picker/picker';
@@ -13,6 +13,7 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ReactSwitch from 'react-switch';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -36,6 +37,8 @@ const AgregarServicio2 = () => {
     Sábado: { inicio: '', fin: '' },
     Domingo: { inicio: '', fin: '' },
   });
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
 
   // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
   useEffect(() => {
@@ -114,7 +117,8 @@ const AgregarServicio2 = () => {
   };
   const manejarGuardarServicio = async (datosSeleccionados: any) => {
     if (!datosSeleccionados) {
-      Alert.alert('Error', 'No hay datos para guardar.');
+      setMessage('Error, No hay datos para guardar.');
+      setVisible(true);
       return;
     }
 
@@ -155,11 +159,12 @@ const AgregarServicio2 = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Detalles del error:", data);
+        console.log("Detalles del error:", data);
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      Alert.alert('Éxito', 'Servicio creado exitosamente');
+     setMessage('Servicio guardado exitosamente.');
+     setVisible(true);
 
       // Proceso de vinculación como ya tenés:
       const servicio = data.id || data[0]?.id;
@@ -185,14 +190,14 @@ const AgregarServicio2 = () => {
         const datos = await respuesta.json();
         console.log('Vinculación exitosa:', datos);
       } else {
-        console.error('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
+        console.log('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
       }
 
       navigation.navigate('MisServicios');
-    } catch (error: any) {
-      console.error('Error al guardar el servicio:', error);
-      const errorMessage = error.message || 'Error desconocido';
-      Alert.alert('Error', `No se pudo crear el servicio: ${errorMessage}`);
+    } catch (error) {
+      console.log('Error al guardar el servicio:', error);
+      setMessage('Error al guardar el servicio. Por favor, inténtalo de nuevo.');
+      setVisible(true);
     }
   };
 
@@ -327,6 +332,8 @@ const AgregarServicio2 = () => {
         activeScreen="AgregarServicio2" // O el screen activo correspondiente
         onNavigate={handleNavigation}
       />
+
+     <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
     </SafeAreaView>
   );
 };

@@ -118,7 +118,7 @@ const EditarPerfil = () => {
       setImageUri(uri);
       setImageUriOriginal(uri); // Guardar la original para compararla
     } catch (error) {
-      console.error('Error al obtener la foto de perfil:', error);
+      console.log('Error al obtener la foto de perfil:', error);
       setMessage('Error: No se pudo cargar la imagen de perfil.');
       setVisible(true);
     }

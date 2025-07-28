@@ -71,17 +71,11 @@ const PerfilProveedor = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } 
   };
 
   useEffect(() => {
@@ -95,7 +89,7 @@ const PerfilProveedor = () => {
           console.log("Perfil de otro ID del usuario obtenido:", userIdNumerico);
         }
       } catch (error) {
-        console.error("Error al obtener los datos de AsyncStorage:", error);
+        console.log("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -153,7 +147,7 @@ const PerfilProveedor = () => {
         setCargando(false);
       }
     } catch (error) {
-      console.error("Error inesperado al iniciar changuita:", error);
+      console.log("Error inesperado al iniciar changuita:", error);
       setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
       setCargando(false);
@@ -256,8 +250,8 @@ const PerfilProveedor = () => {
       setUsuario(dataUsuario);
       setImageUri(dataUsuario.fotoPerfil || 'https://via.placeholder.com/80');
 
-    } catch (error: any) {
-      console.error('Error al cargar los datos del usuario:', error); // Detalles del error
+    } catch (error) {
+      console.log('Error al cargar los datos del usuario:', error); // Detalles del error
       setMessage("Error. No se pudo cargar el perfil.");
       setVisible(true);
     } finally {
@@ -278,7 +272,7 @@ const PerfilProveedor = () => {
     }
 
     Linking.openURL(whatsappLink).catch((err) =>
-      console.error("Error al abrir WhatsApp", err)
+      console.log("Error al abrir WhatsApp", err)
     );
   };
 
@@ -323,7 +317,7 @@ const PerfilProveedor = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.error("Error al bloquear usuario:", error);
+      console.log("Error al bloquear usuario:", error);
       setMessage("Error. al bloquear el usuario.");
       setVisible(true);
     }

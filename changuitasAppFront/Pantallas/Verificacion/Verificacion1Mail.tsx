@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native";
+import {Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -27,7 +27,8 @@ const Verificacion1Mail = () => {
     if (route.params?.datosUsuario?.email) {
       setEmail(route.params.datosUsuario.email); // Asignar el email recibido
     } else {
-      Alert.alert("Error", "No se recibió un correo electrónico válido.");
+      setMessage("Error, No se recibió un correo electrónico válido.");
+      setVisible(true);
     }
   }, [route.params]);
 
@@ -48,15 +49,17 @@ const Verificacion1Mail = () => {
         body: JSON.stringify({ email: email }),
       });
 
-      const data = await response.json();
       if (response.ok) {
         setMessage("El código a sido enviado al correo.");
         setVisible(true);
       } else {
-        Alert.alert("Error", data.error || "No se pudo enviar el código");
+        setMessage("Error al enviar el código");
+        setVisible(true);
       }
     } catch (error) {
-      Alert.alert("Error", "Problema de conexión con el servidor");
+      setMessage("Error, Problema de conexión con el servidor");
+      setVisible(true);
+      console.log("Error al enviar el código:", error);
     }
   };
 
@@ -64,7 +67,6 @@ const Verificacion1Mail = () => {
   const validarCodigo = async () => {
     const codigoInt = parseInt(codigo, 10);
     if (isNaN(codigoInt)) {
-      Alert.alert("Error", "Por favor ingresa un código válido.");
       setMessage("El código debe ser un número.");
       setVisible(true);
       return;
@@ -79,17 +81,17 @@ const Verificacion1Mail = () => {
 
       const data = await response.json();
       if (response.ok) {
-        Alert.alert("Éxito", "Código válido");
         setMessage("El código es válido");
+        setVisible(true);
         console.log("Datos a enviar: ", route.params.datosUsuario);
         navigation.navigate('Verificacion2Registro', { datosUsuario: route.params.datosUsuario });
       } else {
-        Alert.alert("Error", data.error || "El código no es válido");
+        console.log("Error al validar el código:", data);
         setMessage(data?.email || "El código no es válido.");
         setVisible(true);
       }
     } catch (error) {
-      Alert.alert("Error", "Problema de conexión con el servidor");
+      console.log("Error al validar el código:", error);
       setMessage("Error de conexión. Inténtalo de nuevo.");
       setVisible(true);
     }

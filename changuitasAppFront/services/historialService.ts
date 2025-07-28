@@ -30,7 +30,7 @@ export const fetchMultipleProveedoresData = async (
     const proveedoresData = await Promise.all(proveedorResponses.map(res => res.json()));
     return proveedoresData;
   } catch (error) {
-    console.error('Error al cargar proveedores:', error);
+    console.log('Error al cargar proveedores:', error);
     return [];
   }
 };
@@ -110,6 +110,6 @@ export const fetchUHistorial = async (
 
     setPersonasContratadas(personas);
   } catch (error) {
-    console.error('Error al cargar historial:', error);
+    console.log('Error al cargar historial:', error);
   }
 };

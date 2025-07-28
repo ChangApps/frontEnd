@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -13,16 +13,14 @@ import MenuDesplegable from '../../componentes/MenuDesplegable';
 import EncabezadoPerfil from '../../componentes/perfilesUsuarios/EncabezadoPerfil';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import  {redirectAdmin} from '../../utils/utils';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
-const redirectAdmin = () => {
-  Linking.openURL('http://127.0.0.1:8000/admin/');
-};
 
 const UsuariosBloqueados = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-
-
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state, setState] = useContext(AuthContext);
@@ -42,16 +40,11 @@ const UsuariosBloqueados = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
+      setMessage('Error al cerrar sesión');
+      setVisible(true);
+    } 
   };
 
   const desbloquearUsuario = async (idUsuario: number) => {
@@ -70,8 +63,8 @@ const UsuariosBloqueados = () => {
       console.log(data);
 
       if (response.ok) {
-        Alert.alert("Éxito", "Usuario desbloqueado con éxito.");
-
+        setMessage("Éxito , Usuario desbloqueado con éxito.");
+        setVisible(true);
         // Filtramos la lista para quitar al usuario desbloqueado
         setUsuariosBloqueados(prevUsuarios =>
           prevUsuarios.filter(usuario => usuario.id !== idUsuario)
@@ -79,11 +72,13 @@ const UsuariosBloqueados = () => {
 
 
       } else {
-        Alert.alert("Error", data.error || "No se pudo desbloquear al usuario.");
+        setMessage("Error, No se pudo desbloquear al usuario.");
+        setVisible(true);
       }
     } catch (error) {
-      console.error("Error al desbloquear usuario:", error);
-      Alert.alert("Error", "No se pudo desbloquear al usuario.");
+      console.log("Error al desbloquear usuario:", error);
+      setMessage("Error, No se pudo desbloquear al usuario.");
+      setVisible(true);
     }
   };
 
@@ -112,7 +107,7 @@ const UsuariosBloqueados = () => {
       })));
 
     } catch (error) {
-      console.error("Error al obtener usuarios bloqueados:", error);
+      console.log("Error al obtener usuarios bloqueados:", error);
     } finally {
       setLoading(false);
     }
@@ -200,6 +195,7 @@ const UsuariosBloqueados = () => {
           activeScreen="UsuarioBloqueados" // O el screen activo correspondiente
           onNavigate={handleNavigation}
         />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

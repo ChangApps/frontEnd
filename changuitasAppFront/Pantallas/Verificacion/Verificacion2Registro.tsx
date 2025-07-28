@@ -1,4 +1,4 @@
-import { Alert, Platform, Image, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
+import { Platform, Image, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
 import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
@@ -67,11 +67,11 @@ const Verificacion2Registro = () => {
         // Llamar a la función para enviar la foto de perfil
         EnviarFotoPerfil(idUsuarioCreado);
       } else {
-        console.error("Error al crear el usuario:", response.status);
+        console.log("Error al crear el usuario:", response.status);
         setErrorMessage("No se pudo crear el usuario.");
       }
     } catch (error) {
-      console.error("Error en la creación del usuario:", error);
+      console.log("Error en la creación del usuario:", error);
       setErrorMessage("Error en la creación del usuario.");
     }
   }
@@ -98,8 +98,8 @@ const Verificacion2Registro = () => {
             });
           }
         } catch (error) {
-          console.error('Error al procesar la imagen:', error);
-          Alert.alert('Error', 'No se pudo procesar la imagen seleccionada.');
+          console.log('Error al procesar la imagen:', error);
+          setErrorMessage('Error, No se pudo procesar la imagen seleccionada.');
           return;
         }
       }
@@ -116,7 +116,7 @@ const Verificacion2Registro = () => {
       // Llamar a login() después de actualizar la foto de perfil
       login();
     } catch (error) {
-      console.error("Error al actualizar la foto de perfil:", error);
+      console.log("Error al actualizar la foto de perfil:", error);
       setErrorMessage("Error al actualizar la foto de perfil.");
     }
   };
@@ -129,23 +129,21 @@ const Verificacion2Registro = () => {
       });
 
       if (data.error) {
-        console.error("Error en login:", data.error);
+        console.log("Error en login:", data.error);
         setErrorMessage(data.error);
         return;
       }
 
-      setState({ token: data.access });
       await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
       await AsyncStorage.setItem("accessToken", data.access);
       await AsyncStorage.setItem("refreshToken", data.refresh);
       await AsyncStorage.setItem("userId", data.id.toString());
 
       console.log("Token guardado: ", data.access);
-
-      console.log("Exito");
+      setState({ token: data.access });
       navigation.navigate("Home");
     } catch (error) {
-      console.error("Error en login:", error);
+      console.log("Error en login:", error);
       setErrorMessage("Error al iniciar sesión.");
     }
   };
