@@ -8,11 +8,13 @@ import Colors from '../../assets/Colors';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
 
 const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedService, setSelectedService] = useState<string | null>(null);
-
+  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
+  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
   const handleSelectService = (service: string) => {
     // Seleccionar un solo servicio, desmarcando el anterior
     setSelectedService(service === selectedService ? null : service);
@@ -20,7 +22,8 @@ const AgregarServicio1 = () => {
 
   const handleNext = () => {
     if (!selectedService) {
-      alert("Por favor selecciona un servicio.");
+      setMessage("Por favor selecciona un servicio.");
+      setVisible(true);
       return;
     }
     navigation.navigate('AgregarServicio2', { selectedServices: [selectedService] });
@@ -103,6 +106,7 @@ const AgregarServicio1 = () => {
         activeScreen="AgregarServicio1" // O el screen activo correspondiente
         onNavigate={handleNavigation}
       />
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
     </SafeAreaView>
   );
 };

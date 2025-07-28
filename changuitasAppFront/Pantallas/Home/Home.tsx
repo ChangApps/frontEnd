@@ -143,7 +143,7 @@ const PantallaHome = () => {
           console.log('No se encontró token');
         }
       } catch (err) {
-        console.error("Error en init:", err);
+        console.log("Error en init:", err);
       } finally {
         setCargandoContenido(false);
       }

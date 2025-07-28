@@ -1,4 +1,4 @@
-import { Text, View, FlatList, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { Text, View, FlatList, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';

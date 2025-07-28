@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, Linking, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -13,6 +13,7 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { redirectAdmin } from '../../utils/utils';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -74,10 +75,6 @@ const Historial2 = () => {
     cliente_nombre: string;
   }
 
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
@@ -94,7 +91,7 @@ const Historial2 = () => {
 
         setUserId(userId); // Si existe, actualiza el estado
       } catch (error) {
-        console.error("Error al obtener los datos de AsyncStorage:", error);
+        console.log("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -109,14 +106,9 @@ const Historial2 = () => {
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
       console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+      setMessage("Error en el cierre de sesión");
+      setVisible(true);
+    } 
   };
 
   const fetchUHistorial = async () => {
@@ -172,8 +164,8 @@ const Historial2 = () => {
         const clientes = solicitudesData.map((item: any) => item.clienteId);
         await fetchMultipleClientesData(clientes);
       }
-    } catch (error: any) {
-      console.error('Error al cargar datos del usuario (historial):', error.message);
+    } catch (error) {
+      console.log('Error al cargar datos del usuario (historial):', error);
     } finally {
       setLoading(false);
     }
@@ -207,10 +199,10 @@ const Historial2 = () => {
 
       const clientesData = await Promise.all(clienteResponses.map(r => r.json()));
       console.log("Clientes recibidos:", clientesData);
-      setClientes(clientesData); // Suponiendo que usás setClientes
+      setClientes(clientesData);
 
-    } catch (error: any) {
-      console.error("Error al cargar datos de clientes:", error.message);
+    } catch (error) {
+      console.log("Error al cargar datos de clientes:", error);
       setMessage("No se pudo cargar los datos de los clientes");
       setVisible(true);
     } finally {

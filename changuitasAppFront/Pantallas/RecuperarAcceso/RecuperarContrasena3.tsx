@@ -29,7 +29,6 @@ const RecuperarContrasena3 = () => {
 
   // Mostrar los datos pasados desde la pantalla anterior
   useEffect(() => {
-    console.log('Entrando al useEffect de contrasena3');
     console.log('El id recibido es :', id);
   }, [id]);
 
@@ -57,7 +56,7 @@ const RecuperarContrasena3 = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.error("Error al actualizar la contraseña:", error);
+      console.log("Error al actualizar la contraseña:", error);
       setMessage("Error al actualizar la contraseña.");
       setVisible(true);
     }

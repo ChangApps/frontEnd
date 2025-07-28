@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform, Linking, Alert, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Linking, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import styles from './estilos/EstilosCalificarTarea';
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ import { cerrarSesion } from '../../autenticacion/authService';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import { redirectAdmin } from '../../utils/utils';
 
 const CalificarTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -73,10 +74,10 @@ const CalificarTarea = () => {
 
       setCargando(false);
       navigation.navigate('Home');
-    } catch (error: any) {
+    } catch (error) {
       setCargando(false);
-      console.error('Error al actualizar la solicitud:', error);
-      setMessage(error.message || 'Error al actualizar la solicitud.');
+      console.log('Error al actualizar la solicitud:', error);
+      setMessage('Error al actualizar la solicitud.');
       setVisible(true);
     }
   };
@@ -110,21 +111,11 @@ const CalificarTarea = () => {
       setState({ token: "" });
       await cerrarSesion();
       console.log('Sesión cerrada correctamente');
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
-  };
-
-  // Función para redirigir al admin
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
+      setMessage('Error al cerrar sesión');
+      setVisible(true);
+    } 
   };
 
   const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;

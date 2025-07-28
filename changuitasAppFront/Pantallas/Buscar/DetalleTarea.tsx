@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import { redirectAdmin } from '../../utils/utils';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -71,7 +72,7 @@ const DetalleTarea = () => {
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
@@ -92,7 +93,7 @@ const DetalleTarea = () => {
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
@@ -171,8 +172,9 @@ const DetalleTarea = () => {
     try {
       setState({ token: '' });
       await cerrarSesion();
-    } finally {
-      navigation.reset({ index: 0, routes: [{ name: 'InicioDeSesion' }] });
+    } catch (error) {
+      setMessage('Error al cerrar sesión');
+      setVisible(true);
     }
   };
 
@@ -198,10 +200,6 @@ const DetalleTarea = () => {
 
   // Función para alternar el menú desplegable
   const toggleDesplegable = () => { setMostrarDesplegable(!mostrarDesplegable); };
-  // Función para redirigir al admin
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
 
   const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
 

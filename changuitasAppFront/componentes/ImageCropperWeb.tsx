@@ -44,7 +44,7 @@ export const ImageCropperWeb: React.FC<Props> = ({
       const ctx = canvas.getContext("2d");
 
       if (!ctx) {
-        console.error("No se pudo obtener el contexto del canvas");
+        console.log("No se pudo obtener el contexto del canvas");
         setError("Error al obtener el contexto de la imagen.");
         return;
       }
@@ -73,12 +73,12 @@ export const ImageCropperWeb: React.FC<Props> = ({
           setImageUri(url);
           setCropperVisible(false); // Ocultar el recortador
         } else {
-          console.error("Error al procesar el recorte.");
+          console.log("Error al procesar el recorte.");
           setError("Error al procesar el recorte.");
         }
       }, "image/jpeg");
     } else {
-      console.warn("No se ha seleccionado un área de recorte.");
+      console.log("No se ha seleccionado un área de recorte.");
       setError("Por favor, seleccione un área para recortar.");
     }
   };

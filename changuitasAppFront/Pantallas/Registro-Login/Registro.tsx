@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Alert } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -40,20 +40,17 @@ const Registro = () => {
   // Función para manejar el registro del usuario
   const handleRegistro = async () => {
     if (password !== confirmarPassword) {
-      Alert.alert('Error', 'Las contraseñas no coinciden');
       setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;
     }
 
     if (!fechaNacimiento.trim()) {
-      Alert.alert('Error', 'El campo de fecha de nacimiento no puede estar vacío.');
       setErrorMessage('El campo de fecha de nacimiento no puede estar vacío.');
       return;
     }
 
     const regexFecha = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!regexFecha.test(fechaNacimiento)) {
-      Alert.alert('Error', 'Formato de fecha inválido. Usa el formato DD/MM/AAAA.');
       setErrorMessage('Formato de fecha inválido. Usa el formato DD/MM/AAAA.');
       return;
     }
@@ -71,7 +68,6 @@ const Registro = () => {
     }
 
     if (age < 18) {
-      Alert.alert('Error', 'Debes tener al menos 18 años para registrarte');
       setErrorMessage('Debes tener al menos 18 años para registrarte');
       return;
     }
@@ -180,8 +176,7 @@ const Registro = () => {
 
     } catch (error: any) {
       const errorMessage = error.message || 'No se pudieron validar los datos.';
-      console.error('Error detallado:', error);
-      Alert.alert('Error', errorMessage);
+      console.log('Error detallado:', error);
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     }
   };

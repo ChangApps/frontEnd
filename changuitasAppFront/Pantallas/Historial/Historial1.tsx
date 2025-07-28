@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, TouchableWithoutFeedback, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -13,6 +13,7 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { redirectAdmin } from '../../utils/utils';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -74,10 +75,6 @@ const Historial1 = () => {
     cliente_nombre: string;
   }
 
-  const redirectAdmin = () => {
-    Linking.openURL('http://127.0.0.1:8000/admin/');
-  };
-
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
@@ -92,7 +89,7 @@ const Historial1 = () => {
           setUserId(userId);
         }
       } catch (error) {
-        console.error("Error al obtener los datos de AsyncStorage:", error);
+        console.log("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -105,15 +102,10 @@ const Historial1 = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
+      setMessage("Error en el cierre de sesión");
+      setVisible(true);
     }
   };
 
@@ -165,9 +157,9 @@ const Historial1 = () => {
       } 
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error al cargar datos de la solicitud:', error.message);
+        console.log('Error al cargar datos de la solicitud:', error.message);
       } else {
-        console.error('Error desconocido:', error);
+        console.log('Error desconocido:', error);
       }
     }
   };
@@ -214,8 +206,8 @@ const Historial1 = () => {
       // Actualiza el estado con los datos de los proveedores
       setProveedores(proveedoresData);
 
-    } catch (error: any) {
-      console.error('Error al cargar datos de los proveedores:', error.message);
+    } catch (error) {
+      console.log('Error al cargar datos de los proveedores:', error);
       setMessage('No se pudo cargar los datos de los proveedores');
       setVisible(true);
     } finally {

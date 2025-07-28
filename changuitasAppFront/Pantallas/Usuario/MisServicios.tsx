@@ -38,8 +38,8 @@ const MisServicios = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesion');
       setVisible(true);
     } 
@@ -78,7 +78,7 @@ const MisServicios = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.error("Error eliminando el servicio:", error);
+      console.log("Error eliminando el servicio:", error);
     }
   };
 
@@ -107,7 +107,7 @@ const MisServicios = () => {
       const data: Servicio[] = await response.json();
       setServices(data);
     } catch (error) {
-      console.error('Error al cargar los servicios del usuario:', error);
+      console.log('Error al cargar los servicios del usuario:', error);
     } finally {
       setLoading(false);
     }

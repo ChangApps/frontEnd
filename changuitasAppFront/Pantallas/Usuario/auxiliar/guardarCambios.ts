@@ -1,4 +1,4 @@
-import { Alert, Platform } from 'react-native';
+import {Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import  API_URL  from '../../../utils/API_URL';
@@ -99,7 +99,8 @@ export const guardarCambios = async (
       Object.keys(datosActualizados).length === 0 &&
       (!imageUri || imageUri === imageUriOriginal)
     ) {
-      Alert.alert('Sin cambios', 'No hay campos modificados para guardar.');
+      setMessage('Sin cambios, No hay campos modificados para guardar.');
+      setVisible
       return { success: false };
     }
 
@@ -196,7 +197,6 @@ export const guardarCambios = async (
     } else {
       setMessage('Ocurrió un error inesperado.');
       setVisible(true);
-      Alert.alert('Error', 'Ocurrió un problema con la conexión.');
       return { success: false };
     }
   }
@@ -250,6 +250,6 @@ export const guardarImagen = async (
   } catch (error: any) {
     setMessage('Error al guardar la imagen');
     setVisible(true);
-    console.error(error);
+    console.log(error);
   }
 };
