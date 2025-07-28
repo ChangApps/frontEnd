@@ -1,5 +1,5 @@
 import { Text, View, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import API_URL from '../../utils/API_URL';
@@ -12,6 +12,7 @@ import PasswordInput from "../../componentes/inputs/PasswordInput";
 import { Button } from "../../componentes/Buttons";
 import { useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView, Platform} from 'react-native';
 
 const Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -185,8 +186,12 @@ const Registro = () => {
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}
+      >
       <SafeAreaView style={EstilosRegistro.safeContainer}>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <View style={EstilosRegistro.contenedor}>
             <View style={[EstilosRegistro.contenidoResponsivo, width > 600 && EstilosRegistro.contenidoWeb]}>
               {/* NavBar Superior */}
@@ -332,6 +337,7 @@ const Registro = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
