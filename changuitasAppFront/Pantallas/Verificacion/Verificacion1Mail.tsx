@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from "../../componentes/PantallaCarga";
 
 const Verificacion1Mail = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -21,6 +22,7 @@ const Verificacion1Mail = () => {
   const [email, setEmail] = useState(''); // Estado para almacenar el email
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
+  const [cargando, setCargando] = useState(false);
 
   // Recupera el email desde los parámetros de la pantalla anterior
   useEffect(() => {
@@ -72,6 +74,7 @@ const Verificacion1Mail = () => {
       return;
     }
 
+    setCargando(true);
     try {
       const response = await fetch(`${API_URL}/validar-codigo/`, {
         method: "POST",
@@ -94,10 +97,16 @@ const Verificacion1Mail = () => {
       console.log("Error al validar el código:", error);
       setMessage("Error de conexión. Inténtalo de nuevo.");
       setVisible(true);
+    } finally {
+      setCargando(false);
     }
   };
 
   const { width } = useWindowDimensions();
+
+  if (cargando) {
+    return <PantallaCarga frase="Procesando..." />;
+  }
 
   return (
     <SafeAreaView style={EstilosVerificacion1Mail.safeContainer}>

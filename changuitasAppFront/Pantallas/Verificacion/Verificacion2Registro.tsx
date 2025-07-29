@@ -19,6 +19,7 @@ import { Button } from "../../componentes/Buttons";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { guardarImagen } from "../Usuario/auxiliar/guardarCambios";
 import CustomSnackbar from "../../componentes/CustomSnackbar";
+import PantallaCarga from "../../componentes/PantallaCarga";
 
 
 const Verificacion2Registro = () => {
@@ -38,6 +39,7 @@ const Verificacion2Registro = () => {
   const [imageUriOriginal, setImageUriOriginal] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
+  const [cargando, setCargando] = useState(false);
 
   const handleImagePress = () => {
     setModalVisible(true); // Mostrar el modal cuando se presiona la imagen
@@ -48,6 +50,7 @@ const Verificacion2Registro = () => {
   };
 
   const crearUsuario = async () => {
+    setCargando(true);
     try {
       // Enviar los datos del usuario sin la foto de perfil
       const response = await fetch(`${API_URL}/usuarios/`, {
@@ -73,6 +76,8 @@ const Verificacion2Registro = () => {
     } catch (error) {
       console.log("Error en la creación del usuario:", error);
       setErrorMessage("Error en la creación del usuario.");
+    } finally {
+      setCargando(false);
     }
   }
 
@@ -149,6 +154,10 @@ const Verificacion2Registro = () => {
   };
   
 const { width } = useWindowDimensions();
+
+  if (cargando) {
+    return <PantallaCarga frase="Registrándose..." />;
+  }
 
   return (
     <SafeAreaView style={EstilosVerificacion2.safeContainer}>

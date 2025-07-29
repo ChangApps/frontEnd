@@ -13,11 +13,13 @@ import { Button } from "../../componentes/Buttons";
 import { useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView, Platform} from 'react-native';
+import PantallaCarga from "../../componentes/PantallaCarga";
 
 const Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarContraseña, setMostrarContraseña] = useState(false);
   const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
 
   // Estados para cada campo
@@ -93,6 +95,7 @@ const Registro = () => {
       },
     };
     try {
+      setCargando(true);
       const response = await fetch(`${API_URL}/validar/`, {
         method: 'POST',
         headers: {
@@ -179,10 +182,16 @@ const Registro = () => {
       const errorMessage = error.message || 'No se pudieron validar los datos.';
       console.log('Error detallado:', error);
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
+    } finally {
+      setCargando(false);
     }
   };
 
   const { width } = useWindowDimensions();
+
+  if (cargando) {
+    return <PantallaCarga frase="Procesando..." />;
+  }
 
   return (
     <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosRegistro.degradado}>
