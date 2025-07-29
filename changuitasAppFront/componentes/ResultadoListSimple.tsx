@@ -25,7 +25,9 @@ type Props = {
   estiloAvatar?: ImageStyle;
   estiloNombre?: TextStyle;
   estiloOficio?: TextStyle;
+  onPerfilPress?: () => void;
 };
+
 const ResultadoListSimple = ({
   historial,
   usuarios,
@@ -35,6 +37,7 @@ const ResultadoListSimple = ({
   estiloAvatar,
   estiloNombre,
   estiloOficio,
+  onPerfilPress,
 }: Props) => {
   return (
     <FlatList
@@ -67,6 +70,9 @@ const ResultadoListSimple = ({
 
             <TouchableOpacity
               onPress={() => {
+                if (onPerfilPress) {
+                  onPerfilPress();
+                }
                 navigation.navigate('PerfilProveedor', {
                   id: usuario?.id?.toString() || 'No disponible',
                   servicio: servicioId, 

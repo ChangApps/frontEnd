@@ -44,6 +44,7 @@ const PantallaHome = () => {
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
+  const [cargandoPerfil, setCargandoPerfil] = useState(false);
 
   const handleBuscar = async () => {
     console.log("Buscando por:", textoBusqueda);
@@ -110,6 +111,10 @@ const PantallaHome = () => {
     }
   };
 
+  const handlePerfilPress = () => {
+    setCargandoPerfil(true);
+  };
+
   const toggleDesplegable = () => setMostrarDesplegable(!mostrarDesplegable);
 
   const logout = async () => {
@@ -162,6 +167,7 @@ const PantallaHome = () => {
   }, [trabajosNotificados, snackbarVisible, trabajoActual]);
 
   if (cargandoContenido) return <PantallaCarga />;
+  if (cargandoPerfil) return <PantallaCarga frase="Cargando perfil proveedor..." />;
 
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
@@ -223,6 +229,7 @@ const PantallaHome = () => {
                       estiloCard={EstilosHome.cardPersona}
                       estiloAvatar={EstilosHome.avatarPlaceholder}
                       estiloNombre={EstilosHome.nombrePersona}
+                      onPerfilPress={handlePerfilPress}
                     />
                   )}
 

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -47,7 +47,6 @@ const PerfilProveedor = () => {
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
-  const [cargando, setCargando] = useState(false);
 
   const formatearFecha = (fecha: string): string => {
   const [año, mes, dia] = fecha.split("-");
@@ -71,11 +70,17 @@ const PerfilProveedor = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+    } catch (error: any) {
+      console.log('Error en el cierre de sesión:', error.message);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
-    } 
+    } finally {
+      console.log("Intentando ir al iniciar sesion ");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "InicioDeSesion" }],
+      });
+    }
   };
 
   useEffect(() => {
@@ -89,7 +94,7 @@ const PerfilProveedor = () => {
           console.log("Perfil de otro ID del usuario obtenido:", userIdNumerico);
         }
       } catch (error) {
-        console.log("Error al obtener los datos de AsyncStorage:", error);
+        console.error("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -106,14 +111,12 @@ const PerfilProveedor = () => {
 
   //Agregar errores al snackbar 
   const iniciarChanguita = async () => {
-    setCargando(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
 
       if (!accessToken) {
         setMessage("Error");
         setVisible(true);
-        setCargando(false);
         return;
       }
       const response = await fetch(`${API_URL}/iniciar-changuita/`, {
@@ -138,19 +141,17 @@ const PerfilProveedor = () => {
         const idSolicitud = responseJson.id_solicitud;
         console.log("ID solicitud detalle: ", idSolicitud);
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
-        setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
+
       } else {
         const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
         setMessage(errorMsg);
         setVisible(true);
-        setCargando(false);
       }
     } catch (error) {
-      console.log("Error inesperado al iniciar changuita:", error);
+      console.error("Error inesperado al iniciar changuita:", error);
       setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
-      setCargando(false);
     }
   };
 
@@ -250,8 +251,8 @@ const PerfilProveedor = () => {
       setUsuario(dataUsuario);
       setImageUri(dataUsuario.fotoPerfil || 'https://via.placeholder.com/80');
 
-    } catch (error) {
-      console.log('Error al cargar los datos del usuario:', error); // Detalles del error
+    } catch (error: any) {
+      console.error('Error al cargar los datos del usuario:', error); // Detalles del error
       setMessage("Error. No se pudo cargar el perfil.");
       setVisible(true);
     } finally {
@@ -272,13 +273,13 @@ const PerfilProveedor = () => {
     }
 
     Linking.openURL(whatsappLink).catch((err) =>
-      console.log("Error al abrir WhatsApp", err)
+      console.error("Error al abrir WhatsApp", err)
     );
   };
 
   // Mostrar la vista de carga o error
   if (loading) {
-    return <PantallaCarga frase="Cargando perfil del proveedor" />;
+    return <PantallaCarga frase="Cargando perfil proveedor..." />;
   }
 
   if (error) {
@@ -287,10 +288,6 @@ const PerfilProveedor = () => {
         <Text>{error}</Text>
       </SafeAreaView>
     );
-  }
-
-  if (cargando) {
-    return <PantallaCarga frase="Procesando..." />;
   }
 
   const bloquearUsuario = async (idUsuario: number) => {
@@ -310,14 +307,13 @@ const PerfilProveedor = () => {
       if (response.ok) {
         setMessage("Usuario bloqueado correctamente.");
         setVisible(true);
-        setTimeout(()=>{
-        navigation.navigate('Home');},1000);
+        navigation.navigate('Home');
       } else {
         setMessage("No se pudo bloquear al usuario.");
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al bloquear usuario:", error);
+      console.error("Error al bloquear usuario:", error);
       setMessage("Error. al bloquear el usuario.");
       setVisible(true);
     }
@@ -349,7 +345,7 @@ const PerfilProveedor = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView style={EstilosPerfilProveedor.safeContainer}>
+      <SafeAreaView edges={['top']} style={EstilosPerfilProveedor.safeContainer}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
           {/* Encabezado con opciones de menú */}
           <NavBarSuperior
@@ -392,6 +388,9 @@ const PerfilProveedor = () => {
               </View>
             </TouchableWithoutFeedback>
           </Modal>
+
+          {/* Snackbar para mostrar mensajes */}
+          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
@@ -470,8 +469,6 @@ const PerfilProveedor = () => {
             <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
           </View>
         </ScrollView>
-        {/* Snackbar para mostrar mensajes */}
-          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="PerfilProveedor" // O el screen activo correspondiente

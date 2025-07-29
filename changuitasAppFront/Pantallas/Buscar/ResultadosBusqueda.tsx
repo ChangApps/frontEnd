@@ -1,17 +1,18 @@
-import { Text,View, TouchableOpacity, Image, Modal,  TouchableWithoutFeedback, ScrollView, FlatList,} from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../navegacion/AppNavigator';
-import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL from "../../utils/API_URL";
-import EstilosResultadosBusqueda from "./estilos/EstilosResultadosBusqueda";
-import { NavBarSuperior } from "../../componentes/NavBarSuperior";
-import CustomSnackbar from "../../componentes/CustomSnackbar";
-import { NavBarInferior } from "../../componentes/NavBarInferior";
+import { RootStackParamList } from '../../navegacion/AppNavigator';
+import API_URL from '../../utils/API_URL';
+import EstilosResultadosBusqueda from './estilos/EstilosResultadosBusqueda';
+import { NavBarInferior } from '../../componentes/NavBarInferior';
+import { NavBarSuperior } from '../../componentes/NavBarSuperior';
+import CustomSnackbar from '../../componentes/CustomSnackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PantallaCarga from '../../componentes/PantallaCarga';
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../assets/Colors";
 import ModalSeleccionarServicio from "../../componentes/ModalSeleccionarServicio";
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ResultadosBusqueda = () => {
   const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
@@ -23,6 +24,7 @@ const ResultadosBusqueda = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [serviciosModal, setServiciosModal] = useState<any[]>([]);
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState<any>(null);
+  const [loadingProveedor, setLoadingProveedor] = useState(false);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
@@ -103,12 +105,14 @@ const handleProveedorPress = (proveedor: any) => {
     setModalServiciosVisible(true);
   } else {
     console.log('ResultadosBusqueda proveedor id: ', proveedor.id, ' proveedor.servicios: ', proveedor.servicios);
-     navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
+    setLoadingProveedor(true);
+    navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
   }
 };
 
   const handleServicioSeleccionado = (servicio: any) => {
     setModalServiciosVisible(false);
+    setLoadingProveedor(true);
     navigation.navigate('PerfilProveedor', {
       id: proveedorSeleccionado.id,
       servicio: servicio.id,
@@ -116,6 +120,10 @@ const handleProveedorPress = (proveedor: any) => {
   };
 
   const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
+
+  if (loadingProveedor) {
+    return <PantallaCarga frase="Cargando perfil proveedor..." />;
+  }
 
   return (
     <SafeAreaView style={EstilosResultadosBusqueda.safeContainer}>
