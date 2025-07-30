@@ -48,7 +48,7 @@ const Verificacion1Mail = () => {
       const response = await fetch(`${API_URL}/enviar-email/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, contexto:"registro" }),
       });
 
       if (response.ok) {

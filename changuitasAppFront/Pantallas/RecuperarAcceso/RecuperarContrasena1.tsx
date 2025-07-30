@@ -42,7 +42,7 @@ const RecuperarContrasena1 = () => {
       const response = await fetch(`${API_URL}/verificar-email/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, contexto:"recuperacion" }),
       });
 
       const data = await response.json();
