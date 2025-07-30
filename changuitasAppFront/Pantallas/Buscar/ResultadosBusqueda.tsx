@@ -18,7 +18,7 @@ const ResultadosBusqueda = () => {
   const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
-  const [message, setMessage] = useState('');
+  a
   const [modalVisible, setModalVisible] = useState(false);
   const [modalServiciosVisible, setModalServiciosVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
@@ -84,6 +84,7 @@ const ResultadosBusqueda = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -91,13 +92,12 @@ const ResultadosBusqueda = () => {
     }
   };
 
-
-const handleProveedorPress = (proveedor: any) => {
-  if (!proveedor.servicios || proveedor.servicios.length === 0) {
-    setMessage("El proveedor selecionado no tiene servicios disponibles");
-    setVisible(true);
-    return;
-  }
+  const handleProveedorPress = (proveedor: any) => {
+    if (!proveedor.servicios || proveedor.servicios.length === 0) {
+      setMessage("El proveedor selecionado no tiene servicios disponibles");
+      setVisible(true);
+      return;
+    }
 
   if (proveedor.servicios.length > 1) {
     setProveedorSeleccionado(proveedor);

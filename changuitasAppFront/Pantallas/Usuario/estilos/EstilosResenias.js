@@ -54,12 +54,11 @@ const EstilosResenias = StyleSheet.create({
     },
     rating: {
         flexDirection: 'row',
-        marginTop: 5,
+        alignItems: 'center',
     },
     valoracion: {
         fontSize: 14,
         color: Colors.blancoTexto,
-        marginBottom: 10,
     },
     mensajeVacio: {
         textAlign: 'center',

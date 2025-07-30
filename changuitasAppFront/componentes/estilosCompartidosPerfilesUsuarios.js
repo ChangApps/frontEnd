@@ -197,6 +197,8 @@ const EstilosCompartidos = StyleSheet.create({
   },
   datosPersonales: {
     paddingHorizontal: DIMENSIONES.paddingHorizontal,
+    marginHorizontal: "20px",
+    backgroundColor: Colors.grisFondo,
   },
   infoUsuario: {
     fontSize: FUENTES.normal,

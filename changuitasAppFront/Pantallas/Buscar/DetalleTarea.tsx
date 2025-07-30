@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, Linking, Platform } from 'react-native';
+import { Text, View, ScrollView, Linking, Platform, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
@@ -86,7 +86,7 @@ const DetalleTarea = () => {
 
       setFecha(data.fechaSolicitud);
       setServicio(data.nombreServicio);
-      setEstado(data.estado);
+      setEstado(data.estado_display);
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
 
       const userId = await AsyncStorage.getItem('userId');
@@ -190,7 +190,7 @@ const DetalleTarea = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -208,92 +208,94 @@ const DetalleTarea = () => {
   }
   
   return (
-    <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ paddingBottom: 100 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <NavBarSuperior
-            titulo="Detalle de la tarea"
-            titleSize={titleSizeNavbarSuperior}
-            showBackButton={true}
-            onBackPress={() => { navigation.goBack(); }}
-            rightButtonType="menu"
-            onRightPress={() => { toggleDesplegable(); }}
-          />
-
-          {/* Menú Desplegable */}
-          <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
-          />
-
-          <View style={EstilosDetalleTarea.seccionUsuario}>
-            <ImagenPerfilUsuario
-              imageUri={imageUri}
-              modalVisible={modalVisible}
-              onImagePress={() => setModalVisible(true)}
-              onCloseModal={() => setModalVisible(false)}
+    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+      <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <NavBarSuperior
+              titulo="Detalle de la tarea"
+              titleSize={titleSizeNavbarSuperior}
+              showBackButton={true}
+              onBackPress={() => { navigation.goBack(); }}
+              rightButtonType="menu"
+              onRightPress={() => { toggleDesplegable(); }}
             />
-            <Text style={EstilosDetalleTarea.nombreCompleto}>
-              {usuario?.username}
-            </Text>
-          </View>
 
-          <ImagenConModal
-            uri={imageUri}
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            estiloImagen={EstilosDetalleTarea.imagenModal}
-          />
+            {/* Menú Desplegable */}
+            <MenuDesplegable
+              visible={mostrarDesplegable}
+              usuario={state.usuario}
+              onLogout={logout}
+              onRedirectAdmin={redirectAdmin}
+            />
 
-          <DatosTareaCompactos
-            servicio={servicio}
-            fecha={fecha}
-            puntaje={puntaje}
-            estado={estado}
-            estilos={EstilosDetalleTarea}
-          />
+            <View style={EstilosDetalleTarea.seccionUsuario}>
+              <ImagenPerfilUsuario
+                imageUri={imageUri}
+                modalVisible={modalVisible}
+                onImagePress={() => setModalVisible(true)}
+                onCloseModal={() => setModalVisible(false)}
+              />
+              <Text style={EstilosDetalleTarea.nombreCompleto}>
+                {usuario?.username}
+              </Text>
+            </View>
 
-          <AccionesTarea
-            rol={rol}
-            estado={estado}
-            aceptarChanguita={aceptarChanguita}
-            setMostrarModal={setMostrarModalCancelar}
-            finalizarSolicitud={finalizarChanguita}
-            estilos={EstilosDetalleTarea}
-          />
+            <ImagenConModal
+              uri={imageUri}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              estiloImagen={EstilosDetalleTarea.imagenModal}
+            />
 
-            <ModalCancelarChanguita
-              visible={mostrarModalCancelar}
-              onClose={() => setMostrarModalCancelar(false)}
-              onConfirm={async(motivo) => {
-                await cancelarChanguita(motivo);
-                setMostrarModalCancelar(false);
-                setMotivoSeleccionado('');
-              }}
-              motivoSeleccionado={motivoSeleccionado}
-              setMotivoSeleccionado={setMotivoSeleccionado}
+            <DatosTareaCompactos
+              servicio={servicio}
+              fecha={fecha}
+              puntaje={puntaje}
+              estado={estado}
+              estilos={EstilosDetalleTarea}
+            />
+
+            <AccionesTarea
               rol={rol}
+              estado={estado}
+              aceptarChanguita={aceptarChanguita}
+              setMostrarModal={setMostrarModalCancelar}
+              finalizarSolicitud={finalizarChanguita}
+              estilos={EstilosDetalleTarea}
             />
-          </ScrollView>
 
-        <NavBarInferior
-          activeScreen="DetalleTarea"
-          onNavigate={handleNavigation}
+              <ModalCancelarChanguita
+                visible={mostrarModalCancelar}
+                onClose={() => setMostrarModalCancelar(false)}
+                onConfirm={async(motivo) => {
+                  await cancelarChanguita(motivo);
+                  setMostrarModalCancelar(false);
+                  setMotivoSeleccionado('');
+                }}
+                motivoSeleccionado={motivoSeleccionado}
+                setMotivoSeleccionado={setMotivoSeleccionado}
+                rol={rol}
+              />
+            </ScrollView>
+
+          <NavBarInferior
+            activeScreen="DetalleTarea"
+            onNavigate={handleNavigation}
+          />
+        </View>
+
+        {/* Snackbar*/}
+        <CustomSnackbar
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
         />
-      </View>
-
-      {/* Snackbar*/}
-      <CustomSnackbar
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
