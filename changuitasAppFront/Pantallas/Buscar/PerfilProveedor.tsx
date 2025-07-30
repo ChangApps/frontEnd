@@ -43,14 +43,15 @@ const PerfilProveedor = () => {
   const [state, setState] = useContext(AuthContext);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
-  const [reseniasUserId, setreseniasUserId] = useState<number|null>(null);
+  const [reseniasUserId, setreseniasUserId] = useState<number | null>(null);
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
+  const [cargando, setCargando] = useState(false); //para las pantallas de cargas
 
   const formatearFecha = (fecha: string): string => {
-  const [año, mes, dia] = fecha.split("-");
-  return `${dia}/${mes}/${año}`;
+    const [año, mes, dia] = fecha.split("-");
+    return `${dia}/${mes}/${año}`;
   };
 
   const handleImagePress = () => {
@@ -111,12 +112,14 @@ const PerfilProveedor = () => {
 
   //Agregar errores al snackbar 
   const iniciarChanguita = async () => {
+    setCargando(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
 
       if (!accessToken) {
         setMessage("Error");
         setVisible(true);
+        setCargando(false);
         return;
       }
       const response = await fetch(`${API_URL}/iniciar-changuita/`, {
@@ -141,17 +144,20 @@ const PerfilProveedor = () => {
         const idSolicitud = responseJson.id_solicitud;
         console.log("ID solicitud detalle: ", idSolicitud);
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
+        setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
 
       } else {
         const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
         setMessage(errorMsg);
         setVisible(true);
+        setCargando(false);
       }
     } catch (error) {
       console.error("Error inesperado al iniciar changuita:", error);
       setMessage("Ocurrió un error al enviar la solicitud.");
       setVisible(true);
+      setCargando(false);
     }
   };
 
@@ -190,7 +196,7 @@ const PerfilProveedor = () => {
       const proveedorId = route.params.id; //solo para usar en esta funcion
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
       console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
-           setreseniasUserId(proveedorId);
+      setreseniasUserId(proveedorId);
       //  const idServicioString = await AsyncStorage.getItem('idServicio');
       //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
 
@@ -341,6 +347,10 @@ const PerfilProveedor = () => {
 
   const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
 
+  if (cargando) {
+    return <PantallaCarga frase="Procesando..." />;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -394,42 +404,42 @@ const PerfilProveedor = () => {
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
-             <Button
-                titulo="Iniciar changuita"
-                onPress={iniciarChanguita}
-                backgroundColor={COLORES_APP.primario} 
-                textColor="String"        
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="40%"
-              />
-              
-              <Button
-                titulo="Chatear"
-                onPress={handleChat}
-                backgroundColor="transparent"
-                borderColor={COLORES_APP.primario}
-                borderWidth={1}
-                textColor={COLORES_APP.primario}
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="25%"
-              />
+            <Button
+              titulo="Iniciar changuita"
+              onPress={iniciarChanguita}
+              backgroundColor={COLORES_APP.primario}
+              textColor="String"
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="40%"
+            />
 
-              <Button
-                titulo="Bloquear"
-                onPress={() => bloquearUsuario(Number(route.params.id))}
-                backgroundColor="transparent"
-                borderColor={COLORES_APP.primario}
-                borderWidth={1}
-                textColor={COLORES_APP.primario}
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="25%"
-              />
+            <Button
+              titulo="Chatear"
+              onPress={handleChat}
+              backgroundColor="transparent"
+              borderColor={COLORES_APP.primario}
+              borderWidth={1}
+              textColor={COLORES_APP.primario}
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="25%"
+            />
+
+            <Button
+              titulo="Bloquear"
+              onPress={() => bloquearUsuario(Number(route.params.id))}
+              backgroundColor="transparent"
+              borderColor={COLORES_APP.primario}
+              borderWidth={1}
+              textColor={COLORES_APP.primario}
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="25%"
+            />
           </View>
 
           {/* Datos adicionales */}
