@@ -411,6 +411,24 @@ const EditarPerfil = () => {
                     // Si fue exitoso, navegar al home inmediatamente
                     if (resultado && resultado.success) {
                       // Esperar para que el usuario vea el mensaje de éxito
+                      //Limpio los campos del formulario
+                      setCamposModificados({
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        telefono: '',
+                        old_password: '',
+                        password: '',
+                        password2: '',
+                        direccion: {
+                          calle: '',
+                          altura: '',
+                          nroDepto: '',
+                          piso: '',
+                          barrio: '',
+                        }
+                      });
+                      
                       setTimeout(() => {
                         navigation.navigate('Home');
                       }, 1500);
