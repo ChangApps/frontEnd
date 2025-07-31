@@ -103,7 +103,7 @@ const RecuperarContrasena3 = () => {
             <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
               <PasswordInput
                 placeholder="***************"
-                value={password}
+                value={confirmarPassword}
                 onChangeText={setConfirmarPassword}
               />
             </View>
