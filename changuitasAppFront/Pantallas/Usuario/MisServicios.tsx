@@ -174,6 +174,25 @@ const MisServicios = () => {
     </View>
   );
 
+// Se crea una copia del array 'services' para no modificar el original
+const serviciosOrdenados = [...services].sort((a, b) => {
+  // obtenemos el timestamp de 'fechaDesde' de 'a', o null si no existe
+  const fechaA = a.fechaDesde ? new Date(a.fechaDesde).getTime() : null;
+  // obtenemos el timestamp de 'fechaDesde' de 'b', o null si no existe
+  const fechaB = b.fechaDesde ? new Date(b.fechaDesde).getTime() : null;
+
+  // si ninguno tiene fecha, mantienen su orden relativo
+  if (fechaA === null && fechaB === null) return 0;
+  // si 'a' no tiene fecha pero 'b' sí, 'a' va después
+  if (fechaA === null) return 1;
+  // si 'b' no tiene fecha pero 'a' sí, 'b' va después
+  if (fechaB === null) return -1;
+
+  // si ambos tienen fecha, ordenamos por fecha descendente
+  // (más reciente primero)
+  return fechaB - fechaA;
+});
+
 return (
   <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
     <View style={{ flex: 1 }}>
@@ -196,7 +215,7 @@ return (
         </TouchableOpacity>
 
         <FlatList
-          data={services}
+          data={serviciosOrdenados}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderServiceItem}
           contentContainerStyle={EstilosMisServicios.listaServicios}

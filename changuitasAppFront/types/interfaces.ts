@@ -59,4 +59,5 @@ export interface Proveedor {
       desdeHora: string;
       hastaHora: string;
     }>;
+    fechaDesde?: string;
   }
