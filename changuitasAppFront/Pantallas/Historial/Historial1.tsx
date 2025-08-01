@@ -235,8 +235,15 @@ const Historial1 = () => {
     }
   };
 
-  return (
+    const historialOrdenado = [...historial].sort((a, b) => {
+      if (!a.fechaSolicitud) return 1;
+      if (!b.fechaSolicitud) return -1;
+      const fechaA = new Date(a.fechaSolicitud);
+      const fechaB = new Date(b.fechaSolicitud);
+      return fechaB.getTime() - fechaA.getTime(); // más reciente primero
+    });
 
+  return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
@@ -269,7 +276,7 @@ const Historial1 = () => {
         </View>
 
         <ResultadoList
-          historial={historial}
+          historial={historialOrdenado}
           usuarios={proveedores}
           navigation={navigation}
           claveUsuario="proveedor_id"

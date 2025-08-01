@@ -134,29 +134,32 @@ const PantallaHome = () => {
     await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('accessToken');
-        if (storedToken) {
-          console.log("El stored token es: ", storedToken);
-          const resultado = await obtenerCategorias();
-          setCategorias(resultado);
-          await fetchUsuarioLogueado();
-          await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
-        } else {
-          console.log('No se encontró token');
-        }
-      } catch (err) {
-        console.log("Error en init:", err);
-      } finally {
-        setCargandoContenido(false);
+useEffect(() => {
+  const init = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem('accessToken');
+      if (!storedToken) {
+        console.log('No se encontró token');
+        return;
       }
-    };
 
-    init();
-  }, []);
+      console.log("El stored token es: ", storedToken);
 
+      // Ejecutamos todas las funciones en paralelo
+      await Promise.all([
+        obtenerCategorias().then(setCategorias),
+        fetchUsuarioLogueado(),
+        fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas),
+      ]);
+
+    } catch (err) {
+      console.log("Error en init:", err);
+    } finally {
+      setCargandoContenido(false); // solo cuando TODO terminó
+    }
+  };
+  init();
+}, []);
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
       const siguiente = trabajosNotificados[0];

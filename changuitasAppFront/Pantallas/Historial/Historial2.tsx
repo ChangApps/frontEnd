@@ -104,8 +104,8 @@ const Historial2 = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesión");
       setVisible(true);
     } 
@@ -230,6 +230,14 @@ const Historial2 = () => {
     }
   };
 
+    const historialOrdenado = [...historial].sort((a, b) => {
+      if (!a.fechaSolicitud) return 1;
+      if (!b.fechaSolicitud) return -1;
+      const fechaA = new Date(a.fechaSolicitud);
+      const fechaB = new Date(b.fechaSolicitud);
+      return fechaB.getTime() - fechaA.getTime(); // más reciente primero
+    });
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -264,7 +272,7 @@ const Historial2 = () => {
 
         {/* Elemento de resultado */}
         <ResultadoList
-          historial={historial}
+          historial={historialOrdenado}
           usuarios={clientes}
           navigation={navigation}
           claveUsuario="cliente"
