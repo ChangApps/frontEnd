@@ -1,4 +1,4 @@
-import { Text, View, FlatList, TouchableOpacity } from "react-native";
+import { Text, View, FlatList, TouchableOpacity, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -165,7 +165,14 @@ const Resenias = () => {
                 {loading ? (
                     <PantallaCarga frase="Cargando reseñas..." />
                 ) : message ? (
-                    <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
+                    <View style={EstilosResenias.noResultsContainer}>
+                        <Image
+                        source={require('./estilos/list-is-empty.png')}
+                        style={EstilosResenias.noResultsImage}
+                        resizeMode="contain"
+                        />
+                        <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
+                    </View>
                 ) : (
                     <FlatList
                         data={solicitudes}

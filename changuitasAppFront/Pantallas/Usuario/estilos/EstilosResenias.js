@@ -89,6 +89,17 @@ const EstilosResenias = StyleSheet.create({
     textoDesplegable: {
         fontSize: 16,
         color: Colors.negro,
-      },
+    },
+    noResultsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    noResultsImage: {
+        width: 200,
+        height: 200,
+        marginBottom: 20,
+    },
 });
 export default EstilosResenias;
