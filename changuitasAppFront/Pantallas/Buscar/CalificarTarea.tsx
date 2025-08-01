@@ -37,11 +37,11 @@ const CalificarTarea = () => {
   }, [route.params.idSolicitud]);
 
   const actualizarSolicitud = async () => {
-    if (calificacion === 0 || comentario.trim() === "") {
-      setMessage('Error, Debe completar la calificación y el comentario antes de continuar.');
-      setVisible(true);
-      return;
-    }
+     if (calificacion === 0) {
+        setMessage('Error, debe completar la calificación antes de continuar.');
+        setVisible(true);
+        return;
+      }
 
     try {
       setCargando(true);
@@ -58,7 +58,7 @@ const CalificarTarea = () => {
         },
         body: JSON.stringify({
           solicitud_id: idSolicitud,
-          comentario,
+          comentario: comentario.trim() === '' ? 'Sin comentarios' : comentario.trim(),
           valoracion: calificacion,
         }),
       });
