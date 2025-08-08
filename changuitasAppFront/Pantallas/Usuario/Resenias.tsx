@@ -2,7 +2,7 @@ import {
   Text,
   View,
   FlatList,
-  TouchableOpacity,
+  Image,
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
@@ -27,6 +27,7 @@ import PantallaCarga from "../../componentes/PantallaCarga";
 import Colors from "../../assets/Colors";
 import { redirectAdmin } from "../../utils/utils";
 import MenuDesplegable from "../../componentes/MenuDesplegable";
+import EstilosUsuariosBloqueados from "./estilos/EstilosUsuariosBloqueados";
 
 const Resenias = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -37,7 +38,8 @@ const Resenias = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [solicitudes, setSolicitudes] = useState([]); //Estado para guardar el arreglo del historial
   const [state, setState] = useContext(AuthContext);
-
+  const [hayResenas, setHayResenas] = useState(true);
+  
   const logout = async () => {
     try {
       setState({ token: "" });
@@ -79,9 +81,9 @@ const Resenias = () => {
       );
 
       if (responseSolicitudUsuario.status === 404) {
-        console.log("No hay reseñas disponibles");
+        setHayResenas(false);
         setMessage("No hay reseñas disponibles");
-        return; // Opcional salir de la funcion
+        return; 
       }
 
       if (!responseSolicitudUsuario.ok) {
@@ -96,8 +98,8 @@ const Resenias = () => {
       if (solicitudFiltrada.length > 0) {
         setSolicitudes(solicitudFiltrada);
       } else {
-        setMessage("No hay reseñas disponibles");
-        setVisible(true);
+       setHayResenas(false);
+       setMessage("No hay reseñas disponibles");
       }
     } catch (error) {
       console.log("Error al obtener las resenias");
@@ -183,17 +185,24 @@ const Resenias = () => {
             onRedirectAdmin={redirectAdmin}
           />
 
-          {loading ? (
-            <PantallaCarga frase="Cargando reseñas..." />
-          ) : message ? (
-            <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
-          ) : (
-            <FlatList
-              data={solicitudes}
-              renderItem={renderResenia}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          )}
+      {loading ? (
+        <PantallaCarga frase="Cargando reseñas..." />
+      ) : !hayResenas ? (
+        <View style={EstilosResenias.noResultsContainer}>
+              <Image
+                        source={require('./estilos/no-results.png')}
+                        style={EstilosUsuariosBloqueados.noResultsImage}
+                        resizeMode="contain"
+                      />
+                <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={solicitudes}
+                renderItem={renderResenia}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            )}
         </View>
 
         <CustomSnackbar
