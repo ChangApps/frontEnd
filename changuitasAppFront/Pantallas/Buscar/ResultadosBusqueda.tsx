@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
-import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
+import { useNavigation, NavigationProp, RouteProp, useRoute, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from '../../utils/API_URL';
@@ -54,9 +54,20 @@ const ResultadosBusqueda = () => {
     }
   };
 
-  useEffect(() => {
-    obtenerUsuariosBloqueados();
-  }, []);
+useFocusEffect(
+  useCallback(() => {
+    const cargarUsuariosBloqueados = async () => {
+      try {
+        await obtenerUsuariosBloqueados();
+      } catch (error) {
+        console.log("Error al cargar usuarios bloqueados:", error);
+      } finally {
+          setLoadingProveedor(false);
+      }
+    };
+    cargarUsuariosBloqueados();
+  }, [])
+);
 
   const obtenerFotoPerfil = (proveedor: any) => {
     return proveedor.fotoPerfil ? `${API_URL}${proveedor.fotoPerfil}` : "https://via.placeholder.com/100";
