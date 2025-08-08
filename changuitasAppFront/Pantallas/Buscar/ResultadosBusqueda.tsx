@@ -18,14 +18,13 @@ const ResultadosBusqueda = () => {
   const [usuariosBloqueados, setUsuariosBloqueados] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
-  const [message, setMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalServiciosVisible, setModalServiciosVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [serviciosModal, setServiciosModal] = useState<any[]>([]);
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState<any>(null);
   const [loadingProveedor, setLoadingProveedor] = useState(false);
-
+  const [message, setMessage] = useState('');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
   const { proveedores, error, busquedaGeneral } = route.params;
@@ -84,6 +83,7 @@ const ResultadosBusqueda = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -92,27 +92,31 @@ const ResultadosBusqueda = () => {
   };
 
 const handleProveedorPress = (proveedor: any) => {
-  if (proveedor.servicios && proveedor.servicios.length > 1) {
-    // mas de un servicio: abrir modal
+  if (!proveedor.servicios || proveedor.servicios.length === 0) {
+    setMessage("El proveedor seleccionado no tiene servicios disponibles");
+    setVisible(true);
+    return;
+  }
+
+  if (proveedor.servicios.length > 1) {
     setProveedorSeleccionado(proveedor);
     setServiciosModal(proveedor.servicios);
     setModalServiciosVisible(true);
-  } else if (proveedor.servicios && proveedor.servicios.length === 1) {
-    // un solo servicio: navegar con ese servicio
+  } else if (proveedor.servicios.length === 1) {
+    // un solo servicio: navegar directamente
     setLoadingProveedor(true);
-    navigation.navigate('PerfilProveedor', { 
-      id: proveedor.id, 
-      servicio: proveedor.servicios[0].id 
+    navigation.navigate('PerfilProveedor', {
+      id: proveedor.id,
+      servicio: proveedor.servicios[0].id,
     });
   } else if (proveedor.idServicio) {
-    // caso servicio único fuera de array
+    // caso alternativo con idServicio directo
     setLoadingProveedor(true);
     navigation.navigate('PerfilProveedor', {
       id: proveedor.id,
       servicio: proveedor.idServicio,
     });
   } else {
-    // no tiene servicios
     setMessage("El proveedor seleccionado no tiene servicios disponibles");
     setVisible(true);
   }

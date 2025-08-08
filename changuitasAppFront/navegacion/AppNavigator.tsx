@@ -22,6 +22,8 @@ import RecuperarNombreUsuario from '../Pantallas/RecuperarAcceso/RecuperarNombre
 
 import Home from '../Pantallas/Home/Home';
 
+import Notificaciones from '../Pantallas/Notificacion/Notificaciones';
+
 import PerfilUsuario from '../Pantallas/Usuario/PerfilUsuario';
 import Resenias from '../Pantallas/Usuario/Resenias';
 import UsuariosBloqueados from '../Pantallas/Usuario/UsuariosBloqueados';
@@ -72,6 +74,7 @@ export type RootStackParamList = {
   CalificarTarea: { idSolicitud: string };
   Historial1: undefined;
   Historial2: undefined;
+  Notificaciones: undefined;
 };
 
 // Crea una instancia(como una lista) del stack navigator con el tipo RootStackParamList(rutas a navegar)
@@ -136,6 +139,7 @@ export default function AppNavigator() {
         CalificarTarea: 'calificar-tarea/', 
         Historial1: 'historial-1/',
         Historial2: 'historial-2/',
+        Notificaciones: 'notificaciones/'
       },
     },
   };
@@ -245,6 +249,11 @@ export default function AppNavigator() {
           <Stack.Screen
             name="PantallaAyuda"
             component={PantallaAyuda}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Notificaciones"
+            component={Notificaciones}
             options={{ headerShown: false }}
           />
         </>
