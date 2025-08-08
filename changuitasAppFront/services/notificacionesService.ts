@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import API_URL  from '../utils/API_URL';
+import API_URL from '../utils/API_URL';
 
 export const guardarTrabajosNotificados = async (ids: string[]) => {
   await AsyncStorage.setItem('trabajosNotificados', JSON.stringify(ids));
@@ -20,13 +20,14 @@ export const verificarTrabajosPendientes = async (
     });
 
     const data = await res.json();
-  
-    // Verificamos que sea un array antes de usar filter,sino tira un error
     if (!Array.isArray(data)) {
       return;
     }
 
+    // Primero obtengo los ya notificados
     const yaNotificados = await obtenerTrabajosNotificados();
+
+    // Luego filtro nuevos que no estén notificados
     const nuevos = data.filter(
       (s: any) => s.estado === 'PA' && !yaNotificados.includes(String(s.id))
     );
@@ -58,24 +59,35 @@ export const verificarSolicitudesAceptadas = async (
   token: string,
   setTrabajosNotificados: Function
 ) => {
-  const res = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
- const data = await res.json();
+  try {
+    const res = await fetch(`${API_URL}/historial/cliente/${userId}/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-if (!Array.isArray(data)) {
-  return;
-}
+    const data = await res.json();
 
-const nuevos = data.filter(
-  (s: any) => s.estado === 'I' && !yaNotificados.includes(String(s.id))
-);
+    if (!Array.isArray(data)) {
+      return;
+    }
 
-  const yaNotificados = await obtenerTrabajosNotificadosCliente();
- // const nuevos = data.filter((s: any) => s.estado === 'I' && !yaNotificados.includes(String(s.id)));
+    // Primero obtengo los ya notificados para cliente
+    const yaNotificados = await obtenerTrabajosNotificadosCliente();
 
-  if (nuevos.length) {
-    await guardarTrabajosNotificadosCliente([...yaNotificados, ...nuevos.map((s: any) => String(s.id))]);
-    setTrabajosNotificados((prev: any[]) => [...prev, ...nuevos]);
+    // Luego filtro nuevos que no estén notificados
+    const nuevos = data.filter(
+      (s: any) =>
+        (s.estado === 'I' || s.estado === 'Iniciado') &&
+        !yaNotificados.includes(String(s.id))
+    );
+
+    if (nuevos.length) {
+      await guardarTrabajosNotificadosCliente([
+        ...yaNotificados,
+        ...nuevos.map((s: any) => String(s.id)),
+      ]);
+      setTrabajosNotificados((prev: any[]) => [...prev, ...nuevos]);
+    }
+  } catch (error) {
+    console.log("Error al verificar solicitudes aceptadas:", error);
   }
 };
