@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
@@ -133,33 +133,37 @@ const PantallaHome = () => {
     await verificarTrabajosPendientes(userId, token, setTrabajosNotificados);
     await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
+useFocusEffect(
+  useCallback(() => {
+    const init = async () => {
+      try {
+        setCargandoContenido(true); 
+        const storedToken = await AsyncStorage.getItem('accessToken');
+        if (!storedToken) {
+          console.log('No se encontró token');
+          return;
+        }
 
-useEffect(() => {
-  const init = async () => {
-    try {
-      const storedToken = await AsyncStorage.getItem('accessToken');
-      if (!storedToken) {
-        console.log('No se encontró token');
-        return;
+        console.log("El stored token es: ", storedToken);
+
+        await Promise.all([
+          obtenerCategorias().then(setCategorias),
+          fetchUsuarioLogueado(),
+          fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas),
+        ]);
+
+      } catch (err) {
+        console.log("Error en init:", err);
+      } finally {
+        setCargandoContenido(false);
+        setCargandoPerfil(false); // ← Finaliza carga después de todo
       }
+    };
 
-      console.log("El stored token es: ", storedToken);
+    init();
+  }, [])
+);
 
-      // Ejecutamos todas las funciones en paralelo
-      await Promise.all([
-        obtenerCategorias().then(setCategorias),
-        fetchUsuarioLogueado(),
-        fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas),
-      ]);
-
-    } catch (err) {
-      console.log("Error en init:", err);
-    } finally {
-      setCargandoContenido(false); // solo cuando TODO terminó
-    }
-  };
-  init();
-}, []);
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
       const siguiente = trabajosNotificados[0];
