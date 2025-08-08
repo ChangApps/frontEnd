@@ -4,8 +4,10 @@ import { View, Text } from 'react-native';
 interface Props {
   servicio: string;
   fecha: string | null;
+  fechaValoracion: string | null;
   puntaje: string | number;
   estado: string;
+  comentario: string;
   estilos: any;
 }
 
@@ -26,7 +28,7 @@ const formatearFecha = (fechaISO: string | null | undefined): string => {
   }
 };
 
-const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, puntaje, estado, estilos }) => {
+const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, fechaValoracion, puntaje, estado, comentario, estilos }) => {
   const fechaFormateada = formatearFecha(fecha);
 
   return (
@@ -36,7 +38,9 @@ const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, puntaje, estado
         <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
         <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
         <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
+        <Text style={estilos.infoUsuario}>Fecha valoracion: {fechaValoracion}</Text>
         <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+        <Text style={estilos.infoUsuario}>Comentario: {comentario}</Text>
       </View>
     </View>
   );

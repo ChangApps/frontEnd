@@ -34,6 +34,8 @@ const DetalleTarea = () => {
   const [servicio, setServicio] = useState('');
   const [estado, setEstado] = useState('');
   const [puntaje, setPuntaje] = useState<string | number>('Aun no asignado');
+  const [comentario, setComentario] = useState('');
+  const [fechaValoracion, setFechaValoracion] = useState('');
   const [rol, setRol] = useState<'cliente' | 'trabajador' | null>(null);
   const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState('');
@@ -88,7 +90,8 @@ const DetalleTarea = () => {
       setServicio(data.nombreServicio);
       setEstado(data.estado_display);
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
-
+      setComentario(data.comentario||'Sin comentarios');
+      setFechaValoracion(data.fechaValoracion || 'No disponible');
       const userId = await AsyncStorage.getItem('userId');
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
@@ -251,14 +254,15 @@ const DetalleTarea = () => {
               estiloImagen={EstilosDetalleTarea.imagenModal}
             />
 
-            <DatosTareaCompactos
+           <DatosTareaCompactos
               servicio={servicio}
               fecha={fecha}
+              fechaValoracion={fechaValoracion}
               puntaje={puntaje}
               estado={estado}
+              comentario={comentario}
               estilos={EstilosDetalleTarea}
             />
-
             <AccionesTarea
               rol={rol}
               estado={estado}
