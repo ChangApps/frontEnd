@@ -11,7 +11,7 @@ import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { Button } from '../../componentes/Buttons';
 import { COLORES_APP, FUENTES, DIMENSIONES } from '../../componentes/estilosCompartidosPerfilesUsuarios';
-import { Direccion } from '../../types/interfaces';
+import { Direccion, ServicioArreglado } from '../../types/interfaces';
 import { redirectAdmin } from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,6 +48,7 @@ const PerfilProveedor = () => {
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
   const [cargando, setCargando] = useState(false); //para las pantallas de cargas
+  const [DataServicio, setDataServicio] = useState<ServicioArreglado| null>(null);
 
   const formatearFecha = (fecha: string): string => {
     const [año, mes, dia] = fecha.split("-");
@@ -71,17 +72,11 @@ const PerfilProveedor = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.log('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } 
   };
 
   useEffect(() => {
@@ -173,6 +168,7 @@ const PerfilProveedor = () => {
     }
     fetchUsuario();
     fetchProveedorServicio();
+    fetchDatosServicio();
 
     return () => {
       // Cuando el componente se desmonte, poner el flag a false
@@ -197,11 +193,6 @@ const PerfilProveedor = () => {
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
       console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
       setreseniasUserId(proveedorId);
-      //  const idServicioString = await AsyncStorage.getItem('idServicio');
-      //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
-
-      // Realiza la solicitud al backend para obtener los ProveedorServicio
-      // console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
       const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${idServicio}/`, {
         method: 'GET',
         headers: {
@@ -224,6 +215,43 @@ const PerfilProveedor = () => {
     }
   };
 
+
+    const fetchDatosServicio = async () => {
+    if (!isMounted) return;
+    try {
+      // Obtén el token de acceso desde AsyncStorage
+      const accessToken = await AsyncStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso');
+      }
+      console.log("Haciendo fetch del servicio");
+      const idServicio = route.params.servicio; 
+      // Se realiza la solicitud para obtener los datos del servicio
+      const responseServicio = await fetch(`${API_URL}/servicios/${idServicio}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!responseServicio.ok) {
+        console.log(`Error al obtener los datos del servicio: ${responseServicio.status}`);
+      }
+
+      const servicioDat: ServicioArreglado = await responseServicio.json();
+      console.log('Datos del servicio recibidos:', servicioDat); 
+      setDataServicio(servicioDat);
+
+    } catch (error) {
+      console.error('Error al cargar los datos del servicio:', error); 
+      setMessage("Error. No se pudo cargar el perfil.");
+      setVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUsuario = async () => {
     if (!isMounted) return;
@@ -471,18 +499,25 @@ const PerfilProveedor = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Datos Personales */}
-          <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS PERSONALES</Text>
-          <View style={EstilosPerfilProveedor.datosPersonales}>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Nombre: {usuario?.first_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>
-              Fecha de Nacimiento: {usuario?.fechaNacimiento ? formatearFecha(usuario.fechaNacimiento) : ""}
-            </Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Correo Electronico: {usuario?.email}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Telefono: {usuario?.telefono}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
-          </View>
+        {/* Datos del servicio */}
+            <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS DEL SERVICIO</Text>
+            <View style={EstilosPerfilProveedor.datosPersonales}>
+              <Text style={EstilosPerfilProveedor.infoUsuario}>
+                Nombre del servicio: {DataServicio?.nombreServicio}
+              </Text>
+              <Text style={EstilosPerfilProveedor.infoUsuario}>
+                Descripción: {DataServicio?.descripcion}
+              </Text>
+
+              <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
+                Horarios:
+              </Text>
+              {DataServicio?.dias?.map((dia, index) => (
+                <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
+                  {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
+                </Text>
+              ))}
+            </View>
         </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
@@ -495,4 +530,3 @@ const PerfilProveedor = () => {
 };
 
 export default PerfilProveedor;
-

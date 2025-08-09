@@ -61,3 +61,15 @@ export interface Proveedor {
     }>;
     fechaDesde?: string;
   }
+
+  export interface ServicioArreglado {
+    id: number;
+    nombreServicio: string;
+    descripcion: string;
+    dias?: Array<{
+      dia: string;
+      desdeHora: string;
+      hastaHora: string;
+    }>;
+    fechaDesde?: string;
+  }
