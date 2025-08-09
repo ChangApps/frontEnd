@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, DimensionValue, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome, Ionicons, AntDesign, Entypo, Feather } from '@expo/vector-icons';
 import Colors from '../assets/Colors';
 
 interface ButtonProps {
@@ -9,17 +9,18 @@ interface ButtonProps {
     backgroundColor?: string;
     textColor?: string;
     textSize?: number;
-    // Props para la forma del boton
+    // Forma del botón
     padding?: number;
     borderRadius?: number;
     width?: DimensionValue;
-    // Props para el icono
-    showIcon?: boolean;
-    iconName?: keyof typeof MaterialIcons.glyphMap;
-    iconSize?: number;
-    iconColor?: string;
     borderColor?: string;
     borderWidth?: number;
+    // Iconos
+    showIcon?: boolean;
+    iconSet?: 'MaterialIcons' | 'FontAwesome' | 'Ionicons' | 'AntDesign' | 'Entypo' | 'Feather';
+    iconName?: string;
+    iconSize?: number;
+    iconColor?: string;
 }
 
 export function Button({
@@ -31,12 +32,13 @@ export function Button({
     padding = 15,
     borderRadius = 25,
     width,
+    borderColor, 
+    borderWidth,
     showIcon = false,
+    iconSet = 'MaterialIcons',
     iconName = 'arrow-forward',
     iconSize = 20,
     iconColor = '#FFFFFF',
-    borderColor, 
-    borderWidth,
 }: ButtonProps) {
 
     const buttonStyles = [
@@ -59,20 +61,31 @@ export function Button({
         }
     ];
 
+    const renderIcon = () => {
+        if (!showIcon || !iconName) return null;
+        switch (iconSet) {
+            case 'FontAwesome':
+                return <FontAwesome name={iconName as keyof typeof FontAwesome.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+            case 'Ionicons':
+                return <Ionicons name={iconName as keyof typeof Ionicons.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+            case 'AntDesign':
+                return <AntDesign name={iconName as keyof typeof AntDesign.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+            case 'Entypo':
+                return <Entypo name={iconName as keyof typeof Entypo.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+            case 'Feather':
+                return <Feather name={iconName as keyof typeof Feather.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+            default:
+                return <MaterialIcons name={iconName as keyof typeof MaterialIcons.glyphMap} size={iconSize} color={iconColor} style={styles.icon} />;
+        }
+    };
+
     return (
         <TouchableOpacity
             style={buttonStyles}
             onPress={onPress}
             activeOpacity={0.8}>
             <View style={styles.buttonContent}>
-                {showIcon && (
-                    <MaterialIcons
-                        name={iconName}
-                        size={iconSize}
-                        color={iconColor}
-                        style={styles.icon}
-                    />
-                )}
+                {renderIcon()}
                 <Text style={textStyles}>{titulo}</Text>
             </View>
         </TouchableOpacity>

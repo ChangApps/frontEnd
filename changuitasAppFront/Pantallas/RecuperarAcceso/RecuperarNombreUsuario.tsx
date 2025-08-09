@@ -12,6 +12,7 @@ import Input from "../../componentes/inputs/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PasoTituloIcono from "../../componentes/PasoTituloIcono";
 
 const RecuperarNombreUsuario = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -77,8 +78,13 @@ const RecuperarNombreUsuario = () => {
 
             {/* Paso de verificación */}
             <Text style={EstilosRecuperarNombreUsuario.instruccion}>
-              Para recuperar tu nombre de usuario, escribe tu correo electrónico para recibir tu usuario.
+              Ingresa tu correo electrónico para que podamos enviarte el nombre de tu usuario en ChangApp.
             </Text>
+
+          <PasoTituloIcono
+            iconName="person-outline" // o el ícono que quieras
+            texto="RECUPERACIÓN RÁPIDA:"
+          />
 
             {/* Campo de entrada */}
             <Input
