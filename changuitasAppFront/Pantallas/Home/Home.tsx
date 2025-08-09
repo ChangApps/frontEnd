@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
@@ -176,6 +176,18 @@ useFocusEffect(
   if (cargandoContenido) return <PantallaCarga />;
   if (cargandoPerfil) return <PantallaCarga frase="Cargando perfil proveedor..." />;
 
+    const iconosCategorias: Record<string,{ lib: 'Ionicons' | 'MaterialIcons'; name: string }> = {
+      'Hogar': { lib: 'Ionicons', name: 'home' },
+      'Belleza': { lib: 'Ionicons', name: 'cut' },
+      'Limpieza': { lib: 'MaterialIcons', name: 'cleaning-services' },
+      'Cuidado Infantil y Asistencia a Personas de la Tercera Edad': { lib: 'Ionicons', name: 'people' },
+      'Control de plagas': { lib: 'Ionicons', name: 'bug' },
+      'Jardineria': { lib: 'MaterialIcons', name: 'grass' },
+      'Mascotas': { lib: 'Ionicons', name: 'paw' },
+      'Mudanza y Servicios de Invierno': { lib: 'Ionicons', name: 'cube' },
+      'Educación': { lib: 'Ionicons', name: 'school' },
+    };
+
   return (
     <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView style={EstilosHome.safeContainer}>
@@ -246,19 +258,40 @@ useFocusEffect(
               data={categorias}
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
-              columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={EstilosHome.cardCategoria}
-                  onPress={() => {
-                    setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
-                    setMostrarModalBuscar(true);         // ← muestra el modal
-                  }}
-                >
-                  <Ionicons name="image" size={20} color={Colors.naranja} />
-                  <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
-                </TouchableOpacity>
-              )}
+              columnWrapperStyle={{
+                justifyContent: 'space-between',
+                marginHorizontal: 16,
+              }}
+              renderItem={({ item }) => {
+                const icono =
+                  iconosCategorias[item.nombre] || { lib: 'Ionicons', name: 'image' };
+
+                return (
+                  <TouchableOpacity
+                    style={EstilosHome.cardCategoria}
+                    onPress={() => {
+                      setIdCategoriaSeleccionada(item.id);
+                      setMostrarModalBuscar(true);
+                    }}
+                  >
+                    {icono.lib === 'Ionicons' && (
+                      <Ionicons
+                        name={icono.name as React.ComponentProps<typeof Ionicons>['name']}
+                        size={20}
+                        color={Colors.naranja}
+                      />
+                    )}
+                    {icono.lib === 'MaterialIcons' && (
+                      <MaterialIcons
+                        name={icono.name as React.ComponentProps<typeof MaterialIcons>['name']}
+                        size={20}
+                        color={Colors.naranja}
+                      />
+                    )}
+                    <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
+                  </TouchableOpacity>
+                );
+              }}
               contentContainerStyle={EstilosHome.scrollContenido}
             />
 
