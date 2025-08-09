@@ -426,6 +426,11 @@ const PerfilProveedor = () => {
               padding={12}
               borderRadius={DIMENSIONES.borderRadius}
               width="25%"
+              showIcon
+              iconSet="FontAwesome"
+              iconName="whatsapp"
+              iconSize={20}
+              iconColor={COLORES_APP.primario}
             />
 
             <Button
