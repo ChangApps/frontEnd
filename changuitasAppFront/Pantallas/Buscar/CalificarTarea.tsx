@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform, Linking, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Linking, TouchableWithoutFeedback, ScrollView, useWindowDimensions } from 'react-native';
 import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import styles from './estilos/EstilosCalificarTarea';
 import { Ionicons } from "@expo/vector-icons";
@@ -17,6 +17,7 @@ import MenuDesplegable from '../../componentes/MenuDesplegable';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { redirectAdmin } from '../../utils/utils';
+import getStyles from './estilos/EstilosCalificarTarea';
 
 const CalificarTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -121,7 +122,9 @@ const CalificarTarea = () => {
   const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
 
   const startSize = Platform.OS === 'web' ? 40 : 30;
-
+    const { width } = useWindowDimensions();
+  const styles = getStyles(width);
+  
   return (
     <SafeAreaView style={styles.safeContainer}>
       {cargando ? (
