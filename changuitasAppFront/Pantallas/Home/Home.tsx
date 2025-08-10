@@ -45,10 +45,15 @@ const PantallaHome = () => {
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
   const [cargandoPerfil, setCargandoPerfil] = useState(false);
+  const [message, setMessage] = useState('');
 
   const handleBuscar = async () => {
+    if (!textoBusqueda.trim()) {
+      setMessage('Por favor, ingresa un término de búsqueda antes de continuar.');
+      setSnackbarVisible(true);
+      return;
+  }
     console.log("Buscando por:", textoBusqueda);
-
     try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       const res = await fetch(`${API_URL}/buscar-usuario/?q=${encodeURIComponent(textoBusqueda)}`, {
@@ -307,6 +312,14 @@ useFocusEffect(
               actionLabel="Tocá para ver"
               onActionPress={() => navigation.navigate('Historial2')}
             />
+
+            <CustomSnackbar
+            visible={snackbarVisible}
+            setVisible={setSnackbarVisible}
+            message={message}
+            actionLabel=""
+            onActionPress={() => {}}
+          />
 
             {/* NavBar Inferior */}
             <NavBarInferior
