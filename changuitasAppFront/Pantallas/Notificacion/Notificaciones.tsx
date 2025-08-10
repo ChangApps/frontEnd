@@ -32,6 +32,7 @@ const Notificaciones = () => {
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [state, setState] = useContext(AuthContext);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const obtenerNotificaciones = async () => {
     try {
@@ -58,8 +59,10 @@ const Notificaciones = () => {
   };
 
   useEffect(() => {
+      setLoading(true);
       obtenerNotificaciones();
-  }, []);
+      setLoading(false);
+    }, []);
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
@@ -93,6 +96,10 @@ const Notificaciones = () => {
         setVisible(true);
       }
     };
+
+    if (loading) {
+    return <PantallaCarga frase="Cargando historial..." />;
+  }
 
   const renderNotificacion = ({ item }: { item: Notificacion }) => (
     <View style={styles.card}>

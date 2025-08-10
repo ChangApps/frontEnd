@@ -14,6 +14,7 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 const Historial1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -79,8 +80,7 @@ const Historial1 = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-  useEffect(() => {
-    const obtenerDatosAsyncStorage = async () => {
+  const obtenerDatosAsyncStorage = async () => {
       try {
         const userId = await AsyncStorage.getItem('userId');
 
@@ -93,9 +93,16 @@ const Historial1 = () => {
       }
     };
 
-    obtenerDatosAsyncStorage();
-    fetchUHistorial();
-  }, []);  // Solo se ejecuta una vez cuando el componente se monta
+    useEffect(() => {
+      const obtenerDatos = async () => {
+        setLoading(true); // Activar pantalla de carga
+        await obtenerDatosAsyncStorage();
+        await fetchUHistorial();
+        setLoading(false); // Desactivar cuando todo termine
+      };
+
+      obtenerDatos();
+    }, []);
 
   const logout = async () => {
     try {
@@ -214,6 +221,10 @@ const Historial1 = () => {
       setLoading(false); // Cuando termina el fetch de proveedores, se desactiva la carga
     }
   };
+
+   if (loading) {
+    return <PantallaCarga frase="Cargando historial..." />;
+  }
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
