@@ -1,6 +1,6 @@
 // pantallas/Notificaciones.tsx
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableWithoutFeedback, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavBarSuperior } from "../../componentes/NavBarSuperior";
@@ -87,8 +87,10 @@ const Notificaciones = () => {
       try {
         setState({ token: '' });
         await cerrarSesion();
-      } catch (error: any) {
-        console.log('Error en el cierre de sesión:', error.message);
+      } catch (error) {
+        console.log('Error en el cierre de sesión:');
+        setMessage('No se pudo cerrar la sesion');
+        setVisible(true);
       }
     };
 
@@ -117,18 +119,27 @@ const Notificaciones = () => {
             onLogout={logout}
             onRedirectAdmin={redirectAdmin}
         />
-        {cargandoContenido ? (
-            <PantallaCarga />
-        ) : notificaciones.length === 0 ? (
-            <Text style={styles.vacio}>No tenés notificaciones.</Text>
-        ) : (
-            <FlatList
-            data={notificaciones}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderNotificacion}
-            contentContainerStyle={styles.lista}
-            />
-        )}
+      {cargandoContenido ? (
+              <PantallaCarga />
+            ) : notificaciones.length === 0 ? (
+              <View style={styles.vacioContainer}>
+                <Image
+                  source={require('../Usuario/estilos/no-results.png')}
+                  style={styles.vacioImagen}
+                  resizeMode="contain"
+                />
+                <Text style={styles.vacioTexto}>
+                  No tenés notificaciones.
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={notificaciones}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderNotificacion}
+                contentContainerStyle={styles.lista}
+              />
+            )}
         <NavBarInferior
             activeScreen="Notificaciones"
             onNavigate={handleNavigation}
@@ -149,28 +160,47 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.fondo,
   },
   lista: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 80, // espacio para el navbar 
   },
   card: {
-    backgroundColor: "#eee",
-    padding: 14,
+    backgroundColor: "#fff",
+    padding: 16,
     marginBottom: 12,
-    borderRadius: 10,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2, // para Android
   },
   mensaje: {
     fontSize: 16,
+    color: "#333",
   },
   fecha: {
     marginTop: 6,
-    fontSize: 12,
-    color: "#666",
+    fontSize: 13,
+    color: "#888",
   },
-  vacio: {
+  vacioContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  vacioImagen: {
+    width: 160,
+    height: 160,
+    marginBottom: 20,
+    opacity: 0.9,
+  },
+  vacioTexto: {
     textAlign: "center",
-    marginTop: 40,
     fontSize: 16,
     color: "#777",
+    lineHeight: 22,
   },
 });
-
 export default Notificaciones;
