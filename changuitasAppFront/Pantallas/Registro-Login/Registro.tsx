@@ -40,8 +40,30 @@ const Registro = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
 
 
+  const camposObligatoriosVacios = () => {
+  return (
+    username.trim() === '' &&
+    firstName.trim() === '' &&
+    lastName.trim() === '' &&
+    email.trim() === '' &&
+    documento.trim() === '' &&
+    telefono.trim() === '' &&
+    calle.trim() === '' &&
+    altura.trim() === '' &&
+    fechaNacimiento.trim() === '' &&
+    password.trim() === '' &&
+    confirmarPassword.trim() === ''
+  );
+};
+
   // Función para manejar el registro del usuario
   const handleRegistro = async () => {
+
+  if (camposObligatoriosVacios()) {
+    setErrorMessage('Por favor, completa los campos antes de registrarte.');
+    return;
+  }
+
     if (password !== confirmarPassword) {
       setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;

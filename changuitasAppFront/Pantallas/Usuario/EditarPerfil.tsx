@@ -181,6 +181,24 @@ const EditarPerfil = () => {
     return <PantallaCarga frase="Guardando cambios..." />;
   }
 
+  const hayCambios = () => {
+  if (
+    camposModificados.first_name?.trim() !== '' ||
+    camposModificados.last_name?.trim() !== '' ||
+    camposModificados.email?.trim() !== '' ||
+    camposModificados.telefono?.trim() !== '' ||
+    (camposModificados.direccion && Object.values(camposModificados.direccion).some(v => v && v.toString().trim() !== '')) ||
+    camposModificados.old_password?.trim() !== '' ||
+    camposModificados.password?.trim() !== '' ||
+    camposModificados.password2?.trim() !== '' ||
+    imageUri !== imageUriOriginal // si cambiaste la foto
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
   return (
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
@@ -397,6 +415,11 @@ const EditarPerfil = () => {
                 titulo="Guardar Cambios"
                 onPress={async () => {
                   try {
+                     if (!hayCambios()) {
+                          setMessage('No se modificó ningún campo.');
+                          setVisible(true);
+                          return;
+                        }
                     const resultado = await guardarCambios(
                       camposModificados,
                       datosOriginales,

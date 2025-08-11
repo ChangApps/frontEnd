@@ -50,6 +50,12 @@ const Verificacion2Registro = () => {
   };
 
   const crearUsuario = async () => {
+    if (!imageUri) {
+    setMessage('Por favor, seleccioná una imagen.');
+    setVisible(true);
+    return;
+  }
+
     setCargando(true);
     try {
       // Enviar los datos del usuario sin la foto de perfil
