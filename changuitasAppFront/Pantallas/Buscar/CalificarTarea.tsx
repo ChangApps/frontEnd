@@ -67,10 +67,12 @@ const CalificarTarea = () => {
       }
 
       setCargando(false);
-      //Arreglar esto (no muestra el mensaje de éxito)
+      //Arreglar esto (ver como se puede mejorar)
       setMessage('¡Changuita calificada exitosamente!');
       setVisible(true);
-      navigation.navigate('Home');
+        setTimeout(() => {
+        navigation.navigate('Home');
+      }, 2000); // 2 segundos para que se vea el mensaje
     } catch (error) {
       setCargando(false);
       console.log('Error al actualizar la solicitud:', error);
