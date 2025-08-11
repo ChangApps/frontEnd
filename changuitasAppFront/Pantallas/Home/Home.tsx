@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput, Platform, Alert } from 'react-native';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -45,13 +45,21 @@ const PantallaHome = () => {
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
   const [cargandoPerfil, setCargandoPerfil] = useState(false);
-  const [message, setMessage] = useState('');
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const handleBuscar = async () => {
     if (!textoBusqueda.trim()) {
-      setMessage('Por favor, ingresa un término de búsqueda antes de continuar.');
-      setSnackbarVisible(true);
-      return;
+
+    if (Platform.OS === 'web') {
+        alert('Por favor, ingresa un término de búsqueda antes de continuar.');
+      } else {
+        Alert.alert(
+          'Error', 
+          'Por favor, ingresa un término de búsqueda antes de continuar.',
+          [{ text: 'Aceptar' }]
+        );
+      }
+    return;
   }
     console.log("Buscando por:", textoBusqueda);
     try {
@@ -144,6 +152,8 @@ useFocusEffect(
       try {
         setCargandoContenido(true); 
         const storedToken = await AsyncStorage.getItem('accessToken');
+        const userId = await AsyncStorage.getItem('userId');
+        setIdUsuario(userId ? parseInt(userId) : null);
         if (!storedToken) {
           console.log('No se encontró token');
           return;
@@ -300,26 +310,30 @@ useFocusEffect(
               contentContainerStyle={EstilosHome.scrollContenido}
             />
 
-            {/* Snackbar */}
-            <CustomSnackbar
-              visible={snackbarVisible}
-              setVisible={setSnackbarVisible}
-              message={trabajoActual ? (
-                trabajoActual.estado === 'PA'
-                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
-                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
-              ) : 'Mensaje por defecto'}
+       {/* Snackbar */}
+        <CustomSnackbar
+          visible={snackbarVisible}
+          setVisible={setSnackbarVisible}
+          message={
+            trabajoActual
+              ? trabajoActual.cliente === idUsuario
+                ? // Si el cliente es el usuario actual
+                  (trabajoActual.estado === 'PA'
+                    ? `${trabajoActual.proveedor_nombre} aceptó tu solicitud de ${trabajoActual.nombreServicio}`
+                    : `Tu solicitud para ${trabajoActual.nombreServicio} fue aceptada`)
+                : // Si el cliente NO es el usuario actual
+                  (trabajoActual.estado === 'PA'
+                    ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+                    : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`)
+              : 'Mensaje por defecto'
+              }
               actionLabel="Tocá para ver"
-              onActionPress={() => navigation.navigate('Historial2')}
+              onActionPress={() =>
+                navigation.navigate(
+                  trabajoActual?.cliente === idUsuario ? 'Historial1' : 'Historial2'
+                )
+              }
             />
-
-            <CustomSnackbar
-            visible={snackbarVisible}
-            setVisible={setSnackbarVisible}
-            message={message}
-            actionLabel=""
-            onActionPress={() => {}}
-          />
 
             {/* NavBar Inferior */}
             <NavBarInferior

@@ -91,7 +91,13 @@ const DetalleTarea = () => {
       setEstado(data.estado_display);
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
       setComentario(data.comentario||'Sin comentarios');
-      setFechaValoracion(data.fechaValoracion || 'No disponible');
+       const fecha = data.fechaValoracion;
+        if (fecha) {
+          const [año, mes, dia] = fecha.split('-');
+          setFechaValoracion(`${dia}/${mes}/${año}`);
+        } else {
+          setFechaValoracion('No disponible');
+        }
       const userId = await AsyncStorage.getItem('userId');
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
@@ -145,27 +151,6 @@ const DetalleTarea = () => {
       navigation.navigate('Home');
     } catch {
       setMessage('Error al cancelar la changuita.');
-      setVisible(true);
-      setCargando(false);
-    }
-  };
-
-  const finalizarChanguita = async () => {
-    setCargando(true);
-    try {
-      const token = await AsyncStorage.getItem('accessToken');
-      await fetch(`${API_URL}/finalizar-changuita/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ solicitud_id: idSolicitud })
-      });
-      setCargando(false);
-      navigation.navigate('CalificarTarea', { idSolicitud });
-    } catch {
-      setMessage('Error al finalizar la changuita.');
       setVisible(true);
       setCargando(false);
     }
@@ -268,7 +253,9 @@ const DetalleTarea = () => {
               estado={estado}
               aceptarChanguita={aceptarChanguita}
               setMostrarModal={setMostrarModalCancelar}
-              finalizarSolicitud={finalizarChanguita}
+              finalizarSolicitud={() =>
+                  navigation.navigate('CalificarTarea', { idSolicitud })
+                }
               estilos={EstilosDetalleTarea}
             />
 

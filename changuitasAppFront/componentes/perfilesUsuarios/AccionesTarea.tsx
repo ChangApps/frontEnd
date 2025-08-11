@@ -1,4 +1,3 @@
-// COMPONENTE: AccionesTarea.tsx (basado fielmente en tu archivo inicial de DetalleTarea.tsx)
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Button } from '../Buttons';
