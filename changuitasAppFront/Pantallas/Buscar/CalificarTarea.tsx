@@ -38,14 +38,7 @@ const CalificarTarea = () => {
   }, [route.params.idSolicitud]);
 
   const actualizarSolicitud = async () => {
-     if (calificacion === 0) {
-        setMessage('Error, debe completar la calificación antes de continuar.');
-        setVisible(true);
-        return;
-      }
-
     try {
-      setCargando(true);
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) throw new Error('No se encontró el token de acceso');
 
@@ -74,6 +67,9 @@ const CalificarTarea = () => {
       }
 
       setCargando(false);
+      //Arreglar esto (no muestra el mensaje de éxito)
+      setMessage('¡Changuita calificada exitosamente!');
+      setVisible(true);
       navigation.navigate('Home');
     } catch (error) {
       setCargando(false);
@@ -82,6 +78,32 @@ const CalificarTarea = () => {
       setVisible(true);
     }
   };
+
+    const finalizarChanguita = async () => {
+      if (calificacion === 0) {
+        setMessage('Error, debe completar la calificación antes de continuar.');
+        setVisible(true);
+        return;
+      }
+
+      setCargando(true);
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        await fetch(`${API_URL}/finalizar-changuita/`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ solicitud_id:  route.params.idSolicitud })
+        });
+        actualizarSolicitud(); // Llamar a la función para actualizar la solicitud, si todo sale bien
+      } catch {
+        setMessage('Error al finalizar la changuita.');
+        setVisible(true);
+        setCargando(false);
+      }
+    };
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
@@ -191,7 +213,7 @@ const CalificarTarea = () => {
                 <View style={styles.buttonContainer}>
                   <Button
                     titulo="Calificar"
-                    onPress={actualizarSolicitud}
+                    onPress={finalizarChanguita}
                     backgroundColor={Colors.naranja}
                     textColor={Colors.fondo}
                     textSize={20}

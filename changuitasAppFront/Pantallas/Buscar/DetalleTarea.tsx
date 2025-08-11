@@ -150,27 +150,6 @@ const DetalleTarea = () => {
     }
   };
 
-  const finalizarChanguita = async () => {
-    setCargando(true);
-    try {
-      const token = await AsyncStorage.getItem('accessToken');
-      await fetch(`${API_URL}/finalizar-changuita/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ solicitud_id: idSolicitud })
-      });
-      setCargando(false);
-      navigation.navigate('CalificarTarea', { idSolicitud });
-    } catch {
-      setMessage('Error al finalizar la changuita.');
-      setVisible(true);
-      setCargando(false);
-    }
-  };
-
   const logout = async () => {
     try {
       setState({ token: '' });
@@ -268,7 +247,9 @@ const DetalleTarea = () => {
               estado={estado}
               aceptarChanguita={aceptarChanguita}
               setMostrarModal={setMostrarModalCancelar}
-              finalizarSolicitud={finalizarChanguita}
+              finalizarSolicitud={() =>
+                  navigation.navigate('CalificarTarea', { idSolicitud })
+                }
               estilos={EstilosDetalleTarea}
             />
 

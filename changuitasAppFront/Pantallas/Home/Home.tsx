@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput, Platform, Alert } from 'react-native';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -45,13 +45,20 @@ const PantallaHome = () => {
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
   const [cargandoPerfil, setCargandoPerfil] = useState(false);
-  const [message, setMessage] = useState('');
 
   const handleBuscar = async () => {
     if (!textoBusqueda.trim()) {
-      setMessage('Por favor, ingresa un término de búsqueda antes de continuar.');
-      setSnackbarVisible(true);
-      return;
+
+    if (Platform.OS === 'web') {
+        alert('Por favor, ingresa un término de búsqueda antes de continuar.');
+      } else {
+        Alert.alert(
+          'Error', 
+          'Por favor, ingresa un término de búsqueda antes de continuar.',
+          [{ text: 'Aceptar' }]
+        );
+      }
+    return;
   }
     console.log("Buscando por:", textoBusqueda);
     try {
@@ -312,14 +319,6 @@ useFocusEffect(
               actionLabel="Tocá para ver"
               onActionPress={() => navigation.navigate('Historial2')}
             />
-
-            <CustomSnackbar
-            visible={snackbarVisible}
-            setVisible={setSnackbarVisible}
-            message={message}
-            actionLabel=""
-            onActionPress={() => {}}
-          />
 
             {/* NavBar Inferior */}
             <NavBarInferior
