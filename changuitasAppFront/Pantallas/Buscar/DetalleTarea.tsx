@@ -91,7 +91,13 @@ const DetalleTarea = () => {
       setEstado(data.estado_display);
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
       setComentario(data.comentario||'Sin comentarios');
-      setFechaValoracion(data.fechaValoracion || 'No disponible');
+       const fecha = data.fechaValoracion;
+        if (fecha) {
+          const [año, mes, dia] = fecha.split('-');
+          setFechaValoracion(`${dia}/${mes}/${año}`);
+        } else {
+          setFechaValoracion('No disponible');
+        }
       const userId = await AsyncStorage.getItem('userId');
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
