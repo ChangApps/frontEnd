@@ -64,6 +64,17 @@ const Registro = () => {
     return;
   }
 
+      // validar que el nombre y apellido no contengan números
+      const regexNumeros = /\d/; // cualquier dígito del 0 al 9,si tiene un 10 por ejemplo tambien lo toma
+      if (regexNumeros.test(firstName)) {
+        setErrorMessage('El nombre no puede contener números.');
+        return;
+      }
+      if (regexNumeros.test(lastName)) {
+        setErrorMessage('El apellido no puede contener números.');
+        return;
+      }
+
     if (password !== confirmarPassword) {
       setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;
