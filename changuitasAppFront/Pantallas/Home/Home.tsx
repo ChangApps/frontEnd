@@ -195,12 +195,13 @@ useFocusEffect(
       'Hogar': { lib: 'Ionicons', name: 'home' },
       'Belleza': { lib: 'Ionicons', name: 'cut' },
       'Limpieza': { lib: 'MaterialIcons', name: 'cleaning-services' },
-      'Cuidado Infantil y Asistencia a Personas de la Tercera Edad': { lib: 'Ionicons', name: 'people' },
+      'Cuidado de personas': { lib: 'Ionicons', name: 'people' },
       'Control de plagas': { lib: 'Ionicons', name: 'bug' },
       'Jardineria': { lib: 'MaterialIcons', name: 'grass' },
       'Mascotas': { lib: 'Ionicons', name: 'paw' },
-      'Mudanza y Servicios de Invierno': { lib: 'Ionicons', name: 'cube' },
+      'Mudanza': { lib: 'Ionicons', name: 'cube' },
       'Educación': { lib: 'Ionicons', name: 'school' },
+      'Servicios de invierno': { lib: 'Ionicons', name: 'snow' },
     };
 
   return (
