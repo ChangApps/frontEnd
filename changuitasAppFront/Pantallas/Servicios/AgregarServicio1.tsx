@@ -69,15 +69,15 @@ const AgregarServicio1 = () => {
         </View>
 
         {renderCategory("BELLEZA", ["Depilación", "Maquillaje", "Manicura", "Peluquería", "Podología"], selectedService, handleSelectService)}
-        {renderCategory("MASCOTAS", ["Paseo de perros", "Cuidado en el hogar", "Guardería"], selectedService, handleSelectService)}
+        {renderCategory("MASCOTAS", ["Paseo de mascotas", "Cuidado en el hogar", "Guardería"], selectedService, handleSelectService)}
         {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
         {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
         {renderCategory("HOGAR", ["Gasista", "Electricista", "Plomero", "Carpintería", "Pintor", "Albañil", "Zinguería", "Gomería", "Electrodomésticos", "Calderista"], selectedService, handleSelectService)}
         {renderCategory("CUIDADO DE PERSONAS", ["Niñera/o", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
         {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedService, handleSelectService)}
         {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedService, handleSelectService)}
-        {renderCategory("INVIERNO", ["Limpieza de nieve", "Sal en veredas"], selectedService, handleSelectService)}
-        {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de roedores"], selectedService, handleSelectService)}
+        {renderCategory("SERVICIOS DE INVIERNO", ["Limpieza de nieve", "Sal en las veredas"], selectedService, handleSelectService)}
+        {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de plagas"], selectedService, handleSelectService)}
 
         {/* Botones de acción */}
         <View style={EstilosAgregarServicio1.botonesContenedor}>
