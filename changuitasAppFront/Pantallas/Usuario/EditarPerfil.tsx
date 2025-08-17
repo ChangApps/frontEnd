@@ -361,8 +361,6 @@ const EditarPerfil = () => {
                 </>
               )}
 
-              <TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
-
                 {/* Botón para mostrar/ocultar campos de contraseña */}
                 <TouchableOpacity
                   style={EstilosEditarPerfil.botonCambiarPassword}
@@ -405,7 +403,6 @@ const EditarPerfil = () => {
 
                   </>
                 )}
-              </TouchableOpacity>
             </View>
 
             {/* Botón de Guardar Cambios*/}
