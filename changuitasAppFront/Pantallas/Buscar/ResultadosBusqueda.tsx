@@ -60,7 +60,7 @@ useFocusEffect(
       try {
         await obtenerUsuariosBloqueados();
       } catch (error) {
-        console.log("Error al cargar usuarios bloqueados:", error);
+        console.error("Error al cargar usuarios bloqueados:", error);
       } finally {
           setLoadingProveedor(false);
       }

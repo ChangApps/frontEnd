@@ -74,7 +74,7 @@ const DetalleTarea = () => {
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -102,7 +102,7 @@ const DetalleTarea = () => {
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

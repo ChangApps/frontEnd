@@ -49,7 +49,7 @@ const RecuperarContrasena2 = () => {
       if (response.ok) {
         navigation.navigate('RecuperarContrasena3', { id: data.id });
       } else {
-        console.log("Error", "No se pudo obtener el ID.");
+        console.error("Error", "No se pudo obtener el ID.");
       }
     } catch (error) {
       setMessage("Error de conexión. Inténtalo de nuevo.");
