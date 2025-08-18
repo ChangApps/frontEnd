@@ -381,7 +381,7 @@ const PerfilProveedor = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosPerfilProveedor.safeContainer}>
+      <SafeAreaView  style={EstilosPerfilProveedor.safeContainer}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
           {/* Encabezado con opciones de menú */}
           <NavBarSuperior
