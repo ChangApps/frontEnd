@@ -373,8 +373,6 @@ const PerfilProveedor = () => {
     }
   };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
-
   if (cargando) {
     return <PantallaCarga frase="Procesando..." />;
   }
@@ -388,7 +386,6 @@ const PerfilProveedor = () => {
           {/* Encabezado con opciones de menú */}
           <NavBarSuperior
             titulo="Perfil del proveedor"
-            titleSize={titleSizeNavbarSuperior}
             showBackButton={true}
             onBackPress={() => { navigation.goBack(); }}
             rightButtonType="menu"

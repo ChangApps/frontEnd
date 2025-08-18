@@ -143,8 +143,6 @@ const CalificarTarea = () => {
     } 
   };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
-
   const startSize = Platform.OS === 'web' ? 40 : 30;
     const { width } = useWindowDimensions();
   const styles = getStyles(width);
@@ -161,7 +159,6 @@ const CalificarTarea = () => {
             {/* NavBar Superior */}
             <NavBarSuperior
               titulo="Calificar tarea"
-              titleSize={titleSizeNavbarSuperior}
               showBackButton={true}
               onBackPress={() => { navigation.goBack(); }}
               rightButtonType="menu"
