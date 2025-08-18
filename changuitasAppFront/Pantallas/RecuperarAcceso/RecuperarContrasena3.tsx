@@ -56,7 +56,7 @@ const RecuperarContrasena3 = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al actualizar la contraseña:", error);
+      console.error("Error al actualizar la contraseña:", error);
       setMessage("Error al actualizar la contraseña.");
       setVisible(true);
     }

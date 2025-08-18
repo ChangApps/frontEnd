@@ -34,7 +34,6 @@ const CalificarTarea = () => {
   const [state, setState] = useContext(AuthContext)
 
   useEffect(() => {
-    console.log("CalificarTarea: ID DE SOLICITUD RECIBIDO:", route.params.idSolicitud);
   }, [route.params.idSolicitud]);
 
   const actualizarSolicitud = async () => {
@@ -75,7 +74,7 @@ const CalificarTarea = () => {
       }, 2000); // 2 segundos para que se vea el mensaje
     } catch (error) {
       setCargando(false);
-      console.log('Error al actualizar la solicitud:', error);
+      console.error('Error al actualizar la solicitud:', error);
       setMessage('Error al actualizar la solicitud.');
       setVisible(true);
     }
@@ -137,7 +136,7 @@ const CalificarTarea = () => {
       await cerrarSesion();
       console.log('Sesión cerrada correctamente');
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesión');
       setVisible(true);
     } 

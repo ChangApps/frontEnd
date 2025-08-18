@@ -89,7 +89,7 @@ const Historial1 = () => {
           setUserId(userId);
         }
       } catch (error) {
-        console.log("Error al obtener los datos de AsyncStorage:", error);
+        console.error("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -110,7 +110,7 @@ const Historial1 = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesión");
       setVisible(true);
     }
@@ -135,7 +135,6 @@ const Historial1 = () => {
 
       // Manejo especial para 404
       if (responseHistorial.status === 404) {
-        console.log("No se encontraron registros de historial (404)");
         setHistorial([]);
         setSolicitudesInfo([]);
         return; // Salir de la función sin mostrar error
@@ -164,9 +163,9 @@ const Historial1 = () => {
       } 
     } catch (error) {
       if (error instanceof Error) {
-        console.log('Error al cargar datos de la solicitud:', error.message);
+        console.error('Error al cargar datos de la solicitud:', error.message);
       } else {
-        console.log('Error desconocido:', error);
+        console.error('Error desconocido:', error);
       }
     }
   };
@@ -174,7 +173,6 @@ const Historial1 = () => {
 
   const fetchMultipleProveedoresData = async (proveedorIds: number[]) => {
     try {
-      console.log("Adentro del fetch multiple proveedores data");
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -208,13 +206,11 @@ const Historial1 = () => {
       // Procesamos las respuestas en paralelo
       const proveedoresData = await Promise.all(proveedorResponses.map(response => response.json()));
 
-      console.log('Respuesta exitosa: Datos de los proveedores recibidos:', proveedoresData);
-
       // Actualiza el estado con los datos de los proveedores
       setProveedores(proveedoresData);
 
     } catch (error) {
-      console.log('Error al cargar datos de los proveedores:', error);
+      console.error('Error al cargar datos de los proveedores:', error);
       setMessage('No se pudo cargar los datos de los proveedores');
       setVisible(true);
     } finally {

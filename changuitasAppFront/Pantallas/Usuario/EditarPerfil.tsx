@@ -94,7 +94,7 @@ const EditarPerfil = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+      console.error('Error en el cierre de sesión:', error.message);
     }
   };
 
@@ -118,7 +118,6 @@ const EditarPerfil = () => {
       setImageUri(uri);
       setImageUriOriginal(uri); // Guardar la original para compararla
     } catch (error) {
-      console.log('Error al obtener la foto de perfil:', error);
       setMessage('Error: No se pudo cargar la imagen de perfil.');
       setVisible(true);
     }

@@ -40,7 +40,7 @@ const formatearFecha = (fechaISO: string | null | undefined): string => {
     const [anio, mes, dia] = fechaParte.split('-');
     return `${dia}/${mes}/${anio}`;
   } catch (e) {
-    console.log("Error al formatear la fecha:", fechaISO, e);
+    console.error("Error al formatear la fecha:", fechaISO, e);
     return 'Formato de fecha inválido'; // Mensaje de error si el formato es incorrecto
   }
 };

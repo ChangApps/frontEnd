@@ -122,12 +122,12 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
           },
         });
 
-        if (!res.ok) console.log('Error al obtener subcategorías');
+        if (!res.ok) console.error('Error al obtener subcategorías');
 
         const data = await res.json();
         setSubcategorias(data);
       } catch (error) {
-        console.log('Error al obtener subcategorías:', error);
+        console.error('Error al obtener subcategorías:', error);
         setSubcategorias([]);
       }
     };

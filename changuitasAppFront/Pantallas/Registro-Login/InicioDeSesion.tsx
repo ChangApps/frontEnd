@@ -57,7 +57,6 @@ const InicioDeSesion = () => {
           is_staff: data.is_staff,
         }
       }));
-      console.log('Token guardado:', data.access);
 
       // Almacena los tokens y el userId en AsyncStorage
       await AsyncStorage.setItem('accessToken', data.access);

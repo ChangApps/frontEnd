@@ -91,7 +91,7 @@ const Notificaciones = () => {
         setState({ token: '' });
         await cerrarSesion();
       } catch (error) {
-        console.log('Error en el cierre de sesión:');
+        console.error('Error en el cierre de sesión:');
         setMessage('No se pudo cerrar la sesion');
         setVisible(true);
       }
