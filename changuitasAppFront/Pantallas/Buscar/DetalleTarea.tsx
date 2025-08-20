@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, Linking, Platform, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, ScrollView, Linking, Platform, TouchableWithoutFeedback, ImageStyle } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
@@ -233,7 +233,7 @@ const DetalleTarea = () => {
               uri={imageUri}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
-              estiloImagen={EstilosDetalleTarea.imagenModal}
+              estiloImagen={EstilosDetalleTarea.imagenModal as ImageStyle}
             />
 
            <DatosTareaCompactos

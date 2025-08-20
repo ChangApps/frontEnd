@@ -142,46 +142,70 @@ const PerfilUsuario: React.FC = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosPerfilUsuario.safeContainer}>
-        <ScrollView contentContainerStyle={EstilosPerfilUsuario.scrollContainer}>
-        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-        <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-        <BarraPestanasPerfil />
-        {cargando ? (
-          <PantallaCarga frase="Cargando perfil..." />
-        ) : message ? (
-          <Text style={EstilosPerfilUsuario.mensajeVacio}>{message}</Text>
-        ) : (
-          <>
-            <View style={EstilosPerfilUsuario.seccionUsuario}>
-              <ImagenPerfilUsuario
-                imageUri={imageUri}
-                modalVisible={modalVisible}
-                onImagePress={handleImagePress}
-                onCloseModal={handleCloseModal}
-              />
-              <Text style={EstilosPerfilUsuario.nombreCompleto}>{usuario?.username}</Text>
-            </View>
-            <ResumenServiciosUsuario
-              usuarioId={usuarioId}
-              contratados={(usuario as any)?.cantServiciosContratados ?? 0}
-              trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
-              puntaje={(usuario as any)?.puntaje ?? 0}
+  <SafeAreaView style={EstilosPerfilUsuario.safeContainer}>
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: 100 }}
+    >
+      <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+
+      {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+      {mostrarDesplegable && (
+        <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+          <View style={EstilosPerfilUsuario.overlay} />
+        </TouchableWithoutFeedback>
+      )}
+
+      <MenuDesplegable
+        visible={mostrarDesplegable}
+        usuario={state.usuario}
+        onLogout={logout}
+        onRedirectAdmin={redirectAdmin}
+      />
+
+      <BarraPestanasPerfil />
+
+      {cargando ? (
+        <PantallaCarga frase="Cargando perfil..." />
+      ) : message ? (
+        <Text style={EstilosPerfilUsuario.mensajeVacio}>{message}</Text>
+      ) : (
+        <>
+          <View style={EstilosPerfilUsuario.seccionUsuario}>
+            <ImagenPerfilUsuario
+              imageUri={imageUri}
+              modalVisible={modalVisible}
+              onImagePress={handleImagePress}
+              onCloseModal={handleCloseModal}
             />
-            {usuario && <DatosPersonalesUsuario usuario={usuario} />}
-          </>
-        )}
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
-        </ScrollView>
-        {/* Barra de navegación inferior */}
-        <NavBarInferior
-          activeScreen="PerfilUsuario" // O el screen activo correspondiente
-          onNavigate={handleNavigation}
-        />
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  );
+            <Text style={EstilosPerfilUsuario.nombreCompleto}>
+              {usuario?.username}
+            </Text>
+          </View>
+
+          <ResumenServiciosUsuario
+            usuarioId={usuarioId}
+            contratados={(usuario as any)?.cantServiciosContratados ?? 0}
+            trabajados={(usuario as any)?.cantServiciosTrabajados ?? 0}
+            puntaje={(usuario as any)?.puntaje ?? 0}
+          />
+
+          {usuario && <DatosPersonalesUsuario usuario={usuario} />}
+        </>
+      )}
+
+      <CustomSnackbar
+        visible={visible}
+        setVisible={setVisible}
+        message={message}
+      />
+
+      <NavBarInferior
+        activeScreen="PerfilUsuario"
+        onNavigate={handleNavigation}
+      />
+    </ScrollView>
+  </SafeAreaView>
+);
 };
 
 export default PerfilUsuario;

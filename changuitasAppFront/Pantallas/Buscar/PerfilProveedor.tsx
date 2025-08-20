@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform, ImageStyle } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -392,7 +392,7 @@ const PerfilProveedor = () => {
           {/* Información del Usuario */}
           <View style={EstilosPerfilProveedor.seccionUsuario}>
             <Pressable onPress={handleImagePress}>
-              <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica} />
+              <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica as ImageStyle}/>
             </Pressable>
             <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
           </View>
@@ -407,7 +407,7 @@ const PerfilProveedor = () => {
               <View style={EstilosPerfilProveedor.modalContainer}>
                 <Image
                   source={{ uri: imageUri || 'https://via.placeholder.com/80' }}
-                  style={EstilosPerfilProveedor.imagenModal}
+                  style={EstilosPerfilProveedor.imagenModal as ImageStyle}
                 />
               </View>
             </TouchableWithoutFeedback>
