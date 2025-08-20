@@ -41,7 +41,7 @@ const UsuariosBloqueados = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesión');
       setVisible(true);
     } 
@@ -60,7 +60,6 @@ const UsuariosBloqueados = () => {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         setMessage("Éxito , Usuario desbloqueado con éxito.");
@@ -76,7 +75,7 @@ const UsuariosBloqueados = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al desbloquear usuario:", error);
+      console.error("Error al desbloquear usuario:", error);
       setMessage("Error, No se pudo desbloquear al usuario.");
       setVisible(true);
     }
@@ -97,8 +96,6 @@ const UsuariosBloqueados = () => {
       }
 
       const data = await response.json();
-      console.log("Usuarios bloqueados:", data);
-
 
       setUsuariosBloqueados((data as any).map((usuario: any) => ({
         id: usuario.id,
@@ -107,7 +104,7 @@ const UsuariosBloqueados = () => {
       })));
 
     } catch (error) {
-      console.log("Error al obtener usuarios bloqueados:", error);
+      console.error("Error al obtener usuarios bloqueados:", error);
     } finally {
       setLoading(false);
     }

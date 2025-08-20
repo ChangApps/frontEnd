@@ -91,7 +91,7 @@ const Historial2 = () => {
 
         setUserId(userId); // Si existe, actualiza el estado
       } catch (error) {
-        console.log("Error al obtener los datos de AsyncStorage:", error);
+        console.error("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
@@ -111,7 +111,7 @@ const Historial2 = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesión");
       setVisible(true);
     } 
@@ -136,7 +136,6 @@ const Historial2 = () => {
 
       // Manejo especial para 404
       if (responseHistorial.status === 404) {
-        console.log("No se encontraron registros de historial (404)");
         setHistorial([]);
         setSolicitudesInfo([]);
         return; // Salir de la función sin mostrar error
@@ -162,7 +161,6 @@ const Historial2 = () => {
           fechaSolicitud: item.fechaSolicitud,
           estadoSolicitud: item.estado
         }));
-        console.log("Solicitudes procesadas:", solicitudesData);
 
         setSolicitudesInfo(solicitudesData);
 
@@ -171,7 +169,7 @@ const Historial2 = () => {
         await fetchMultipleClientesData(clientes);
       }
     } catch (error) {
-      console.log('Error al cargar datos del usuario (historial):', error);
+      console.error('Error al cargar datos del usuario (historial):', error);
     } finally {
       setLoading(false);
     }
@@ -180,7 +178,6 @@ const Historial2 = () => {
   // Función que obtiene los datos de los proveedores
   const fetchMultipleClientesData = async (clienteIds: number[]) => {
     try {
-      console.log("Adentro del fetch multiple clientes data");
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) throw new Error('No se encontró el token de acceso');
 
@@ -204,11 +201,10 @@ const Historial2 = () => {
       }
 
       const clientesData = await Promise.all(clienteResponses.map(r => r.json()));
-      console.log("Clientes recibidos:", clientesData);
       setClientes(clientesData);
 
     } catch (error) {
-      console.log("Error al cargar datos de clientes:", error);
+      console.error("Error al cargar datos de clientes:", error);
       setMessage("No se pudo cargar los datos de los clientes");
       setVisible(true);
     } finally {

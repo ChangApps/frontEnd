@@ -15,14 +15,20 @@ const ResumenServiciosUsuario: React.FC<Props> = ({ usuarioId, contratados, trab
 
   return (
     <View style={estilos.datosExtras}>
+    <TouchableOpacity onPress={() => navigation.navigate("Historial1")}>
       <View style={estilos.datoItem}>
         <Text style={estilos.datoNumero}>{contratados}</Text>
         <Text style={estilos.datoLabel}>Contrató</Text>
       </View>
-      <View style={estilos.datoItem}>
-        <Text style={estilos.datoNumero}>{trabajados}</Text>
-        <Text style={estilos.datoLabel}>Trabajó</Text>
-      </View>
+       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Historial2")}>
+        <View style={estilos.datoItem}>
+          <Text style={estilos.datoNumero}>{trabajados}</Text>
+          <Text style={estilos.datoLabel}>Trabajó</Text>
+        </View>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={() => navigation.navigate("Resenias", { idUsuario: usuarioId })}>
         <View style={estilos.datoItem}>
           <Text style={estilos.datoNumero}>{puntaje}</Text>

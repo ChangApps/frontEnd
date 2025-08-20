@@ -71,7 +71,6 @@ const PantallaHome = () => {
       });
 
         if (res.status === 204) {
-          console.log("No se encontraron resultados.");
           navigation.navigate('ResultadosBusqueda', {
           proveedores: [],
           error: 'No se encontraron resultados para tu búsqueda.',
@@ -81,7 +80,7 @@ const PantallaHome = () => {
           return;
         }
 
-    if (!res.ok) console.log('Error al obtener los datos');
+    if (!res.ok) console.error('Error al obtener los datos');
 
       const data = await res.json();
       console.log('Datos obtenidos:', data);
@@ -99,7 +98,7 @@ const PantallaHome = () => {
         });
       }
     } catch (error) {
-      console.log('Error al obtener los datos:', error);
+      console.error('Error al obtener los datos:', error);
       setTextoBusqueda('');
     }
   };
@@ -155,11 +154,9 @@ useFocusEffect(
         const userId = await AsyncStorage.getItem('userId');
         setIdUsuario(userId ? parseInt(userId) : null);
         if (!storedToken) {
-          console.log('No se encontró token');
+          console.error('No se encontró token');
           return;
         }
-
-        console.log("El stored token es: ", storedToken);
 
         await Promise.all([
           obtenerCategorias().then(setCategorias),
@@ -168,7 +165,7 @@ useFocusEffect(
         ]);
 
       } catch (err) {
-        console.log("Error en init:", err);
+        console.error("Error en init:", err);
       } finally {
         setCargandoContenido(false);
         setCargandoPerfil(false); // ← Finaliza carga después de todo

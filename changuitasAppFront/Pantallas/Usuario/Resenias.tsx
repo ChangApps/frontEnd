@@ -46,7 +46,7 @@ const Resenias = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log("Sesión cerrada correctamente"); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log("Error en el cierre de sesión:", error);
+      console.error("Error en el cierre de sesión:", error);
       setMessage("Error al cerrar sesion");
       setVisible(true);
     }
@@ -102,7 +102,7 @@ const Resenias = () => {
        setMessage("No hay reseñas disponibles");
       }
     } catch (error) {
-      console.log("Error al obtener las resenias");
+      console.error("Error al obtener las resenias");
     } finally {
       setLoading(false);
     }

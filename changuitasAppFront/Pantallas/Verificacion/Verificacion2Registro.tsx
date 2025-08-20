@@ -76,11 +76,11 @@ const Verificacion2Registro = () => {
         // Llamar a la función para enviar la foto de perfil
         EnviarFotoPerfil(idUsuarioCreado);
       } else {
-        console.log("Error al crear el usuario:", response.status);
+        console.error("Error al crear el usuario:", response.status);
         setErrorMessage("No se pudo crear el usuario.");
       }
     } catch (error) {
-      console.log("Error en la creación del usuario:", error);
+      console.error("Error en la creación del usuario:", error);
       setErrorMessage("Error en la creación del usuario.");
     } finally {
       setCargando(false);
@@ -109,7 +109,7 @@ const Verificacion2Registro = () => {
             });
           }
         } catch (error) {
-          console.log('Error al procesar la imagen:', error);
+          console.error('Error al procesar la imagen:', error);
           setErrorMessage('Error, No se pudo procesar la imagen seleccionada.');
           return;
         }
@@ -122,12 +122,10 @@ const Verificacion2Registro = () => {
         },
       });
 
-      console.log("Foto de perfil actualizada correctamente:", response.data);
-
       // Llamar a login() después de actualizar la foto de perfil
       login();
     } catch (error) {
-      console.log("Error al actualizar la foto de perfil:", error);
+      console.error("Error al actualizar la foto de perfil:", error);
       setErrorMessage("Error al actualizar la foto de perfil.");
     }
   };
@@ -140,7 +138,7 @@ const Verificacion2Registro = () => {
       });
 
       if (data.error) {
-        console.log("Error en login:", data.error);
+        console.error("Error en login:", data.error);
         setErrorMessage(data.error);
         return;
       }
@@ -150,11 +148,10 @@ const Verificacion2Registro = () => {
       await AsyncStorage.setItem("refreshToken", data.refresh);
       await AsyncStorage.setItem("userId", data.id.toString());
 
-      console.log("Token guardado: ", data.access);
       setState({ token: data.access });
       navigation.navigate("Home");
     } catch (error) {
-      console.log("Error en login:", error);
+      console.error("Error en login:", error);
       setErrorMessage("Error al iniciar sesión.");
     }
   };

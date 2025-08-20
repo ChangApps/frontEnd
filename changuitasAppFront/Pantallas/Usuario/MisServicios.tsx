@@ -39,7 +39,7 @@ const MisServicios = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesion');
       setVisible(true);
     } 
@@ -54,8 +54,6 @@ const MisServicios = () => {
       if (!accessToken) {
         throw new Error('Token de acceso no encontrado');
       }
-
-      console.log("Eliminado el servicio: ", serviceId);
 
       const response = await fetch(`${API_URL}/servicios/${serviceId}/`, {
         method: "DELETE",
@@ -78,7 +76,7 @@ const MisServicios = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error eliminando el servicio:", error);
+      console.error("Error eliminando el servicio:", error);
     }
   };
 
@@ -107,7 +105,7 @@ const MisServicios = () => {
       const data: Servicio[] = await response.json();
       setServices(data);
     } catch (error) {
-      console.log('Error al cargar los servicios del usuario:', error);
+      console.error('Error al cargar los servicios del usuario:', error);
     } finally {
       setLoading(false);
     }

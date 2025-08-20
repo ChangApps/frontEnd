@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import Colors from '../assets/Colors';
 
 interface NavBarInferiorProps {
@@ -10,37 +10,46 @@ interface NavBarInferiorProps {
 
 interface NavButtonInferior {
     screen: string;
-    iconName: keyof typeof Ionicons.glyphMap;
+    iconName: string;
+    iconLibrary?: 'Ionicons' | 'MaterialIcons' | 'FontAwesome'; 
 }
 
 const navButtonsInferior: NavButtonInferior[] = [
-    { screen: 'Home', iconName: 'home-outline' },
-    { screen: 'Historial1', iconName: 'grid-outline'   },
-    { screen: 'Add', iconName: 'add' }, // Boton del medio
-    { screen: 'Notifications', iconName: 'notifications-outline' },
-    { screen: 'PerfilUsuario',   iconName: 'person-outline'    },
+    { screen: 'Home', iconName: 'home-outline', iconLibrary: 'Ionicons' },
+    { screen: 'Historial1', iconName: 'history', iconLibrary: 'MaterialIcons' },
+    { screen: 'Add', iconName: 'add', iconLibrary:  'Ionicons' }, // Botón central
+    { screen: 'Notifications', iconName: 'notifications-outline', iconLibrary: 'Ionicons' },
+    { screen: 'PerfilUsuario', iconName: 'person-outline', iconLibrary: 'Ionicons' },
 ];
 
 export function NavBarInferior({ activeScreen, onNavigate }: NavBarInferiorProps) {
+    const renderIcon = (button: NavButtonInferior, size: number, color: string) => {
+        switch (button.iconLibrary) {
+            case 'MaterialIcons':
+                return <MaterialIcons name={button.iconName as any} size={size} color={color} />;
+            case 'FontAwesome':
+                return <FontAwesome name={button.iconName as any} size={size} color={color} />;
+            default:
+                return <Ionicons name={button.iconName as any} size={size} color={color} />;
+        }
+    };
+
     const renderNavButtonInferior = (button: NavButtonInferior, index: number) => {
         const isActive = activeScreen === button.screen;
-        const isCenter = index === 2; // Boton del medio
-        
+        const isCenter = index === 2;
+
         return (
             <TouchableOpacity
                 key={button.screen}
-                style={[
-                    styles.navButton,
-                    isCenter && styles.centerButton
-                ]}
+                style={[styles.navButton, isCenter && styles.centerButton]}
                 onPress={() => onNavigate(button.screen)}
                 activeOpacity={0.7}
             >
-                <Ionicons
-                    name={button.iconName}
-                    size={isCenter ? 28 : 24}
-                    color={isCenter ? Colors.blancoTexto : (isActive ? Colors.naranja : '#8E8E93')}
-                />
+                {renderIcon(
+                    button,
+                    isCenter ? 28 : 24,
+                    isCenter ? Colors.blancoTexto : (isActive ? Colors.naranja : '#8E8E93')
+                )}
             </TouchableOpacity>
         );
     };

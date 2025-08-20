@@ -208,12 +208,11 @@ const Registro = () => {
 
       // Si la respuesta es exitosa
       const data = await response.json();
-      console.log('Los datos son válidos');
       navigation.navigate('Verificacion1Mail', { datosUsuario: usuario });
 
     } catch (error: any) {
       const errorMessage = error.message || 'No se pudieron validar los datos.';
-      console.log('Error detallado:', error);
+      console.error('Error detallado:', error);
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     } finally {
       setCargando(false);

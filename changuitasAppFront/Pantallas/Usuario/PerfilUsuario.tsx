@@ -70,7 +70,7 @@ const PerfilUsuario: React.FC = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesión');
       setVisible(true);
     } 
@@ -87,7 +87,6 @@ const PerfilUsuario: React.FC = () => {
   const fetchUsuario = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('PerfilUsuario: Token obtenido de AsyncStorage:', accessToken);
 
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -114,7 +113,7 @@ const PerfilUsuario: React.FC = () => {
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
 
     } catch (error) {
-      console.log('Error al cargar datos del usuario:', error);
+      console.error('Error al cargar datos del usuario:', error);
       setMessage('Error al cargar datos del usuario');
       setVisible(true);
     } finally {

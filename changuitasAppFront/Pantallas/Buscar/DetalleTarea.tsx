@@ -74,7 +74,7 @@ const DetalleTarea = () => {
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -102,7 +102,7 @@ const DetalleTarea = () => {
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -189,8 +189,6 @@ const DetalleTarea = () => {
   // Función para alternar el menú desplegable
   const toggleDesplegable = () => { setMostrarDesplegable(!mostrarDesplegable); };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
-
   if (cargando) {
     return <PantallaCarga frase="Procesando..." />;
   }
@@ -205,7 +203,6 @@ const DetalleTarea = () => {
           >
             <NavBarSuperior
               titulo="Detalle de la tarea"
-              titleSize={titleSizeNavbarSuperior}
               showBackButton={true}
               onBackPress={() => { navigation.goBack(); }}
               rightButtonType="menu"

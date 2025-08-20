@@ -73,7 +73,7 @@ const PerfilProveedor = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
     } 
@@ -87,7 +87,6 @@ const PerfilProveedor = () => {
         if (usuarioId) {
           const userIdNumerico = parseInt(usuarioId, 10); //Hay que convertilo a integer sino es un string 
           setUserId(userIdNumerico);
-          console.log("Perfil de otro ID del usuario obtenido:", userIdNumerico);
         }
       } catch (error) {
         console.error("Error al obtener los datos de AsyncStorage:", error);
@@ -130,14 +129,10 @@ const PerfilProveedor = () => {
 
       const responseJson = await response.json();
 
-      console.log("Respuesta del servidor:", responseJson);  // Respuesta de la API
-      console.log("ID de la solicitud recibido:", responseJson.id_solicitud);
-
       if (response.ok) {
         console.log("Éxito", "Proveedor servicio creado con éxito.");
 
         const idSolicitud = responseJson.id_solicitud;
-        console.log("ID solicitud detalle: ", idSolicitud);
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
         setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
@@ -162,9 +157,9 @@ const PerfilProveedor = () => {
     setIsMounted(true);
 
     if (route.params?.id) {
-      console.log('ID obtenido:', route.params.id);
+      //console.log('ID obtenido:', route.params.id);
     } else {
-      console.log('No se encontraron id.');
+      console.error('No se encontraron id.');
     }
     fetchUsuario();
     fetchProveedorServicio();
@@ -183,7 +178,6 @@ const PerfilProveedor = () => {
     try {
       // Obtén el token de acceso desde AsyncStorage
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('Token obtenido de AsyncStorage:', accessToken);
 
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -191,7 +185,6 @@ const PerfilProveedor = () => {
 
       const proveedorId = route.params.id; //solo para usar en esta funcion
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
-      console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
       setreseniasUserId(proveedorId);
       const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${idServicio}/`, {
         method: 'GET',
@@ -200,7 +193,6 @@ const PerfilProveedor = () => {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-      console.log('Response status (ProveedorServicio):', responseProveedor.status);
 
       if (!responseProveedor.ok) {
         throw new Error(`Error al obtener el ProveedorServicio: ${responseProveedor.status}`);
@@ -211,7 +203,7 @@ const PerfilProveedor = () => {
       const proveedor = Array.isArray(dataProveedor) ? dataProveedor[0] : dataProveedor;
       setIdProveedorServicio(proveedor?.id);
     } catch (error) {
-      console.log('Error al cargar los datos del proveedor de servicio:', error);
+      console.error('Error al cargar los datos del proveedor de servicio:', error);
     }
   };
 
@@ -237,11 +229,10 @@ const PerfilProveedor = () => {
       });
 
       if (!responseServicio.ok) {
-        console.log(`Error al obtener los datos del servicio: ${responseServicio.status}`);
+        console.error(`Error al obtener los datos del servicio: ${responseServicio.status}`);
       }
 
       const servicioDat: ServicioArreglado = await responseServicio.json();
-      console.log('Datos del servicio recibidos:', servicioDat); 
       setDataServicio(servicioDat);
 
     } catch (error) {
@@ -264,7 +255,6 @@ const PerfilProveedor = () => {
       }
 
       const proveedorId = route.params.id;
-      console.log('fetchUsuario: ID del usuario extraído:', proveedorId);
 
       // Se realiza la solicitud para obtener los datos del usuario
       const responseUsuario = await fetch(`${API_URL}/usuarios/${proveedorId}/`, {
@@ -276,12 +266,11 @@ const PerfilProveedor = () => {
       });
 
       if (!responseUsuario.ok) {
-        console.log(`Error al obtener el usuario: ${responseUsuario.status}`);
+        console.error(`Error al obtener el usuario: ${responseUsuario.status}`);
       }
 
       // Procesa los datos del usuario
       const dataUsuario: Usuario = await responseUsuario.json();
-      console.log('Datos del usuario recibidos:', dataUsuario); // Verifica los datos del usuario
       setUsuario(dataUsuario);
       setImageUri(dataUsuario.fotoPerfil || 'https://via.placeholder.com/80');
 
@@ -337,7 +326,7 @@ const PerfilProveedor = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
         setMessage("Usuario bloqueado correctamente.");
         setVisible(true);
@@ -373,8 +362,6 @@ const PerfilProveedor = () => {
     }
   };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
-
   if (cargando) {
     return <PantallaCarga frase="Procesando..." />;
   }
@@ -383,12 +370,11 @@ const PerfilProveedor = () => {
     <TouchableWithoutFeedback onPress={() => {
       if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
     }}>
-      <SafeAreaView edges={['top']} style={EstilosPerfilProveedor.safeContainer}>
+      <SafeAreaView  style={EstilosPerfilProveedor.safeContainer}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
           {/* Encabezado con opciones de menú */}
           <NavBarSuperior
             titulo="Perfil del proveedor"
-            titleSize={titleSizeNavbarSuperior}
             showBackButton={true}
             onBackPress={() => { navigation.goBack(); }}
             rightButtonType="menu"
