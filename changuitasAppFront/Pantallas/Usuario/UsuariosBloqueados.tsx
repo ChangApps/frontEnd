@@ -15,6 +15,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import  {redirectAdmin} from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 
 const UsuariosBloqueados = () => {
@@ -136,18 +137,23 @@ const UsuariosBloqueados = () => {
 
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
       <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <BarraPestanasPerfil />
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
         <ScrollView contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}>
-          {/* Header con Perfil*/}
-          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-
-          {/* Barra de pestañas */}
-          <BarraPestanasPerfil />
-
           {loading ? (
             <ActivityIndicator size="large" color="#197278" />
           ) : (
@@ -194,7 +200,6 @@ const UsuariosBloqueados = () => {
         />
         <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 export default UsuariosBloqueados;

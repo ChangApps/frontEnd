@@ -145,7 +145,6 @@ const handleProveedorPress = (proveedor: any) => {
 
   return (
     <SafeAreaView style={EstilosResultadosBusqueda.safeContainer}>
-      <View style={EstilosResultadosBusqueda.container}>
         <NavBarSuperior
           titulo="Resultados"
           showBackButton={true}
@@ -153,6 +152,7 @@ const handleProveedorPress = (proveedor: any) => {
           rightButtonType="none"
         />
 
+      <View style={EstilosResultadosBusqueda.container}>
         {error ? (
           <View style={EstilosResultadosBusqueda.noResultsContainer}>
             <Image

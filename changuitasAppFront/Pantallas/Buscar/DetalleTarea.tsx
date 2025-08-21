@@ -19,6 +19,7 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { redirectAdmin } from '../../utils/utils';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -194,29 +195,32 @@ const DetalleTarea = () => {
   }
   
   return (
-    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
       <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
         <View style={{ flex: 1 }}>
+          <NavBarSuperior
+            titulo="Detalle de la tarea"
+            showBackButton={true}
+            onBackPress={() => { navigation.goBack(); }}
+            rightButtonType="menu"
+            onRightPress={() => { toggleDesplegable(); }}
+          />
+          {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+          {mostrarDesplegable && (
+            <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+              <View style={EstiloOverlay.overlay} />
+            </TouchableWithoutFeedback>
+          )}
+
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
           <ScrollView
             contentContainerStyle={{ paddingBottom: 100 }}
             keyboardShouldPersistTaps="handled"
           >
-            <NavBarSuperior
-              titulo="Detalle de la tarea"
-              showBackButton={true}
-              onBackPress={() => { navigation.goBack(); }}
-              rightButtonType="menu"
-              onRightPress={() => { toggleDesplegable(); }}
-            />
-
-            {/* Menú Desplegable */}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
-
             <View style={EstilosDetalleTarea.seccionUsuario}>
               <ImagenPerfilUsuario
                 imageUri={imageUri}
@@ -283,7 +287,6 @@ const DetalleTarea = () => {
           message={message}
         />
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 

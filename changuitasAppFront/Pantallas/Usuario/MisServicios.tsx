@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback, Linking, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,6 +17,7 @@ import Colors from '../../assets/Colors';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { redirectAdmin } from '../../utils/utils';
 import {Servicio} from '../../types/interfaces';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -192,46 +193,49 @@ const serviciosOrdenados = [...services].sort((a, b) => {
 });
 
 return (
-  <TouchableWithoutFeedback onPress={() => mostrarDesplegable && setMostrarDesplegable(false)}>
     <View style={{ flex: 1 }}>
       <SafeAreaView style={EstilosMisServicios.safeContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <BarraPestanasPerfil />
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
         <MenuDesplegable
           visible={mostrarDesplegable}
           usuario={state.usuario}
           onLogout={logout}
           onRedirectAdmin={redirectAdmin}
         />
-        <BarraPestanasPerfil />
+          <TouchableOpacity
+            style={EstilosMisServicios.botonAgregarServicio}
+            onPress={() => navigation.navigate('AgregarServicio1')}
+          >
+            <Ionicons name="add" size={20} color={Colors.naranja} />
+            <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={EstilosMisServicios.botonAgregarServicio}
-          onPress={() => navigation.navigate('AgregarServicio1')}
-        >
-          <Ionicons name="add" size={20} color={Colors.naranja} />
-          <Text style={EstilosMisServicios.textoBoton}>Agregar servicio</Text>
-        </TouchableOpacity>
-
-        <FlatList
-          data={serviciosOrdenados}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderServiceItem}
-          contentContainerStyle={EstilosMisServicios.listaServicios}
-          ListEmptyComponent={!loading ? <EmptyComponent /> : null}
-          ListHeaderComponent={
-            loading ? (
-              <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
-            ) : null
-          }
-          showsVerticalScrollIndicator={true}
-        />
-
+          <FlatList
+            data={serviciosOrdenados}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderServiceItem}
+            contentContainerStyle={EstilosMisServicios.listaServicios}
+            ListEmptyComponent={!loading ? <EmptyComponent /> : null}
+            ListHeaderComponent={
+              loading ? (
+                <Text style={EstilosMisServicios.cargando}>Cargando servicios...</Text>
+              ) : null
+            }
+            showsVerticalScrollIndicator={true}
+          />
         <NavBarInferior activeScreen="MisServicios" onNavigate={handleNavigation} />
       </SafeAreaView>
 
       <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
     </View>
-  </TouchableWithoutFeedback>
 );
 };
 

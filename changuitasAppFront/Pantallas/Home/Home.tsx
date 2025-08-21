@@ -23,6 +23,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -202,146 +203,185 @@ useFocusEffect(
     };
 
   return (
-    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosHome.safeContainer}>
-        <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
+    <SafeAreaView style={EstilosHome.safeContainer}>
+      <View
+        style={[
+          EstilosHome.contenidoResponsivo,
+          width > 600 && EstilosHome.contenidoWeb,
+        ]}
+      />
 
-        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada} />
+      <ModalBuscar
+        visible={mostrarModalBuscar}
+        onClose={() => setMostrarModalBuscar(false)}
+        categoriaId={idCategoriaSeleccionada}
+      />
 
-        {/* Encabezado */}
-        <NavBarSuperior
-          titulo="ChangApp"
-          showBackButton={false}
-          rightButtonType="menu"
-          onRightPress={toggleDesplegable}
-          titleAlign="center"
-          paddingHorizontal={16}
-          iconSize={24}
-          navbarHeight={56}
+      {/* Encabezado */}
+      <NavBarSuperior
+        titulo="ChangApp"
+        showBackButton={false}
+        rightButtonType="menu"
+        onRightPress={toggleDesplegable}
+        titleAlign="center"
+        paddingHorizontal={16}
+        iconSize={24}
+        navbarHeight={56}
+      />
+
+      {/* Overlay para cerrar menú desplegable */}
+      {mostrarDesplegable && (
+        <TouchableWithoutFeedback
+          onPress={() => setMostrarDesplegable(false)}
+        >
+          <View style={EstiloOverlay.overlay} />
+        </TouchableWithoutFeedback>
+      )}
+
+      <MenuDesplegable
+        visible={mostrarDesplegable}
+        usuario={state.usuario}
+        onLogout={logout}
+        onRedirectAdmin={redirectAdmin}
+      />
+
+      {cargandoContenido ? (
+        <PantallaCarga />
+      ) : (
+        <FlatList
+          ListHeaderComponent={
+            <>
+              {/* Buscador */}
+              <View style={EstilosHome.barraBusqueda}>
+                <TextInput
+                  style={EstilosHome.inputBusqueda}
+                  placeholder="Buscar..."
+                  placeholderTextColor="#ccc"
+                  value={textoBusqueda}
+                  onChangeText={setTextoBusqueda}
+                />
+                <TouchableOpacity
+                  style={EstilosHome.botonFiltro}
+                  onPress={handleBuscar}
+                >
+                  <FontAwesome6
+                    name="magnifying-glass"
+                    size={20}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Últimas personas */}
+              <Text style={EstilosHome.subtituloSeccion}>
+                Últimas personas contratadas
+              </Text>
+              {personasContratadas.length === 0 ? (
+                <Text style={EstilosHome.mensajeVacio}>
+                  No se encontraron personas contratadas.
+                </Text>
+              ) : (
+                <ResultadoListSimple
+                  historial={historial}
+                  usuarios={proveedores}
+                  navigation={navigation}
+                  claveUsuario="proveedor_id"
+                  estiloCard={EstilosHome.cardPersona}
+                  estiloAvatar={EstilosHome.avatarPlaceholder}
+                  estiloNombre={EstilosHome.nombrePersona}
+                  onPerfilPress={handlePerfilPress}
+                />
+              )}
+
+              <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+            </>
+          }
+          data={categorias}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            marginHorizontal: 16,
+          }}
+          renderItem={({ item }) => {
+            const icono =
+              iconosCategorias[item.nombre] || {
+                lib: "Ionicons",
+                name: "image",
+              };
+
+            return (
+              <TouchableOpacity
+                style={EstilosHome.cardCategoria}
+                onPress={() => {
+                  setIdCategoriaSeleccionada(item.id);
+                  setMostrarModalBuscar(true);
+                }}
+              >
+                {icono.lib === "Ionicons" && (
+                  <Ionicons
+                    name={
+                      icono.name as React.ComponentProps<
+                        typeof Ionicons
+                      >["name"]
+                    }
+                    size={20}
+                    color={Colors.naranja}
+                  />
+                )}
+                {icono.lib === "MaterialIcons" && (
+                  <MaterialIcons
+                    name={
+                      icono.name as React.ComponentProps<
+                        typeof MaterialIcons
+                      >["name"]
+                    }
+                    size={20}
+                    color={Colors.naranja}
+                  />
+                )}
+                <Text style={EstilosHome.textoCategoria}>
+                  {item.nombre}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            ...EstilosHome.scrollContenido,
+          }}
         />
+      )}
 
-        <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
+      {/* Snackbar */}
+      <CustomSnackbar
+        visible={snackbarVisible}
+        setVisible={setSnackbarVisible}
+        message={
+          trabajoActual
+            ? trabajoActual.cliente === idUsuario
+              ? trabajoActual.estado === "PA"
+                ? `${trabajoActual.proveedor_nombre} aceptó tu solicitud de ${trabajoActual.nombreServicio}`
+                : `Tu solicitud para ${trabajoActual.nombreServicio} fue aceptada`
+              : trabajoActual.estado === "PA"
+              ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+              : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
+            : "Mensaje por defecto"
+        }
+        actionLabel="Tocá para ver"
+        onActionPress={() =>
+          navigation.navigate(
+            trabajoActual?.cliente === idUsuario ? "Historial1" : "Historial2"
+          )
+        }
+      />
 
-        {cargandoContenido ? (
-          <PantallaCarga />
-        ) : (
-          <>
-            <FlatList
-              ListHeaderComponent={
-                <>
-                  {/* Buscador */}
-                  <View style={EstilosHome.barraBusqueda}>
-                    <TextInput
-                      style={EstilosHome.inputBusqueda}
-                      placeholder="Buscar..."
-                      placeholderTextColor="#ccc"
-                      value={textoBusqueda}
-                      onChangeText={setTextoBusqueda}
-                    />
-                    <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
-                      <FontAwesome6 name="magnifying-glass" size={20} color="black" />
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Últimas personas */}
-                  <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
-                  {personasContratadas.length === 0 ? (
-                    <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
-                  ) : (
-                    <ResultadoListSimple
-                      historial={historial}
-                      usuarios={proveedores}
-                      navigation={navigation}
-                      claveUsuario="proveedor_id"
-                      estiloCard={EstilosHome.cardPersona}
-                      estiloAvatar={EstilosHome.avatarPlaceholder}
-                      estiloNombre={EstilosHome.nombrePersona}
-                      onPerfilPress={handlePerfilPress}
-                    />
-                  )}
-
-                  <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
-                </>
-              }
-              data={categorias}
-              keyExtractor={(item) => item.id.toString()}
-              numColumns={2}
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-                marginHorizontal: 16,
-              }}
-              renderItem={({ item }) => {
-                const icono =
-                  iconosCategorias[item.nombre] || { lib: 'Ionicons', name: 'image' };
-
-                return (
-                  <TouchableOpacity
-                    style={EstilosHome.cardCategoria}
-                    onPress={() => {
-                      setIdCategoriaSeleccionada(item.id);
-                      setMostrarModalBuscar(true);
-                    }}
-                  >
-                    {icono.lib === 'Ionicons' && (
-                      <Ionicons
-                        name={icono.name as React.ComponentProps<typeof Ionicons>['name']}
-                        size={20}
-                        color={Colors.naranja}
-                      />
-                    )}
-                    {icono.lib === 'MaterialIcons' && (
-                      <MaterialIcons
-                        name={icono.name as React.ComponentProps<typeof MaterialIcons>['name']}
-                        size={20}
-                        color={Colors.naranja}
-                      />
-                    )}
-                    <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
-                  </TouchableOpacity>
-                );
-              }}
-              contentContainerStyle={EstilosHome.scrollContenido}
-            />
-
-       {/* Snackbar */}
-        <CustomSnackbar
-          visible={snackbarVisible}
-          setVisible={setSnackbarVisible}
-          message={
-            trabajoActual
-              ? trabajoActual.cliente === idUsuario
-                ? // Si el cliente es el usuario actual
-                  (trabajoActual.estado === 'PA'
-                    ? `${trabajoActual.proveedor_nombre} aceptó tu solicitud de ${trabajoActual.nombreServicio}`
-                    : `Tu solicitud para ${trabajoActual.nombreServicio} fue aceptada`)
-                : // Si el cliente NO es el usuario actual
-                  (trabajoActual.estado === 'PA'
-                    ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
-                    : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`)
-              : 'Mensaje por defecto'
-              }
-              actionLabel="Tocá para ver"
-              onActionPress={() =>
-                navigation.navigate(
-                  trabajoActual?.cliente === idUsuario ? 'Historial1' : 'Historial2'
-                )
-              }
-            />
-
-            {/* NavBar Inferior */}
-            <NavBarInferior
-              activeScreen="Home" // O el screen activo correspondiente
-              onNavigate={handleNavigation}
-            />
-          </>
-        )}
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      {/* Navbar Inferior */}
+      <NavBarInferior
+        activeScreen="Home"
+        onNavigate={handleNavigation}
+      />
+    </SafeAreaView>
   );
 };
 

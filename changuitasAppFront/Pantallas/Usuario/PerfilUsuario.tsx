@@ -19,6 +19,7 @@ import { NavBarInferior } from "../../componentes/NavBarInferior";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PantallaCarga from "../../componentes/PantallaCarga";
 import { redirectAdmin } from "../../utils/utils";
+import EstiloOverlay from "../../componentes/estiloOverlayMenuDesplegable";
 
 const PerfilUsuario: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -143,7 +144,7 @@ const PerfilUsuario: React.FC = () => {
       {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
       {mostrarDesplegable && (
         <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-          <View style={EstilosPerfilUsuario.overlay} />
+          <View style={EstiloOverlay.overlay} />
         </TouchableWithoutFeedback>
       )}
 

@@ -17,6 +17,7 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 
 const PerfilProveedor = () => {
@@ -367,28 +368,31 @@ const PerfilProveedor = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
       <SafeAreaView  style={EstilosPerfilProveedor.safeContainer}>
+        {/* Encabezado con opciones de menú */}
+        <NavBarSuperior
+          titulo="Perfil Proveedor"
+          showBackButton={true}
+          onBackPress={() => { navigation.goBack(); }}
+          rightButtonType="menu"
+          onRightPress={() => { toggleDesplegable(); }}
+        />
+        
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
+
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
-          {/* Encabezado con opciones de menú */}
-          <NavBarSuperior
-            titulo="Perfil del proveedor"
-            showBackButton={true}
-            onBackPress={() => { navigation.goBack(); }}
-            rightButtonType="menu"
-            onRightPress={() => { toggleDesplegable(); }}
-          />
-
-          {/* Menú Desplegable */}
-          <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
-          />
-
           {/* Información del Usuario */}
           <View style={EstilosPerfilProveedor.seccionUsuario}>
             <Pressable onPress={handleImagePress}>
@@ -488,21 +492,28 @@ const PerfilProveedor = () => {
         {/* Datos del servicio */}
             <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS DEL SERVICIO</Text>
             <View style={EstilosPerfilProveedor.datosPersonales}>
-              <Text style={EstilosPerfilProveedor.infoUsuario}>
-                Nombre del servicio: {DataServicio?.nombreServicio}
-              </Text>
-              <Text style={EstilosPerfilProveedor.infoUsuario}>
-                Descripción: {DataServicio?.descripcion}
-              </Text>
-
-              <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
-                Horarios:
-              </Text>
-              {DataServicio?.dias?.map((dia, index) => (
-                <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
-                  {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={EstilosPerfilProveedor.infoUsuario}>
+                  Nombre del servicio: {DataServicio?.nombreServicio}
                 </Text>
-              ))}
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={EstilosPerfilProveedor.infoUsuario}>
+                  Descripción: {DataServicio?.descripcion}
+                </Text>
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
+                  Horarios:
+                </Text>
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                {DataServicio?.dias?.map((dia, index) => (
+                  <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
+                    {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
+                  </Text>
+                ))}
+              </View>
             </View>
         </ScrollView>
         {/* Barra de navegación inferior */}
@@ -511,7 +522,6 @@ const PerfilProveedor = () => {
           onNavigate={handleNavigation}
         />
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 

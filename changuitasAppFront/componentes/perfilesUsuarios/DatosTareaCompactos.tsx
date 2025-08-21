@@ -35,12 +35,24 @@ const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, fechaValoracion
     <View>
       <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
       <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
-        <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
-        <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
-        <Text style={estilos.infoUsuario}>Fecha valoracion: {fechaValoracion}</Text>
-        <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
-        <Text style={estilos.infoUsuario}>Comentario: {comentario}</Text>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Fecha valoracion: {fechaValoracion}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Comentario: {comentario}</Text>
+        </View>
       </View>
     </View>
   );
