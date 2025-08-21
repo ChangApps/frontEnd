@@ -110,7 +110,7 @@ const PerfilProveedor = () => {
     setCargando(true);
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
-      
+
       if (!accessToken) {
         setMessage("Error");
         setVisible(true);
@@ -137,6 +137,7 @@ const PerfilProveedor = () => {
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
         setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
+
       } else {
         const errorMsg = responseJson.error || "No se pudo enviar la solicitud.";
         setMessage(errorMsg);
