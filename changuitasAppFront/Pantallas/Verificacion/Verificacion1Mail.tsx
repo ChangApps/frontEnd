@@ -48,7 +48,7 @@ const Verificacion1Mail = () => {
       const response = await fetch(`${API_URL}/enviar-email/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, contexto:"registro" }),
       });
 
       if (response.ok) {
@@ -61,7 +61,7 @@ const Verificacion1Mail = () => {
     } catch (error) {
       setMessage("Error, Problema de conexión con el servidor");
       setVisible(true);
-      console.log("Error al enviar el código:", error);
+      console.error("Error al enviar el código:", error);
     }
   };
 
@@ -86,15 +86,14 @@ const Verificacion1Mail = () => {
       if (response.ok) {
         setMessage("El código es válido");
         setVisible(true);
-        console.log("Datos a enviar: ", route.params.datosUsuario);
         navigation.navigate('Verificacion2Registro', { datosUsuario: route.params.datosUsuario });
       } else {
-        console.log("Error al validar el código:", data);
+        console.error("Error al validar el código:", data);
         setMessage(data?.email || "El código no es válido.");
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al validar el código:", error);
+      console.error("Error al validar el código:", error);
       setMessage("Error de conexión. Inténtalo de nuevo.");
       setVisible(true);
     } finally {

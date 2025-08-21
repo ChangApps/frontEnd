@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, FlatList, TextInput, Platform, Alert } from 'react-native';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import { cerrarSesion } from '../../autenticacion/authService';
 import EstilosHome from './estilos/EstilosHome';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../../autenticacion/auth';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
@@ -23,6 +23,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const PantallaHome = () => {
   const { width } = useWindowDimensions();
@@ -45,10 +46,23 @@ const PantallaHome = () => {
   const [cargandoContenido, setCargandoContenido] = useState(true);
   const [idCategoriaSeleccionada, setIdCategoriaSeleccionada] = useState<number | null>(null);
   const [cargandoPerfil, setCargandoPerfil] = useState(false);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const handleBuscar = async () => {
-    console.log("Buscando por:", textoBusqueda);
+    if (!textoBusqueda.trim()) {
 
+    if (Platform.OS === 'web') {
+        alert('Por favor, ingresa un término de búsqueda antes de continuar.');
+      } else {
+        Alert.alert(
+          'Error', 
+          'Por favor, ingresa un término de búsqueda antes de continuar.',
+          [{ text: 'Aceptar' }]
+        );
+      }
+    return;
+  }
+    console.log("Buscando por:", textoBusqueda);
     try {
       const storedToken = await AsyncStorage.getItem('accessToken');
       const res = await fetch(`${API_URL}/buscar-usuario/?q=${encodeURIComponent(textoBusqueda)}`, {
@@ -58,7 +72,6 @@ const PantallaHome = () => {
       });
 
         if (res.status === 204) {
-          console.log("No se encontraron resultados.");
           navigation.navigate('ResultadosBusqueda', {
           proveedores: [],
           error: 'No se encontraron resultados para tu búsqueda.',
@@ -68,7 +81,7 @@ const PantallaHome = () => {
           return;
         }
 
-    if (!res.ok) console.log('Error al obtener los datos');
+    if (!res.ok) console.error('Error al obtener los datos');
 
       const data = await res.json();
       console.log('Datos obtenidos:', data);
@@ -86,7 +99,7 @@ const PantallaHome = () => {
         });
       }
     } catch (error) {
-      console.log('Error al obtener los datos:', error);
+      console.error('Error al obtener los datos:', error);
       setTextoBusqueda('');
     }
   };
@@ -103,7 +116,7 @@ const PantallaHome = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -133,29 +146,36 @@ const PantallaHome = () => {
     await verificarTrabajosPendientes(userId, token, setTrabajosNotificados);
     await verificarSolicitudesAceptadas(userId, token, setTrabajosNotificados);
   };
-
-  useEffect(() => {
+useFocusEffect(
+  useCallback(() => {
     const init = async () => {
       try {
+        setCargandoContenido(true); 
         const storedToken = await AsyncStorage.getItem('accessToken');
-        if (storedToken) {
-          console.log("El stored token es: ", storedToken);
-          const resultado = await obtenerCategorias();
-          setCategorias(resultado);
-          await fetchUsuarioLogueado();
-          await fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas);
-        } else {
-          console.log('No se encontró token');
+        const userId = await AsyncStorage.getItem('userId');
+        setIdUsuario(userId ? parseInt(userId) : null);
+        if (!storedToken) {
+          console.error('No se encontró token');
+          return;
         }
+
+        await Promise.all([
+          obtenerCategorias().then(setCategorias),
+          fetchUsuarioLogueado(),
+          fetchUHistorial(setHistorial, setSolicitudesInfo, setProveedores, setPersonasContratadas),
+        ]);
+
       } catch (err) {
-        console.log("Error en init:", err);
+        console.error("Error en init:", err);
       } finally {
         setCargandoContenido(false);
+        setCargandoPerfil(false); // ← Finaliza carga después de todo
       }
     };
 
     init();
-  }, []);
+  }, [])
+);
 
   useEffect(() => {
     if (!snackbarVisible && trabajosNotificados.length > 0 && !trabajoActual) {
@@ -169,114 +189,199 @@ const PantallaHome = () => {
   if (cargandoContenido) return <PantallaCarga />;
   if (cargandoPerfil) return <PantallaCarga frase="Cargando perfil proveedor..." />;
 
+    const iconosCategorias: Record<string,{ lib: 'Ionicons' | 'MaterialIcons'; name: string }> = {
+      'Hogar': { lib: 'Ionicons', name: 'home' },
+      'Belleza': { lib: 'Ionicons', name: 'cut' },
+      'Limpieza': { lib: 'MaterialIcons', name: 'cleaning-services' },
+      'Cuidado de personas': { lib: 'Ionicons', name: 'people' },
+      'Control de plagas': { lib: 'Ionicons', name: 'bug' },
+      'Jardineria': { lib: 'MaterialIcons', name: 'grass' },
+      'Mascotas': { lib: 'Ionicons', name: 'paw' },
+      'Mudanza': { lib: 'Ionicons', name: 'cube' },
+      'Educación': { lib: 'Ionicons', name: 'school' },
+      'Servicios de invierno': { lib: 'Ionicons', name: 'snow' },
+    };
+
   return (
-    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosHome.safeContainer}>
-        <View style={[EstilosHome.contenidoResponsivo, width > 600 && EstilosHome.contenidoWeb]} />
+    <SafeAreaView style={EstilosHome.safeContainer}>
+      <View
+        style={[
+          EstilosHome.contenidoResponsivo,
+          width > 600 && EstilosHome.contenidoWeb,
+        ]}
+      />
 
-        <ModalBuscar visible={mostrarModalBuscar} onClose={() => setMostrarModalBuscar(false)} categoriaId={idCategoriaSeleccionada} />
+      <ModalBuscar
+        visible={mostrarModalBuscar}
+        onClose={() => setMostrarModalBuscar(false)}
+        categoriaId={idCategoriaSeleccionada}
+      />
 
-        {/* Encabezado */}
-        <NavBarSuperior
-          titulo="ChangApp"
-          showBackButton={false}
-          rightButtonType="menu"
-          onRightPress={toggleDesplegable}
-          titleAlign="center"
-          paddingHorizontal={16}
-          iconSize={24}
-          navbarHeight={56}
-        />
+      {/* Encabezado */}
+      <NavBarSuperior
+        titulo="ChangApp"
+        showBackButton={false}
+        rightButtonType="menu"
+        onRightPress={toggleDesplegable}
+        titleAlign="center"
+        paddingHorizontal={16}
+        iconSize={24}
+        navbarHeight={56}
+      />
 
-        <MenuDesplegable
-          visible={mostrarDesplegable}
-          usuario={state.usuario}
-          onLogout={logout}
-          onRedirectAdmin={redirectAdmin}
-        />
+      {/* Overlay para cerrar menú desplegable */}
+      {mostrarDesplegable && (
+        <TouchableWithoutFeedback
+          onPress={() => setMostrarDesplegable(false)}
+        >
+          <View style={EstiloOverlay.overlay} />
+        </TouchableWithoutFeedback>
+      )}
 
-        {cargandoContenido ? (
-          <PantallaCarga />
-        ) : (
-          <>
-            <FlatList
-              ListHeaderComponent={
-                <>
-                  {/* Buscador */}
-                  <View style={EstilosHome.barraBusqueda}>
-                    <TextInput
-                      style={EstilosHome.inputBusqueda}
-                      placeholder="Buscar..."
-                      placeholderTextColor="#ccc"
-                      value={textoBusqueda}
-                      onChangeText={setTextoBusqueda}
-                    />
-                    <TouchableOpacity style={EstilosHome.botonFiltro} onPress={handleBuscar}>
-                      <FontAwesome6 name="magnifying-glass" size={20} color="black" />
-                    </TouchableOpacity>
-                  </View>
+      <MenuDesplegable
+        visible={mostrarDesplegable}
+        usuario={state.usuario}
+        onLogout={logout}
+        onRedirectAdmin={redirectAdmin}
+      />
 
-                  {/* Últimas personas */}
-                  <Text style={EstilosHome.subtituloSeccion}>Últimas personas contratadas</Text>
-                  {personasContratadas.length === 0 ? (
-                    <Text style={EstilosHome.mensajeVacio}>No se encontraron personas contratadas.</Text>
-                  ) : (
-                    <ResultadoListSimple
-                      historial={historial}
-                      usuarios={proveedores}
-                      navigation={navigation}
-                      claveUsuario="proveedor_id"
-                      estiloCard={EstilosHome.cardPersona}
-                      estiloAvatar={EstilosHome.avatarPlaceholder}
-                      estiloNombre={EstilosHome.nombrePersona}
-                      onPerfilPress={handlePerfilPress}
-                    />
-                  )}
-
-                  <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
-                </>
-              }
-              data={categorias}
-              keyExtractor={(item) => item.id.toString()}
-              numColumns={2}
-              columnWrapperStyle={{ justifyContent: 'space-between', marginHorizontal: 16 }}
-              renderItem={({ item }) => (
+      {cargandoContenido ? (
+        <PantallaCarga />
+      ) : (
+        <FlatList
+          ListHeaderComponent={
+            <>
+              {/* Buscador */}
+              <View style={EstilosHome.barraBusqueda}>
+                <TextInput
+                  style={EstilosHome.inputBusqueda}
+                  placeholder="Buscar..."
+                  placeholderTextColor="#ccc"
+                  value={textoBusqueda}
+                  onChangeText={setTextoBusqueda}
+                />
                 <TouchableOpacity
-                  style={EstilosHome.cardCategoria}
-                  onPress={() => {
-                    setIdCategoriaSeleccionada(item.id); // ← guarda el ID para despues mostrar las subcategorías
-                    setMostrarModalBuscar(true);         // ← muestra el modal
-                  }}
+                  style={EstilosHome.botonFiltro}
+                  onPress={handleBuscar}
                 >
-                  <Ionicons name="image" size={20} color={Colors.naranja} />
-                  <Text style={EstilosHome.textoCategoria}>{item.nombre}</Text>
+                  <FontAwesome6
+                    name="magnifying-glass"
+                    size={20}
+                    color="black"
+                  />
                 </TouchableOpacity>
+              </View>
+
+              {/* Últimas personas */}
+              <Text style={EstilosHome.subtituloSeccion}>
+                Últimas personas contratadas
+              </Text>
+              {personasContratadas.length === 0 ? (
+                <Text style={EstilosHome.mensajeVacio}>
+                  No se encontraron personas contratadas.
+                </Text>
+              ) : (
+                <ResultadoListSimple
+                  historial={historial}
+                  usuarios={proveedores}
+                  navigation={navigation}
+                  claveUsuario="proveedor_id"
+                  estiloCard={EstilosHome.cardPersona}
+                  estiloAvatar={EstilosHome.avatarPlaceholder}
+                  estiloNombre={EstilosHome.nombrePersona}
+                  onPerfilPress={handlePerfilPress}
+                />
               )}
-              contentContainerStyle={EstilosHome.scrollContenido}
-            />
 
-            {/* Snackbar */}
-            <CustomSnackbar
-              visible={snackbarVisible}
-              setVisible={setSnackbarVisible}
-              message={trabajoActual ? (
-                trabajoActual.estado === 'PA'
-                  ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
-                  : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
-              ) : 'Mensaje por defecto'}
-              actionLabel="Tocá para ver"
-              onActionPress={() => navigation.navigate('Historial2')}
-            />
+              <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+            </>
+          }
+          data={categorias}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            marginHorizontal: 16,
+          }}
+          renderItem={({ item }) => {
+            const icono =
+              iconosCategorias[item.nombre] || {
+                lib: "Ionicons",
+                name: "image",
+              };
 
-            {/* NavBar Inferior */}
-            <NavBarInferior
-              activeScreen="Home" // O el screen activo correspondiente
-              onNavigate={handleNavigation}
-            />
-          </>
-        )}
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+            return (
+              <TouchableOpacity
+                style={EstilosHome.cardCategoria}
+                onPress={() => {
+                  setIdCategoriaSeleccionada(item.id);
+                  setMostrarModalBuscar(true);
+                }}
+              >
+                {icono.lib === "Ionicons" && (
+                  <Ionicons
+                    name={
+                      icono.name as React.ComponentProps<
+                        typeof Ionicons
+                      >["name"]
+                    }
+                    size={20}
+                    color={Colors.naranja}
+                  />
+                )}
+                {icono.lib === "MaterialIcons" && (
+                  <MaterialIcons
+                    name={
+                      icono.name as React.ComponentProps<
+                        typeof MaterialIcons
+                      >["name"]
+                    }
+                    size={20}
+                    color={Colors.naranja}
+                  />
+                )}
+                <Text style={EstilosHome.textoCategoria}>
+                  {item.nombre}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            ...EstilosHome.scrollContenido,
+          }}
+        />
+      )}
+
+      {/* Snackbar */}
+      <CustomSnackbar
+        visible={snackbarVisible}
+        setVisible={setSnackbarVisible}
+        message={
+          trabajoActual
+            ? trabajoActual.cliente === idUsuario
+              ? trabajoActual.estado === "PA"
+                ? `${trabajoActual.proveedor_nombre} aceptó tu solicitud de ${trabajoActual.nombreServicio}`
+                : `Tu solicitud para ${trabajoActual.nombreServicio} fue aceptada`
+              : trabajoActual.estado === "PA"
+              ? `${trabajoActual.cliente_nombre} solicitó tu servicio de ${trabajoActual.nombreServicio}`
+              : `La solicitud que mandaste para ${trabajoActual.nombreServicio} fue aceptada`
+            : "Mensaje por defecto"
+        }
+        actionLabel="Tocá para ver"
+        onActionPress={() =>
+          navigation.navigate(
+            trabajoActual?.cliente === idUsuario ? "Historial1" : "Historial2"
+          )
+        }
+      />
+
+      {/* Navbar Inferior */}
+      <NavBarInferior
+        activeScreen="Home"
+        onNavigate={handleNavigation}
+      />
+    </SafeAreaView>
   );
 };
 

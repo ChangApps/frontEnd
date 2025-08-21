@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, Linking, Platform } from 'react-native';
+import { Text, View, ScrollView, Linking, Platform, TouchableWithoutFeedback, ImageStyle } from 'react-native';
 import { useNavigation, useRoute, RouteProp, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EstilosDetalleTarea from './estilos/EstilosDetalleTarea';
@@ -19,6 +19,7 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import MenuDesplegable from '../../componentes/MenuDesplegable';
 import PantallaCarga from '../../componentes/PantallaCarga';
 import { redirectAdmin } from '../../utils/utils';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const DetalleTarea = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -34,6 +35,8 @@ const DetalleTarea = () => {
   const [servicio, setServicio] = useState('');
   const [estado, setEstado] = useState('');
   const [puntaje, setPuntaje] = useState<string | number>('Aun no asignado');
+  const [comentario, setComentario] = useState('');
+  const [fechaValoracion, setFechaValoracion] = useState('');
   const [rol, setRol] = useState<'cliente' | 'trabajador' | null>(null);
   const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
   const [idSolicitud, setIdSolicitud] = useState('');
@@ -72,7 +75,7 @@ const DetalleTarea = () => {
       setUsuario(data);
       setImageUri(data.fotoPerfil || 'https://via.placeholder.com/80');
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -86,14 +89,21 @@ const DetalleTarea = () => {
 
       setFecha(data.fechaSolicitud);
       setServicio(data.nombreServicio);
-      setEstado(data.estado);
+      setEstado(data.estado_display);
       setPuntaje(data.valoracion > 0 ? data.valoracion : 'Aun no asignado');
-
+      setComentario(data.comentario||'Sin comentarios');
+       const fecha = data.fechaValoracion;
+        if (fecha) {
+          const [año, mes, dia] = fecha.split('-');
+          setFechaValoracion(`${dia}/${mes}/${año}`);
+        } else {
+          setFechaValoracion('No disponible');
+        }
       const userId = await AsyncStorage.getItem('userId');
       const rolCalculado = userId === data.cliente.toString() ? 'cliente' : 'trabajador';
       setRol(rolCalculado);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -147,27 +157,6 @@ const DetalleTarea = () => {
     }
   };
 
-  const finalizarChanguita = async () => {
-    setCargando(true);
-    try {
-      const token = await AsyncStorage.getItem('accessToken');
-      await fetch(`${API_URL}/finalizar-changuita/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ solicitud_id: idSolicitud })
-      });
-      setCargando(false);
-      navigation.navigate('CalificarTarea', { idSolicitud });
-    } catch {
-      setMessage('Error al finalizar la changuita.');
-      setVisible(true);
-      setCargando(false);
-    }
-  };
-
   const logout = async () => {
     try {
       setState({ token: '' });
@@ -190,7 +179,7 @@ const DetalleTarea = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -201,99 +190,103 @@ const DetalleTarea = () => {
   // Función para alternar el menú desplegable
   const toggleDesplegable = () => { setMostrarDesplegable(!mostrarDesplegable); };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
-
   if (cargando) {
     return <PantallaCarga frase="Procesando..." />;
   }
   
   return (
-    <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ paddingBottom: 100 }}
-          keyboardShouldPersistTaps="handled"
-        >
+      <SafeAreaView style={EstilosDetalleTarea.safeContainer}>
+        <View style={{ flex: 1 }}>
           <NavBarSuperior
             titulo="Detalle de la tarea"
-            titleSize={titleSizeNavbarSuperior}
             showBackButton={true}
             onBackPress={() => { navigation.goBack(); }}
             rightButtonType="menu"
             onRightPress={() => { toggleDesplegable(); }}
           />
+          {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+          {mostrarDesplegable && (
+            <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+              <View style={EstiloOverlay.overlay} />
+            </TouchableWithoutFeedback>
+          )}
 
-          {/* Menú Desplegable */}
           <MenuDesplegable
             visible={mostrarDesplegable}
             usuario={state.usuario}
             onLogout={logout}
             onRedirectAdmin={redirectAdmin}
           />
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={EstilosDetalleTarea.seccionUsuario}>
+              <ImagenPerfilUsuario
+                imageUri={imageUri}
+                modalVisible={modalVisible}
+                onImagePress={() => setModalVisible(true)}
+                onCloseModal={() => setModalVisible(false)}
+              />
+              <Text style={EstilosDetalleTarea.nombreCompleto}>
+                {usuario?.username}
+              </Text>
+            </View>
 
-          <View style={EstilosDetalleTarea.seccionUsuario}>
-            <ImagenPerfilUsuario
-              imageUri={imageUri}
-              modalVisible={modalVisible}
-              onImagePress={() => setModalVisible(true)}
-              onCloseModal={() => setModalVisible(false)}
+            <ImagenConModal
+              uri={imageUri}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              estiloImagen={EstilosDetalleTarea.imagenModal as ImageStyle}
             />
-            <Text style={EstilosDetalleTarea.nombreCompleto}>
-              {usuario?.username}
-            </Text>
-          </View>
 
-          <ImagenConModal
-            uri={imageUri}
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            estiloImagen={EstilosDetalleTarea.imagenModal}
-          />
-
-          <DatosTareaCompactos
-            servicio={servicio}
-            fecha={fecha}
-            puntaje={puntaje}
-            estado={estado}
-            estilos={EstilosDetalleTarea}
-          />
-
-          <AccionesTarea
-            rol={rol}
-            estado={estado}
-            aceptarChanguita={aceptarChanguita}
-            setMostrarModal={setMostrarModalCancelar}
-            finalizarSolicitud={finalizarChanguita}
-            estilos={EstilosDetalleTarea}
-          />
-
-            <ModalCancelarChanguita
-              visible={mostrarModalCancelar}
-              onClose={() => setMostrarModalCancelar(false)}
-              onConfirm={async(motivo) => {
-                await cancelarChanguita(motivo);
-                setMostrarModalCancelar(false);
-                setMotivoSeleccionado('');
-              }}
-              motivoSeleccionado={motivoSeleccionado}
-              setMotivoSeleccionado={setMotivoSeleccionado}
+           <DatosTareaCompactos
+              servicio={servicio}
+              fecha={fecha}
+              fechaValoracion={fechaValoracion}
+              puntaje={puntaje}
+              estado={estado}
+              comentario={comentario}
+              estilos={EstilosDetalleTarea}
+            />
+            <AccionesTarea
               rol={rol}
+              estado={estado}
+              aceptarChanguita={aceptarChanguita}
+              setMostrarModal={setMostrarModalCancelar}
+              finalizarSolicitud={() =>
+                  navigation.navigate('CalificarTarea', { idSolicitud })
+                }
+              estilos={EstilosDetalleTarea}
             />
-          </ScrollView>
 
-        <NavBarInferior
-          activeScreen="DetalleTarea"
-          onNavigate={handleNavigation}
+              <ModalCancelarChanguita
+                visible={mostrarModalCancelar}
+                onClose={() => setMostrarModalCancelar(false)}
+                onConfirm={async(motivo) => {
+                  await cancelarChanguita(motivo);
+                  setMostrarModalCancelar(false);
+                  setMotivoSeleccionado('');
+                }}
+                motivoSeleccionado={motivoSeleccionado}
+                setMotivoSeleccionado={setMotivoSeleccionado}
+                rol={rol}
+              />
+            </ScrollView>
+
+          <NavBarInferior
+            activeScreen="DetalleTarea"
+            onNavigate={handleNavigation}
+          />
+        </View>
+
+        {/* Snackbar*/}
+        <CustomSnackbar
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
         />
-      </View>
-
-      {/* Snackbar*/}
-      <CustomSnackbar
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
   );
 };
 

@@ -15,6 +15,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import  {redirectAdmin} from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 
 const UsuariosBloqueados = () => {
@@ -41,7 +42,7 @@ const UsuariosBloqueados = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.log('Error en el cierre de sesión:', error);
+      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesión');
       setVisible(true);
     } 
@@ -60,7 +61,6 @@ const UsuariosBloqueados = () => {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         setMessage("Éxito , Usuario desbloqueado con éxito.");
@@ -76,7 +76,7 @@ const UsuariosBloqueados = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al desbloquear usuario:", error);
+      console.error("Error al desbloquear usuario:", error);
       setMessage("Error, No se pudo desbloquear al usuario.");
       setVisible(true);
     }
@@ -97,8 +97,6 @@ const UsuariosBloqueados = () => {
       }
 
       const data = await response.json();
-      console.log("Usuarios bloqueados:", data);
-
 
       setUsuariosBloqueados((data as any).map((usuario: any) => ({
         id: usuario.id,
@@ -107,7 +105,7 @@ const UsuariosBloqueados = () => {
       })));
 
     } catch (error) {
-      console.log("Error al obtener usuarios bloqueados:", error);
+      console.error("Error al obtener usuarios bloqueados:", error);
     } finally {
       setLoading(false);
     }
@@ -129,7 +127,7 @@ const UsuariosBloqueados = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -139,18 +137,23 @@ const UsuariosBloqueados = () => {
 
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
       <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
+        <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+        <BarraPestanasPerfil />
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
         <ScrollView contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}>
-          {/* Header con Perfil*/}
-          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-          <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-
-          {/* Barra de pestañas */}
-          <BarraPestanasPerfil />
-
           {loading ? (
             <ActivityIndicator size="large" color="#197278" />
           ) : (
@@ -197,7 +200,6 @@ const UsuariosBloqueados = () => {
         />
         <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 export default UsuariosBloqueados;

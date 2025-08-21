@@ -197,6 +197,8 @@ const EstilosCompartidos = StyleSheet.create({
   },
   datosPersonales: {
     paddingHorizontal: DIMENSIONES.paddingHorizontal,
+    marginHorizontal: "20px",
+    // backgroundColor: Colors.grisFondo,
   },
   infoUsuario: {
     fontSize: FUENTES.normal,
@@ -333,6 +335,7 @@ const EstilosCompartidos = StyleSheet.create({
     fontSize: FUENTES.normal,
     fontWeight: 'bold',
   },
+  // overlay para el menu desplegable
 });
 
 export default EstilosCompartidos;

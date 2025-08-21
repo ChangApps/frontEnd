@@ -44,10 +44,16 @@ const AuthProvider = ({ children }) => {
         } else {
           logout(); // Si no hay token nuevo, cerrar sesión
         }
-      } catch (err) {
-        console.log("Error al renovar token:", err);
+      } catch (error) {
+      console.log("Error al renovar token:", err);
+      // Si el error es 401(no autorizado), cerramos sesión
+      if (err.response?.status === 401) {
+        logout();
+      } else {
+        // Otro 
         logout();
       }
+    }
     }, 60000); // Cada 60 segundos
 
     return () => clearInterval(interval);

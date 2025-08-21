@@ -22,6 +22,8 @@ const EstilosRecuperarContrasena1 = StyleSheet.create({
   },
   contenidoResponsivo: {
     width: '100%',
+    flex: 1,
+    
   },
   contenidoWeb: {
     maxWidth: 700,

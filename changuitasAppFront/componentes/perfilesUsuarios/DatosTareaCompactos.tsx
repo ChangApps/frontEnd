@@ -4,8 +4,10 @@ import { View, Text } from 'react-native';
 interface Props {
   servicio: string;
   fecha: string | null;
+  fechaValoracion: string | null;
   puntaje: string | number;
   estado: string;
+  comentario: string;
   estilos: any;
 }
 
@@ -26,17 +28,31 @@ const formatearFecha = (fechaISO: string | null | undefined): string => {
   }
 };
 
-const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, puntaje, estado, estilos }) => {
+const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, fechaValoracion, puntaje, estado, comentario, estilos }) => {
   const fechaFormateada = formatearFecha(fecha);
 
   return (
     <View>
       <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
       <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
-        <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
-        <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
-        <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Fecha valoracion: {fechaValoracion}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>Comentario: {comentario}</Text>
+        </View>
       </View>
     </View>
   );

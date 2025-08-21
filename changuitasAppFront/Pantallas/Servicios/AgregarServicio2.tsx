@@ -42,11 +42,10 @@ const AgregarServicio2 = () => {
 
   // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
   useEffect(() => {
-    console.log('Componente AgregarServicio2 montado');
     if (route.params?.selectedServices) {
       console.log('Servicios seleccionados:', route.params.selectedServices);
     } else {
-      console.log('No se encontraron servicios seleccionados.');
+      console.error('No se encontraron servicios seleccionados.');
     }
   }, [route.params]);
 
@@ -86,9 +85,6 @@ const AgregarServicio2 = () => {
           hastaHora, // Hora de fin
         };
       });
-
-
-    console.log('Datos seleccionados:', diasSeleccionadosFiltrados);
 
     // Aquí ya no necesitas duplicar el campo 'horas'
     const datosSeleccionados = {
@@ -188,14 +184,13 @@ const AgregarServicio2 = () => {
 
       if (respuesta.ok) {
         const datos = await respuesta.json();
-        console.log('Vinculación exitosa:', datos);
       } else {
-        console.log('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
+        console.error('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
       }
 
       navigation.navigate('MisServicios');
     } catch (error) {
-      console.log('Error al guardar el servicio:', error);
+      console.error('Error al guardar el servicio:', error);
       setMessage('Error al guardar el servicio. Por favor, inténtalo de nuevo.');
       setVisible(true);
     }
@@ -213,7 +208,7 @@ const AgregarServicio2 = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');

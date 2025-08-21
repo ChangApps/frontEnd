@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
-import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
+import { useNavigation, NavigationProp, RouteProp, useRoute, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from '../../utils/API_URL';
@@ -25,7 +25,6 @@ const ResultadosBusqueda = () => {
   const [serviciosModal, setServiciosModal] = useState<any[]>([]);
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState<any>(null);
   const [loadingProveedor, setLoadingProveedor] = useState(false);
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'ResultadosBusqueda'>>();
   const { proveedores, error, busquedaGeneral } = route.params;
@@ -55,9 +54,20 @@ const ResultadosBusqueda = () => {
     }
   };
 
-  useEffect(() => {
-    obtenerUsuariosBloqueados();
-  }, []);
+useFocusEffect(
+  useCallback(() => {
+    const cargarUsuariosBloqueados = async () => {
+      try {
+        await obtenerUsuariosBloqueados();
+      } catch (error) {
+        console.error("Error al cargar usuarios bloqueados:", error);
+      } finally {
+          setLoadingProveedor(false);
+      }
+    };
+    cargarUsuariosBloqueados();
+  }, [])
+);
 
   const obtenerFotoPerfil = (proveedor: any) => {
     return proveedor.fotoPerfil ? `${API_URL}${proveedor.fotoPerfil}` : "https://via.placeholder.com/100";
@@ -84,6 +94,7 @@ const ResultadosBusqueda = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -91,22 +102,29 @@ const ResultadosBusqueda = () => {
     }
   };
 
-
 const handleProveedorPress = (proveedor: any) => {
-  if (!proveedor.servicios || proveedor.servicios.length === 0) {
-    setMessage("El proveedor selecionado no tiene servicios disponibles");
-    setVisible(true);
-    return;
-  }
-
-  if (proveedor.servicios.length > 1) {
+  if (proveedor.servicios && proveedor.servicios.length > 1) {
+    // mas de un servicio: abrir modal
     setProveedorSeleccionado(proveedor);
     setServiciosModal(proveedor.servicios);
     setModalServiciosVisible(true);
-  } else {
-    console.log('ResultadosBusqueda proveedor id: ', proveedor.id, ' proveedor.servicios: ', proveedor.servicios);
+  } else if (proveedor.servicios && proveedor.servicios.length === 1) {
+    // un solo servicio: navegar con ese servicio
     setLoadingProveedor(true);
-    navigation.navigate('PerfilProveedor', { id: proveedor.id, servicio: proveedor.servicios[0].id });
+    navigation.navigate('PerfilProveedor', { 
+      id: proveedor.id, 
+      servicio: proveedor.servicios[0].id 
+    });
+  } else if (proveedor.idServicio) {
+    setLoadingProveedor(true);
+    navigation.navigate('PerfilProveedor', {
+      id: proveedor.id,
+      servicio: proveedor.idServicio,
+    });
+  } else {
+    // no tiene servicios
+    setMessage("El proveedor seleccionado no tiene servicios disponibles");
+    setVisible(true);
   }
 };
 
@@ -127,7 +145,6 @@ const handleProveedorPress = (proveedor: any) => {
 
   return (
     <SafeAreaView style={EstilosResultadosBusqueda.safeContainer}>
-      <View style={EstilosResultadosBusqueda.container}>
         <NavBarSuperior
           titulo="Resultados"
           showBackButton={true}
@@ -135,6 +152,7 @@ const handleProveedorPress = (proveedor: any) => {
           rightButtonType="none"
         />
 
+      <View style={EstilosResultadosBusqueda.container}>
         {error ? (
           <View style={EstilosResultadosBusqueda.noResultsContainer}>
             <Image

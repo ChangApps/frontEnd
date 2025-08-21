@@ -30,7 +30,7 @@ export function NavBarSuperior({
     onBackPress,
     rightButtonType = 'menu',
     onRightPress,
-    titleSize = 20,
+    titleSize = 25,
     titleAlign = 'left',
     navbarHeight = 60,
     buttonSize = 40,

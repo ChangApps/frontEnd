@@ -54,12 +54,11 @@ const EstilosResenias = StyleSheet.create({
     },
     rating: {
         flexDirection: 'row',
-        marginTop: 5,
+        alignItems: 'center',
     },
     valoracion: {
         fontSize: 14,
         color: Colors.blancoTexto,
-        marginBottom: 10,
     },
     mensajeVacio: {
         textAlign: 'center',
@@ -89,6 +88,17 @@ const EstilosResenias = StyleSheet.create({
     textoDesplegable: {
         fontSize: 16,
         color: Colors.negro,
-      },
+    },
+    noResultsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    noResultsImage: {
+        width: 200,
+        height: 200,
+        marginBottom: 20,
+    },
 });
 export default EstilosResenias;

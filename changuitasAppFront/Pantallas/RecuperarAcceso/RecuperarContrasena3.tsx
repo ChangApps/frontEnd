@@ -56,7 +56,7 @@ const RecuperarContrasena3 = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.log("Error al actualizar la contraseña:", error);
+      console.error("Error al actualizar la contraseña:", error);
       setMessage("Error al actualizar la contraseña.");
       setVisible(true);
     }
@@ -103,7 +103,7 @@ const RecuperarContrasena3 = () => {
             <View style={EstilosRecuperarContrasena3.contenedorEntrada}>
               <PasswordInput
                 placeholder="***************"
-                value={password}
+                value={confirmarPassword}
                 onChangeText={setConfirmarPassword}
               />
             </View>

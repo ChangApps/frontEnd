@@ -40,8 +40,41 @@ const Registro = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
 
 
+  const camposObligatoriosVacios = () => {
+  return (
+    username.trim() === '' &&
+    firstName.trim() === '' &&
+    lastName.trim() === '' &&
+    email.trim() === '' &&
+    documento.trim() === '' &&
+    telefono.trim() === '' &&
+    calle.trim() === '' &&
+    altura.trim() === '' &&
+    fechaNacimiento.trim() === '' &&
+    password.trim() === '' &&
+    confirmarPassword.trim() === ''
+  );
+};
+
   // Función para manejar el registro del usuario
   const handleRegistro = async () => {
+
+  if (camposObligatoriosVacios()) {
+    setErrorMessage('Por favor, completa los campos antes de registrarte.');
+    return;
+  }
+
+      // validar que el nombre y apellido no contengan números
+      const regexNumeros = /\d/; // cualquier dígito del 0 al 9,si tiene un 10 por ejemplo tambien lo toma
+      if (regexNumeros.test(firstName)) {
+        setErrorMessage('El nombre no puede contener números.');
+        return;
+      }
+      if (regexNumeros.test(lastName)) {
+        setErrorMessage('El apellido no puede contener números.');
+        return;
+      }
+
     if (password !== confirmarPassword) {
       setErrorMessage('Las contraseñas no coinciden'); // Actualiza el estado para almacenar el mensaje
       return;
@@ -175,12 +208,11 @@ const Registro = () => {
 
       // Si la respuesta es exitosa
       const data = await response.json();
-      console.log('Los datos son válidos');
       navigation.navigate('Verificacion1Mail', { datosUsuario: usuario });
 
     } catch (error: any) {
       const errorMessage = error.message || 'No se pudieron validar los datos.';
-      console.log('Error detallado:', error);
+      console.error('Error detallado:', error);
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     } finally {
       setCargando(false);

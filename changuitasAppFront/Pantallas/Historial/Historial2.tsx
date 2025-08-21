@@ -14,6 +14,8 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
+import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -79,7 +81,6 @@ const Historial2 = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-  useEffect(() => {
     const obtenerDatosAsyncStorage = async () => {
       try {
         const userId = await AsyncStorage.getItem('userId');
@@ -91,21 +92,27 @@ const Historial2 = () => {
 
         setUserId(userId); // Si existe, actualiza el estado
       } catch (error) {
-        console.log("Error al obtener los datos de AsyncStorage:", error);
+        console.error("Error al obtener los datos de AsyncStorage:", error);
       }
     };
 
-    obtenerDatosAsyncStorage();
-    fetchUHistorial();
-  }, []);  // Solo se ejecuta una vez cuando el componente se monta
+    useEffect(() => {
+      const obtenerDatos = async () => {
+        setLoading(true); // Activar pantalla de carga
+        await obtenerDatosAsyncStorage();
+        await fetchUHistorial();
+        setLoading(false); // Desactivar cuando todo termine
+      };
+      obtenerDatos();
+    }, []);
 
   const logout = async () => {
     try {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesión");
       setVisible(true);
     } 
@@ -130,7 +137,6 @@ const Historial2 = () => {
 
       // Manejo especial para 404
       if (responseHistorial.status === 404) {
-        console.log("No se encontraron registros de historial (404)");
         setHistorial([]);
         setSolicitudesInfo([]);
         return; // Salir de la función sin mostrar error
@@ -156,7 +162,6 @@ const Historial2 = () => {
           fechaSolicitud: item.fechaSolicitud,
           estadoSolicitud: item.estado
         }));
-        console.log("Solicitudes procesadas:", solicitudesData);
 
         setSolicitudesInfo(solicitudesData);
 
@@ -165,7 +170,7 @@ const Historial2 = () => {
         await fetchMultipleClientesData(clientes);
       }
     } catch (error) {
-      console.log('Error al cargar datos del usuario (historial):', error);
+      console.error('Error al cargar datos del usuario (historial):', error);
     } finally {
       setLoading(false);
     }
@@ -174,7 +179,6 @@ const Historial2 = () => {
   // Función que obtiene los datos de los proveedores
   const fetchMultipleClientesData = async (clienteIds: number[]) => {
     try {
-      console.log("Adentro del fetch multiple clientes data");
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) throw new Error('No se encontró el token de acceso');
 
@@ -198,17 +202,20 @@ const Historial2 = () => {
       }
 
       const clientesData = await Promise.all(clienteResponses.map(r => r.json()));
-      console.log("Clientes recibidos:", clientesData);
       setClientes(clientesData);
 
     } catch (error) {
-      console.log("Error al cargar datos de clientes:", error);
+      console.error("Error al cargar datos de clientes:", error);
       setMessage("No se pudo cargar los datos de los clientes");
       setVisible(true);
     } finally {
       setLoading(false);
     }
   };
+
+   if (loading) {
+    return <PantallaCarga frase="Cargando historial..." />;
+  }
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
@@ -222,7 +229,7 @@ const Historial2 = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -230,10 +237,15 @@ const Historial2 = () => {
     }
   };
 
+    const historialOrdenado = [...historial].sort((a, b) => {
+      if (!a.fechaSolicitud) return 1;
+      if (!b.fechaSolicitud) return -1;
+      const fechaA = new Date(a.fechaSolicitud);
+      const fechaB = new Date(b.fechaSolicitud);
+      return fechaB.getTime() - fechaA.getTime(); // más reciente primero
+    });
+
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
       <SafeAreaView style={EstilosHistorial2.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
@@ -244,7 +256,13 @@ const Historial2 = () => {
           onRightPress={() => { toggleDesplegable(); }}
         />
 
-        {/* Menú Desplegable */}
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
         <MenuDesplegable
           visible={mostrarDesplegable}
           usuario={state.usuario}
@@ -264,7 +282,7 @@ const Historial2 = () => {
 
         {/* Elemento de resultado */}
         <ResultadoList
-          historial={historial}
+          historial={historialOrdenado}
           usuarios={clientes}
           navigation={navigation}
           claveUsuario="cliente"
@@ -283,7 +301,6 @@ const Historial2 = () => {
           onNavigate={handleNavigation}
         />
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 export default Historial2;

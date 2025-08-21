@@ -25,6 +25,7 @@ import Colors from '../../assets/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -94,7 +95,7 @@ const EditarPerfil = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+      console.error('Error en el cierre de sesión:', error.message);
     }
   };
 
@@ -118,7 +119,6 @@ const EditarPerfil = () => {
       setImageUri(uri);
       setImageUriOriginal(uri); // Guardar la original para compararla
     } catch (error) {
-      console.log('Error al obtener la foto de perfil:', error);
       setMessage('Error: No se pudo cargar la imagen de perfil.');
       setVisible(true);
     }
@@ -169,7 +169,7 @@ const EditarPerfil = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -181,30 +181,49 @@ const EditarPerfil = () => {
     return <PantallaCarga frase="Guardando cambios..." />;
   }
 
+  const hayCambios = () => {
+  if (
+    camposModificados.first_name?.trim() !== '' ||
+    camposModificados.last_name?.trim() !== '' ||
+    camposModificados.email?.trim() !== '' ||
+    camposModificados.telefono?.trim() !== '' ||
+    (camposModificados.direccion && Object.values(camposModificados.direccion).some(v => v && v.toString().trim() !== '')) ||
+    camposModificados.old_password?.trim() !== '' ||
+    camposModificados.password?.trim() !== '' ||
+    camposModificados.password2?.trim() !== '' ||
+    imageUri !== imageUriOriginal // si cambiaste la foto
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
     <View style={{flex:1}}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         >
         <SafeAreaView style={EstilosEditarPerfil.safeContainer}>
+          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          <BarraPestanasPerfil />
+          {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+          {mostrarDesplegable && (
+            <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+              <View style={EstiloOverlay.overlay} />
+            </TouchableWithoutFeedback>
+          )}
+
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
+
+
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
-            {/* Header con Perfil*/}
-            <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-            <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-            <BarraPestanasPerfil />
-
-            {/* Menú Desplegable */}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
-
             {/* Sección para cambiar la foto */}
             <View style={EstilosEditarPerfil.seccionFoto}>
               <TouchableOpacity onPress={handleImagePress}>
@@ -343,8 +362,6 @@ const EditarPerfil = () => {
                 </>
               )}
 
-              <TouchableOpacity onPress={() => setMostrarContrasena(!mostrarContrasena)}>
-
                 {/* Botón para mostrar/ocultar campos de contraseña */}
                 <TouchableOpacity
                   style={EstilosEditarPerfil.botonCambiarPassword}
@@ -387,7 +404,6 @@ const EditarPerfil = () => {
 
                   </>
                 )}
-              </TouchableOpacity>
             </View>
 
             {/* Botón de Guardar Cambios*/}
@@ -397,6 +413,11 @@ const EditarPerfil = () => {
                 titulo="Guardar Cambios"
                 onPress={async () => {
                   try {
+                     if (!hayCambios()) {
+                          setMessage('No se modificó ningún campo.');
+                          setVisible(true);
+                          return;
+                        }
                     const resultado = await guardarCambios(
                       camposModificados,
                       datosOriginales,
@@ -411,6 +432,24 @@ const EditarPerfil = () => {
                     // Si fue exitoso, navegar al home inmediatamente
                     if (resultado && resultado.success) {
                       // Esperar para que el usuario vea el mensaje de éxito
+                      //Limpio los campos del formulario
+                      setCamposModificados({
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        telefono: '',
+                        old_password: '',
+                        password: '',
+                        password2: '',
+                        direccion: {
+                          calle: '',
+                          altura: '',
+                          nroDepto: '',
+                          piso: '',
+                          barrio: '',
+                        }
+                      });
+                      
                       setTimeout(() => {
                         navigation.navigate('Home');
                       }, 1500);
@@ -438,16 +477,14 @@ const EditarPerfil = () => {
             setVisible={setVisible}
             message={message}
           />
-        </SafeAreaView>
-        </KeyboardAvoidingView>
-      
-        {/* Barra de navegación inferior */}
+       {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="EditarPerfil" // O el screen activo correspondiente
           onNavigate={handleNavigation}
         />
+        </SafeAreaView>
+        </KeyboardAvoidingView>
       </View>
-    </TouchableWithoutFeedback>
   );
 };
 

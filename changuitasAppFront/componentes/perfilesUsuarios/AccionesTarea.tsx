@@ -1,4 +1,3 @@
-// COMPONENTE: AccionesTarea.tsx (basado fielmente en tu archivo inicial de DetalleTarea.tsx)
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Button } from '../Buttons';
@@ -22,9 +21,9 @@ const AccionesTarea: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {rol === 'trabajador' && estado === 'PA' && (
+      {rol === 'trabajador' && (estado === 'PA' || estado === 'Pendiente de Aceptación') && (
         <View style={estilos.buttonContainer}>
-           <Button
+          <Button
             titulo="Aceptar changuita"
             onPress={aceptarChanguita}
             backgroundColor={Colors.naranja}
@@ -48,7 +47,7 @@ const AccionesTarea: React.FC<Props> = ({
         </View>
       )}
 
-      {rol === 'trabajador' && estado === 'I' && (
+      {rol === 'trabajador' && (estado === 'I'  || estado === 'Iniciado')  && (
         <View style={estilos.buttonContainer}>
           <Button
             titulo="Cancelar changuita"
@@ -64,21 +63,22 @@ const AccionesTarea: React.FC<Props> = ({
         </View>
       )}
 
-      {rol === 'cliente' && !['F', 'C', 'Finalizado', 'Cancelado'].includes(estado) && (
-        <View style={estilos.buttonContainer}>
-          {estado !== 'PA' && estado !== 'Pendiente Aceptacion' && (
-            <Button
-              titulo="Finalizar changuita"
-              onPress={finalizarSolicitud}
-              backgroundColor={Colors.naranja}
-              textColor={Colors.fondo}
-              width={estilos.nextButton.width}
-              padding={estilos.nextButton.padding}
-              borderRadius={estilos.nextButton?.borderRadius}
-            />
-          )}
-
-           <Button
+{rol === 'cliente' && !['F', 'C', 'Finalizado', 'Cancelado'].includes(estado) && (
+  <View style={estilos.buttonContainer}>
+    {!['PA', 'Pendiente de Aceptación'].includes(estado) && (
+      <>
+        <Button
+          titulo="Finalizar changuita"
+          onPress={finalizarSolicitud}
+          backgroundColor={Colors.naranja}
+          textColor={Colors.fondo}
+          width={estilos.nextButton.width}
+          padding={estilos.nextButton.padding}
+          borderRadius={estilos.nextButton?.borderRadius}
+        />
+      </>
+    )}
+          <Button
             titulo="Cancelar changuita"
             onPress={() => setMostrarModal(true)}
             backgroundColor={Colors.fondo}

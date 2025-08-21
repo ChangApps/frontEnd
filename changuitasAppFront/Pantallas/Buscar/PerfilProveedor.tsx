@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform, ImageStyle } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -11,12 +11,13 @@ import MenuDesplegable from '../../componentes/MenuDesplegable';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { Button } from '../../componentes/Buttons';
 import { COLORES_APP, FUENTES, DIMENSIONES } from '../../componentes/estilosCompartidosPerfilesUsuarios';
-import { Direccion } from '../../types/interfaces';
+import { Direccion, ServicioArreglado } from '../../types/interfaces';
 import { redirectAdmin } from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 
 const PerfilProveedor = () => {
@@ -43,15 +44,16 @@ const PerfilProveedor = () => {
   const [state, setState] = useContext(AuthContext);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
-  const [reseniasUserId, setreseniasUserId] = useState<number|null>(null);
+  const [reseniasUserId, setreseniasUserId] = useState<number | null>(null);
   const [IdproveedorServicio, setIdProveedorServicio] = useState(null);
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(false); //para las pantallas de cargas
+  const [DataServicio, setDataServicio] = useState<ServicioArreglado| null>(null);
 
   const formatearFecha = (fecha: string): string => {
-  const [año, mes, dia] = fecha.split("-");
-  return `${dia}/${mes}/${año}`;
+    const [año, mes, dia] = fecha.split("-");
+    return `${dia}/${mes}/${año}`;
   };
 
   const handleImagePress = () => {
@@ -71,17 +73,11 @@ const PerfilProveedor = () => {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
-    } catch (error: any) {
-      console.log('Error en el cierre de sesión:', error.message);
+    } catch (error) {
+      console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
-    } finally {
-      console.log("Intentando ir al iniciar sesion ");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "InicioDeSesion" }],
-      });
-    }
+    } 
   };
 
   useEffect(() => {
@@ -92,7 +88,6 @@ const PerfilProveedor = () => {
         if (usuarioId) {
           const userIdNumerico = parseInt(usuarioId, 10); //Hay que convertilo a integer sino es un string 
           setUserId(userIdNumerico);
-          console.log("Perfil de otro ID del usuario obtenido:", userIdNumerico);
         }
       } catch (error) {
         console.error("Error al obtener los datos de AsyncStorage:", error);
@@ -135,14 +130,10 @@ const PerfilProveedor = () => {
 
       const responseJson = await response.json();
 
-      console.log("Respuesta del servidor:", responseJson);  // Respuesta de la API
-      console.log("ID de la solicitud recibido:", responseJson.id_solicitud);
-
       if (response.ok) {
         console.log("Éxito", "Proveedor servicio creado con éxito.");
 
         const idSolicitud = responseJson.id_solicitud;
-        console.log("ID solicitud detalle: ", idSolicitud);
         const id = Array.isArray(route.params.id) ? String(route.params.id[0]) : String(route.params.id);
         setCargando(false);
         navigation.navigate('DetalleTarea', { id, idSolicitud });
@@ -166,12 +157,13 @@ const PerfilProveedor = () => {
     setIsMounted(true);
 
     if (route.params?.id) {
-      console.log('ID obtenido:', route.params.id);
+      //console.log('ID obtenido:', route.params.id);
     } else {
-      console.log('No se encontraron id.');
+      console.error('No se encontraron id.');
     }
     fetchUsuario();
     fetchProveedorServicio();
+    fetchDatosServicio();
 
     return () => {
       // Cuando el componente se desmonte, poner el flag a false
@@ -186,7 +178,6 @@ const PerfilProveedor = () => {
     try {
       // Obtén el token de acceso desde AsyncStorage
       const accessToken = await AsyncStorage.getItem('accessToken');
-      console.log('Token obtenido de AsyncStorage:', accessToken);
 
       if (!accessToken) {
         throw new Error('No se encontró el token de acceso');
@@ -194,13 +185,7 @@ const PerfilProveedor = () => {
 
       const proveedorId = route.params.id; //solo para usar en esta funcion
       const idServicio = route.params.servicio; // ID del servicio pasado desde la navegación
-      console.log('PerfilProveedor: ID usuario recibido', proveedorId, ' ID del servicio obtenido:', idServicio);
-           setreseniasUserId(proveedorId);
-      //  const idServicioString = await AsyncStorage.getItem('idServicio');
-      //  const servicioIdentificador = idServicioString ? parseInt(idServicioString, 10) : null;
-
-      // Realiza la solicitud al backend para obtener los ProveedorServicio
-      // console.log("Datos a enviar en fetchProveedor:", proveedorId, " y ", servicioIdentificador);
+      setreseniasUserId(proveedorId);
       const responseProveedor = await fetch(`${API_URL}/proveedores-servicios/usuario/${proveedorId}/${idServicio}/`, {
         method: 'GET',
         headers: {
@@ -208,7 +193,6 @@ const PerfilProveedor = () => {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-      console.log('Response status (ProveedorServicio):', responseProveedor.status);
 
       if (!responseProveedor.ok) {
         throw new Error(`Error al obtener el ProveedorServicio: ${responseProveedor.status}`);
@@ -219,10 +203,46 @@ const PerfilProveedor = () => {
       const proveedor = Array.isArray(dataProveedor) ? dataProveedor[0] : dataProveedor;
       setIdProveedorServicio(proveedor?.id);
     } catch (error) {
-      console.log('Error al cargar los datos del proveedor de servicio:', error);
+      console.error('Error al cargar los datos del proveedor de servicio:', error);
     }
   };
 
+
+    const fetchDatosServicio = async () => {
+    if (!isMounted) return;
+    try {
+      // Obtén el token de acceso desde AsyncStorage
+      const accessToken = await AsyncStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        throw new Error('No se encontró el token de acceso');
+      }
+      console.log("Haciendo fetch del servicio");
+      const idServicio = route.params.servicio; 
+      // Se realiza la solicitud para obtener los datos del servicio
+      const responseServicio = await fetch(`${API_URL}/servicios/${idServicio}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!responseServicio.ok) {
+        console.error(`Error al obtener los datos del servicio: ${responseServicio.status}`);
+      }
+
+      const servicioDat: ServicioArreglado = await responseServicio.json();
+      setDataServicio(servicioDat);
+
+    } catch (error) {
+      console.error('Error al cargar los datos del servicio:', error); 
+      setMessage("Error. No se pudo cargar el perfil.");
+      setVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUsuario = async () => {
     if (!isMounted) return;
@@ -235,7 +255,6 @@ const PerfilProveedor = () => {
       }
 
       const proveedorId = route.params.id;
-      console.log('fetchUsuario: ID del usuario extraído:', proveedorId);
 
       // Se realiza la solicitud para obtener los datos del usuario
       const responseUsuario = await fetch(`${API_URL}/usuarios/${proveedorId}/`, {
@@ -247,12 +266,11 @@ const PerfilProveedor = () => {
       });
 
       if (!responseUsuario.ok) {
-        console.log(`Error al obtener el usuario: ${responseUsuario.status}`);
+        console.error(`Error al obtener el usuario: ${responseUsuario.status}`);
       }
 
       // Procesa los datos del usuario
       const dataUsuario: Usuario = await responseUsuario.json();
-      console.log('Datos del usuario recibidos:', dataUsuario); // Verifica los datos del usuario
       setUsuario(dataUsuario);
       setImageUri(dataUsuario.fotoPerfil || 'https://via.placeholder.com/80');
 
@@ -308,7 +326,7 @@ const PerfilProveedor = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
         setMessage("Usuario bloqueado correctamente.");
         setVisible(true);
@@ -336,7 +354,7 @@ const PerfilProveedor = () => {
         navigation.navigate('AgregarServicio1');
         break;
       case 'Notifications':
-        // Navegar a notificaciones
+        navigation.navigate('Notificaciones');
         break;
       case 'PerfilUsuario':
         navigation.navigate('PerfilUsuario');
@@ -344,39 +362,40 @@ const PerfilProveedor = () => {
     }
   };
 
-  const titleSizeNavbarSuperior = Platform.OS === 'web' ? 35 : 25;
   if (cargando) {
     return <PantallaCarga frase="Procesando..." />;
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
-      <SafeAreaView edges={['top']} style={EstilosPerfilProveedor.safeContainer}>
+      <SafeAreaView  style={EstilosPerfilProveedor.safeContainer}>
+        {/* Encabezado con opciones de menú */}
+        <NavBarSuperior
+          titulo="Perfil Proveedor"
+          showBackButton={true}
+          onBackPress={() => { navigation.goBack(); }}
+          rightButtonType="menu"
+          onRightPress={() => { toggleDesplegable(); }}
+        />
+        
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
+
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
-          {/* Encabezado con opciones de menú */}
-          <NavBarSuperior
-            titulo="Perfil del proveedor"
-            titleSize={titleSizeNavbarSuperior}
-            showBackButton={true}
-            onBackPress={() => { navigation.goBack(); }}
-            rightButtonType="menu"
-            onRightPress={() => { toggleDesplegable(); }}
-          />
-
-          {/* Menú Desplegable */}
-          <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
-          />
-
           {/* Información del Usuario */}
           <View style={EstilosPerfilProveedor.seccionUsuario}>
             <Pressable onPress={handleImagePress}>
-              <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica} />
+              <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica as ImageStyle}/>
             </Pressable>
             <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
           </View>
@@ -391,7 +410,7 @@ const PerfilProveedor = () => {
               <View style={EstilosPerfilProveedor.modalContainer}>
                 <Image
                   source={{ uri: imageUri || 'https://via.placeholder.com/80' }}
-                  style={EstilosPerfilProveedor.imagenModal}
+                  style={EstilosPerfilProveedor.imagenModal as ImageStyle}
                 />
               </View>
             </TouchableWithoutFeedback>
@@ -402,42 +421,47 @@ const PerfilProveedor = () => {
 
           {/* Botones */}
           <View style={EstilosPerfilProveedor.buttonContainer}>
-             <Button
-                titulo="Iniciar changuita"
-                onPress={iniciarChanguita}
-                backgroundColor={COLORES_APP.primario} 
-                textColor="String"        
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="40%"
-              />
-              
-              <Button
-                titulo="Chatear"
-                onPress={handleChat}
-                backgroundColor="transparent"
-                borderColor={COLORES_APP.primario}
-                borderWidth={1}
-                textColor={COLORES_APP.primario}
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="25%"
-              />
+            <Button
+              titulo="Iniciar changuita"
+              onPress={iniciarChanguita}
+              backgroundColor={COLORES_APP.primario}
+              textColor="String"
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="40%"
+            />
 
-              <Button
-                titulo="Bloquear"
-                onPress={() => bloquearUsuario(Number(route.params.id))}
-                backgroundColor="transparent"
-                borderColor={COLORES_APP.primario}
-                borderWidth={1}
-                textColor={COLORES_APP.primario}
-                textSize={FUENTES.normal}
-                padding={12}
-                borderRadius={DIMENSIONES.borderRadius}
-                width="25%"
-              />
+            <Button
+              titulo="Chatear"
+              onPress={handleChat}
+              backgroundColor="transparent"
+              borderColor={COLORES_APP.primario}
+              borderWidth={1}
+              textColor={COLORES_APP.primario}
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="25%"
+              showIcon
+              iconSet="FontAwesome"
+              iconName="whatsapp"
+              iconSize={20}
+              iconColor={COLORES_APP.primario}
+            />
+
+            <Button
+              titulo="Bloquear"
+              onPress={() => bloquearUsuario(Number(route.params.id))}
+              backgroundColor="transparent"
+              borderColor={COLORES_APP.primario}
+              borderWidth={1}
+              textColor={COLORES_APP.primario}
+              textSize={FUENTES.normal}
+              padding={12}
+              borderRadius={DIMENSIONES.borderRadius}
+              width="25%"
+            />
           </View>
 
           {/* Datos adicionales */}
@@ -464,18 +488,32 @@ const PerfilProveedor = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Datos Personales */}
-          <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS PERSONALES</Text>
-          <View style={EstilosPerfilProveedor.datosPersonales}>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Nombre: {usuario?.first_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Apellido: {usuario?.last_name}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>
-              Fecha de Nacimiento: {usuario?.fechaNacimiento ? formatearFecha(usuario.fechaNacimiento) : ""}
-            </Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Correo Electronico: {usuario?.email}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Telefono: {usuario?.telefono}</Text>
-            <Text style={EstilosPerfilProveedor.infoUsuario}>Direccion: {usuario?.direccion?.calle}</Text>
-          </View>
+        {/* Datos del servicio */}
+            <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS DEL SERVICIO</Text>
+            <View style={EstilosPerfilProveedor.datosPersonales}>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={EstilosPerfilProveedor.infoUsuario}>
+                  Nombre del servicio: {DataServicio?.nombreServicio}
+                </Text>
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={EstilosPerfilProveedor.infoUsuario}>
+                  Descripción: {DataServicio?.descripcion}
+                </Text>
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
+                  Horarios:
+                </Text>
+              </View>
+              <View style={EstilosPerfilProveedor.infoBox}>
+                {DataServicio?.dias?.map((dia, index) => (
+                  <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
+                    {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
+                  </Text>
+                ))}
+              </View>
+            </View>
         </ScrollView>
         {/* Barra de navegación inferior */}
         <NavBarInferior
@@ -483,9 +521,7 @@ const PerfilProveedor = () => {
           onNavigate={handleNavigation}
         />
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 
 export default PerfilProveedor;
-
