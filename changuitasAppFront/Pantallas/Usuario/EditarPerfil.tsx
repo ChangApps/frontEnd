@@ -477,14 +477,13 @@ const EditarPerfil = () => {
             setVisible={setVisible}
             message={message}
           />
-        </SafeAreaView>
-        </KeyboardAvoidingView>
-      
-        {/* Barra de navegación inferior */}
+       {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="EditarPerfil" // O el screen activo correspondiente
           onNavigate={handleNavigation}
         />
+        </SafeAreaView>
+        </KeyboardAvoidingView>
       </View>
   );
 };
