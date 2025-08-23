@@ -229,7 +229,7 @@ const DetalleTarea = () => {
                 onCloseModal={() => setModalVisible(false)}
               />
               <Text style={EstilosDetalleTarea.nombreCompleto}>
-                {usuario?.username}
+                {usuario?.first_name} {usuario?.last_name}
               </Text>
             </View>
 
