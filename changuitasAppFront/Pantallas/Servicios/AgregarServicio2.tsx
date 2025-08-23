@@ -334,15 +334,17 @@ const AgregarServicio2 = () => {
             padding={14}
             borderRadius={25}
           />
-          <Button
-            titulo="Atrás"
-            onPress={() => navigation.navigate('AgregarServicio1')}
-            backgroundColor="transparent"
-            textColor={Colors.naranja}
-            textSize={18}
-            padding={14}
-            borderRadius={25}
-          />
+          {!servicioExistente && (
+            <Button
+              titulo="Atrás"
+              onPress={() => navigation.navigate('AgregarServicio1')}
+              backgroundColor="transparent"
+              textColor={Colors.naranja}
+              textSize={18}
+              padding={14}
+              borderRadius={25}
+            />
+          )}
         </View>
       </ScrollView>
 
