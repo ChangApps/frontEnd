@@ -57,12 +57,13 @@ const ResultadosBusqueda = () => {
 useFocusEffect(
   useCallback(() => {
     const cargarUsuariosBloqueados = async () => {
+      setLoading(true); // inicio de carga
       try {
         await obtenerUsuariosBloqueados();
       } catch (error) {
         console.error("Error al cargar usuarios bloqueados:", error);
       } finally {
-          setLoadingProveedor(false);
+        setLoading(false); //fin de carga
       }
     };
     cargarUsuariosBloqueados();
@@ -139,8 +140,8 @@ const handleProveedorPress = (proveedor: any) => {
 
   const proveedoresFiltrados = proveedores.filter(proveedor => !usuariosBloqueados.includes(proveedor.id));
 
-  if (loadingProveedor) {
-    return <PantallaCarga frase="Cargando perfil proveedor..." />;
+  if (loading) {
+    return <PantallaCarga frase="Cargando resultados..." />;
   }
 
   return (

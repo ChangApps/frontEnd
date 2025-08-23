@@ -61,7 +61,9 @@ export type RootStackParamList = {
   MisServicios:undefined;
   EditarPerfil:undefined;
   AgregarServicio1:undefined;
-  AgregarServicio2: { selectedServices: string[] }; // Define que AgregarServicio2 espera un parametro
+  AgregarServicio2: {
+    selectedServices: { nombre: string; parentId: number | null }[];
+  };
   BuscarServicio1:undefined;
   BuscarServicio2: { selectedService: string[] };
   ResultadosBusqueda: { 
