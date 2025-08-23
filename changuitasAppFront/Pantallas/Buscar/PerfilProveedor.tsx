@@ -418,8 +418,6 @@ const PerfilProveedor = () => {
           </TouchableWithoutFeedback>
         </Modal>
 
-        {/* Snackbar para mostrar mensajes */}
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
 
         {/* Botones */}
         <View style={EstilosPerfilProveedor.buttonContainer}>
@@ -527,6 +525,9 @@ const PerfilProveedor = () => {
           </View>
         </View>
       </ScrollView>
+      
+        {/* Snackbar para mostrar mensajes */}
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
       {/* Barra de navegación inferior */}
       <NavBarInferior
         activeScreen="PerfilProveedor" // O el screen activo correspondiente

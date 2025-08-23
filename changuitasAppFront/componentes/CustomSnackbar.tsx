@@ -31,7 +31,7 @@ const CustomSnackbar = ({ visible, setVisible, message, actionLabel, onActionPre
         bottom: 100,
         left: 0,
         right: 0,
-        zIndex: 100000,
+        zIndex: 500000,
       }}
     >
       {message}
