@@ -155,13 +155,15 @@ const AgregarServicio2 = () => {
 
     const userId = await AsyncStorage.getItem('userId');
 
+    const categoriaIds = servicioExistente
+      ? servicioExistente.categorias?.map((c: any) => c.id) || []
+      : route.params.selectedServices?.map(s => s.parentId).filter(id => id !== null) || [];
+
     const cuerpo = {
       nombreServicio: datosSeleccionados.nombreServicio,
       descripcion: datosSeleccionados.descripcion,
       dias: dias,
-      categoria_ids: route.params.selectedServices
-        ? route.params.selectedServices.map(s => s.parentId).filter(id => id !== null) as number[]
-        : servicioExistente?.categorias?.map((c: any) => c.id) || [],
+      categoria_ids: categoriaIds,
     };
 
     console.log('Cuerpo que se enviará al backend:', JSON.stringify(cuerpo));
