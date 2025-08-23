@@ -131,18 +131,38 @@ const EstilosMisServicios = StyleSheet.create({
     color: Colors.naranja,
   },
   listaServicios: { paddingHorizontal: 16 },
-  servicioCard: { padding: 16, marginBottom: 8, backgroundColor: Colors.grisBoxes, borderRadius: 8, elevation: 2 },
+  servicioCard: { 
+    padding: 16, 
+    marginBottom: 8, 
+    backgroundColor: Colors.grisBoxes, 
+    borderRadius: 8, 
+    elevation: 2, 
+    flexDirection:"column",
+    justifyContent:"space-between",
+    alignItems: "flex-start",
+  },
   nombreServicio: { fontSize: 16, fontWeight: 'bold', color: Colors.blancoTexto },
   descripcion: { fontSize: 14, color: Colors.grisTexto },
   horario: { fontSize: 12, color: Colors.naranja },
   sinServicios: { textAlign: 'center', marginTop: 20, color: 'grey', fontSize: 18 },
-
+  conternidoCard:{
+    flex:1,
+  },
   botonEliminar: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: "#ffe5e5",
-    alignSelf: 'flex-end',
-    marginTop: -40,
+    backgroundColor: "#ffe5e5", 
+  },
+  botonEditar: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor :"#ffe5e5",
+  },
+  botonesCard:{
+    flexDirection: "row",
+    alignSelf:"flex-end",
+    gap:8,
+    marginTop:-10,
   },
   noResultsContainer: {
     flex: 1,

@@ -58,11 +58,12 @@ export type RootStackParamList = {
   PerfilUsuario:undefined;
   Resenias:{idUsuario: any };
   UsuariosBloqueados:undefined;
-  MisServicios:undefined;
+  MisServicios:{message?:string};
   EditarPerfil:undefined;
   AgregarServicio1:undefined;
   AgregarServicio2: {
     selectedServices: { nombre: string; parentId: number | null }[];
+    servicio?:any;
   };
   BuscarServicio1:undefined;
   BuscarServicio2: { selectedService: string[] };

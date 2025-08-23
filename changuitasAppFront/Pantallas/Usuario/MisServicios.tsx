@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
 import API_URL from '../../utils/API_URL';
@@ -18,10 +18,11 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { redirectAdmin } from '../../utils/utils';
 import {Servicio} from '../../types/interfaces';
 import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const route = useRoute<RouteProp<RootStackParamList, 'MisServicios'>>();
   const [services, setServices] = useState<Servicio[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mostrarDesplegable, setMostrarDesplegable] = useState(false);
@@ -116,6 +117,13 @@ const MisServicios = () => {
     fetchUsuario();
   }, []);
 
+  useEffect(() => {
+  if (route.params?.message) {
+    setMessage(route.params.message);
+    setVisible(true);
+  }
+}, [route.params]);
+
   const renderServiceItem = ({ item }: { item: Servicio }) => (
     <View style={EstilosMisServicios.servicioCard}>
       <Text style={EstilosMisServicios.nombreServicio}>{item.nombreServicio}</Text>
@@ -131,14 +139,23 @@ const MisServicios = () => {
           {item.dia}: {item.desdeHora} - {item.hastaHora}
         </Text>
       )}
-
-      {/* Botón para eliminar el servicio */}
-      <TouchableOpacity
-        style={EstilosMisServicios.botonEliminar}
-        onPress={() => EliminarServicio(item.id)}
-      >
-        <Ionicons name="trash-outline" size={24} color="red" />
-      </TouchableOpacity>
+      <View style={EstilosMisServicios.botonesCard}>
+        {/* Botón editar */}
+        <TouchableOpacity
+          style={EstilosMisServicios.botonEditar}
+          onPress={() => navigation.navigate('AgregarServicio2', { selectedServices: [], servicio: item })}
+        >
+          <FontAwesome name="pencil" size={24} color="coral" />
+        </TouchableOpacity>
+        
+        {/* Botón para eliminar el servicio */}
+        <TouchableOpacity
+          style={EstilosMisServicios.botonEliminar}
+          onPress={() => EliminarServicio(item.id)}
+        >
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
+        </View>
     </View>
   );
 

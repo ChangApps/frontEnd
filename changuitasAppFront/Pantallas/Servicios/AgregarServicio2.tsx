@@ -18,7 +18,7 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 const AgregarServicio2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'AgregarServicio2'>>();
-  const [descripcion, setDescripcion] = useState('');
+  const [descripcion, setDescripcion] = useState(''); 
   const [diasSeleccionados, setDiasSeleccionados] = useState({
     Lunes: false,
     Martes: false,
@@ -39,6 +39,26 @@ const AgregarServicio2 = () => {
   });
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
+  const servicioExistente = route.params?.servicio;
+
+  useEffect(() => {
+  if (servicioExistente) {
+    setDescripcion(servicioExistente.descripcion || '');
+
+    // Pre-cargar días y horarios
+    const dias = servicioExistente.dias || [];
+    const diasInicial = { ...diasSeleccionados };
+    const horasInicial = { ...horasSeleccionadas };
+
+    dias.forEach((d: any) => {
+      diasInicial[d.dia as keyof typeof diasInicial] = true;
+      horasInicial[d.dia as keyof typeof horasInicial] = { inicio: d.desdeHora.slice(0,5), fin: d.hastaHora.slice(0,5) };
+    });
+
+    setDiasSeleccionados(diasInicial);
+    setHorasSeleccionadas(horasInicial);
+  }
+}, [servicioExistente]);
 
   // Mostrar los datos pasados desde la pantalla anterior (AgregarServicio1)
   useEffect(() => {
@@ -69,6 +89,10 @@ const AgregarServicio2 = () => {
 
   //"Guardo" los datos obtenidos y se los paso a AgregarServicio3
   const manejarGuardar = () => {
+    const nombreServicio = servicioExistente
+    ? servicioExistente.nombreServicio
+    : route.params.selectedServices?.[0]?.nombre || '';
+
     // Filtra los días seleccionados
     const diasSeleccionadosFiltrados = Object.keys(diasSeleccionados)
       .filter(dia => diasSeleccionados[dia as keyof typeof diasSeleccionados]) // Filtra solo los días con valor true
@@ -88,7 +112,7 @@ const AgregarServicio2 = () => {
       });
 
     const datosSeleccionados = {
-      nombreServicio: route.params.selectedServices[0].nombre, // Incluye el nombre del servicio
+      nombreServicio, // Incluye el nombre del servicio
       descripcion,
       dias: diasSeleccionadosFiltrados, // Solo los días seleccionados
     };
@@ -136,20 +160,27 @@ const AgregarServicio2 = () => {
       descripcion: datosSeleccionados.descripcion,
       dias: dias,
       categoria_ids: route.params.selectedServices
-      .map(s => s.parentId)
-      .filter(id => id !== null) as number[], // solo ids válidos
+        ? route.params.selectedServices.map(s => s.parentId).filter(id => id !== null) as number[]
+        : servicioExistente?.categorias?.map((c: any) => c.id) || [],
     };
+
     console.log('Cuerpo que se enviará al backend:', JSON.stringify(cuerpo));
 
+    // Si estoy editando -> PUT, si no -> POST
+    const method = servicioExistente ? 'PUT' : 'POST';
+    const url = servicioExistente
+      ? `${API_URL}/servicios/${servicioExistente.id}/`
+      : `${API_URL}/servicios/`;
+
     try {
-      const response = await fetch(`${API_URL}/servicios/`, {
-        method: 'POST',
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: JSON.stringify(cuerpo),
-      });
+    });
 
       const data = await response.json();
 
@@ -158,42 +189,34 @@ const AgregarServicio2 = () => {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-     setMessage('Servicio guardado exitosamente.');
-     setVisible(true);
-
-      // Proceso de vinculación como ya tenés:
+     if (!servicioExistente) {
+      // Proceso de vinculación solo en creación
       const servicio = data.id || data[0]?.id;
-
       const fechaDesde = new Date().toISOString().split('T')[0];
       const vinculo = {
         servicio,
         proveedor: userId,
         fechaDesde,
-        fechaHasta: null
+        fechaHasta: null,
       };
 
-      const respuesta = await fetch(`${API_URL}/proveedores-servicios/`, {
+      await fetch(`${API_URL}/proveedores-servicios/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify(vinculo)
+        body: JSON.stringify(vinculo),
       });
-
-      if (respuesta.ok) {
-        const datos = await respuesta.json();
-      } else {
-        console.error('Error al vincular el servicio:', respuesta.status, respuesta.statusText);
-      }
-
-      navigation.navigate('MisServicios');
-    } catch (error) {
-      console.error('Error al guardar el servicio:', error);
-      setMessage('Error al guardar el servicio. Por favor, inténtalo de nuevo.');
-      setVisible(true);
     }
-  };
+
+    navigation.navigate('MisServicios', {message: servicioExistente ? 'Servicio actualizado exitosamente.' : 'Servicio guardado exitosamente.'});
+  } catch (error) {
+    console.error('Error al guardar el servicio:', error);
+    setMessage('Error al guardar el servicio. Por favor, inténtalo de nuevo.');
+    setVisible(true);
+  }
+};
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
@@ -302,7 +325,7 @@ const AgregarServicio2 = () => {
 
         <View style={EstilosAgregarServicio2.contenedorBotones}>
           <Button
-            titulo="Publicar"
+            titulo={servicioExistente ? "Actualizar" : "Publicar"}
             onPress={manejarGuardar}
             textSize={18}
             textColor={Colors.fondo}
