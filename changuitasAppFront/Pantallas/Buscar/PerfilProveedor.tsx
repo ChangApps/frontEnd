@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Linking, Modal, TouchableWithoutFeedback, Pressable, ScrollView, Platform, ImageStyle } from 'react-native';
 import { useNavigation, NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -17,6 +17,8 @@ import CustomSnackbar from '../../componentes/CustomSnackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
+import Colors from '../../assets/Colors';
 
 
 const PerfilProveedor = () => {
@@ -48,7 +50,7 @@ const PerfilProveedor = () => {
   const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState("");  // Estado para almacenar el mensaje de error o éxito
   const [cargando, setCargando] = useState(false); //para las pantallas de cargas
-  const [DataServicio, setDataServicio] = useState<ServicioArreglado| null>(null);
+  const [DataServicio, setDataServicio] = useState<ServicioArreglado | null>(null);
 
   const formatearFecha = (fecha: string): string => {
     const [año, mes, dia] = fecha.split("-");
@@ -76,7 +78,7 @@ const PerfilProveedor = () => {
       console.error('Error en el cierre de sesión:', error);
       setMessage("Error en el cierre de sesion");
       setVisible(true);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -208,7 +210,7 @@ const PerfilProveedor = () => {
   };
 
 
-    const fetchDatosServicio = async () => {
+  const fetchDatosServicio = async () => {
     if (!isMounted) return;
     try {
       // Obtén el token de acceso desde AsyncStorage
@@ -218,7 +220,7 @@ const PerfilProveedor = () => {
         throw new Error('No se encontró el token de acceso');
       }
       console.log("Haciendo fetch del servicio");
-      const idServicio = route.params.servicio; 
+      const idServicio = route.params.servicio;
       // Se realiza la solicitud para obtener los datos del servicio
       const responseServicio = await fetch(`${API_URL}/servicios/${idServicio}/`, {
         method: 'GET',
@@ -236,7 +238,7 @@ const PerfilProveedor = () => {
       setDataServicio(servicioDat);
 
     } catch (error) {
-      console.error('Error al cargar los datos del servicio:', error); 
+      console.error('Error al cargar los datos del servicio:', error);
       setMessage("Error. No se pudo cargar el perfil.");
       setVisible(true);
     } finally {
@@ -367,151 +369,170 @@ const PerfilProveedor = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
-      <SafeAreaView  style={EstilosPerfilProveedor.safeContainer}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
-          {/* Encabezado con opciones de menú */}
-          <NavBarSuperior
-            titulo="Perfil del proveedor"
-            showBackButton={true}
-            onBackPress={() => { navigation.goBack(); }}
-            rightButtonType="menu"
-            onRightPress={() => { toggleDesplegable(); }}
+    <SafeAreaView style={EstilosPerfilProveedor.safeContainer}>
+      {/* Encabezado con opciones de menú */}
+      <NavBarSuperior
+        titulo="Perfil Proveedor"
+        showBackButton={true}
+        onBackPress={() => { navigation.goBack(); }}
+        rightButtonType="menu"
+        onRightPress={() => { toggleDesplegable(); }}
+      />
+
+      {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+      {mostrarDesplegable && (
+        <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+          <View style={EstiloOverlay.overlay} />
+        </TouchableWithoutFeedback>
+      )}
+
+      <MenuDesplegable
+        visible={mostrarDesplegable}
+        usuario={state.usuario}
+        onLogout={logout}
+        onRedirectAdmin={redirectAdmin}
+      />
+
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
+        {/* Información del Usuario */}
+        <View style={EstilosPerfilProveedor.seccionUsuario}>
+          <Pressable onPress={handleImagePress}>
+            <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica as ImageStyle} />
+          </Pressable>
+          <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
+        </View>
+
+        <Modal
+          visible={modalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseModal}>
+            <View style={EstilosPerfilProveedor.modalContainer}>
+              <Image
+                source={{ uri: imageUri || 'https://via.placeholder.com/80' }}
+                style={EstilosPerfilProveedor.imagenModal as ImageStyle}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        {/* Snackbar para mostrar mensajes */}
+        <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
+
+        {/* Botones */}
+        <View style={EstilosPerfilProveedor.buttonContainer}>
+          <Button
+            titulo="Iniciar changuita"
+            onPress={iniciarChanguita}
+            backgroundColor={COLORES_APP.primario}
+            textColor="String"
+            textSize={FUENTES.normal}
+            padding={12}
+            borderRadius={DIMENSIONES.borderRadius}
+            width="30%"
           />
 
-          {/* Menú Desplegable */}
-          <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
+          <Button
+            titulo="Chatear"
+            onPress={handleChat}
+            backgroundColor="transparent"
+            borderColor={COLORES_APP.primario}
+            borderWidth={1}
+            textColor={COLORES_APP.primario}
+            textSize={FUENTES.normal}
+            padding={12}
+            borderRadius={DIMENSIONES.borderRadius}
+            width="25%"
+            showIcon
+            iconSet="FontAwesome"
+            iconName="whatsapp"
+            iconSize={20}
+            iconColor={COLORES_APP.primario}
           />
 
-          {/* Información del Usuario */}
-          <View style={EstilosPerfilProveedor.seccionUsuario}>
-            <Pressable onPress={handleImagePress}>
-              <Image source={{ uri: imageUri || undefined }} style={EstilosPerfilProveedor.imagenUsuarioChica} />
-            </Pressable>
-            <Text style={EstilosPerfilProveedor.nombreCompleto}>{usuario?.first_name} {usuario?.last_name}</Text>
+          <Button
+            titulo="Bloquear"
+            onPress={() => bloquearUsuario(Number(route.params.id))}
+            backgroundColor="transparent"
+            borderColor={COLORES_APP.primario}
+            borderWidth={1}
+            textColor={COLORES_APP.primario}
+            textSize={FUENTES.normal}
+            padding={12}
+            borderRadius={DIMENSIONES.borderRadius}
+            width="25%"
+          />
+        </View>
+
+        {/* Datos adicionales */}
+        <View style={EstilosPerfilProveedor.datosExtras}>
+          <View style={EstilosPerfilProveedor.datoItem}>
+            <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
+            <Text style={EstilosPerfilProveedor.datoLabel}>Contrató</Text>
+          </View>
+          <View style={EstilosPerfilProveedor.datoItem}>
+            <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
+            <Text style={EstilosPerfilProveedor.datoLabel}>Trabajó</Text>
           </View>
 
-          <Modal
-            visible={modalVisible}
-            animationType="fade"
-            transparent={true}
-            onRequestClose={handleCloseModal}
+          {/* Puntaje con botón para abrir las reseñas */}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Resenias", { idUsuario: reseniasUserId });
+            }}
           >
-            <TouchableWithoutFeedback onPress={handleCloseModal}>
-              <View style={EstilosPerfilProveedor.modalContainer}>
-                <Image
-                  source={{ uri: imageUri || 'https://via.placeholder.com/80' }}
-                  style={EstilosPerfilProveedor.imagenModal}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-
-          {/* Snackbar para mostrar mensajes */}
-          <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
-
-          {/* Botones */}
-          <View style={EstilosPerfilProveedor.buttonContainer}>
-            <Button
-              titulo="Iniciar changuita"
-              onPress={iniciarChanguita}
-              backgroundColor={COLORES_APP.primario}
-              textColor="String"
-              textSize={FUENTES.normal}
-              padding={12}
-              borderRadius={DIMENSIONES.borderRadius}
-              width="40%"
-            />
-
-            <Button
-              titulo="Chatear"
-              onPress={handleChat}
-              backgroundColor="transparent"
-              borderColor={COLORES_APP.primario}
-              borderWidth={1}
-              textColor={COLORES_APP.primario}
-              textSize={FUENTES.normal}
-              padding={12}
-              borderRadius={DIMENSIONES.borderRadius}
-              width="25%"
-              showIcon
-              iconSet="FontAwesome"
-              iconName="whatsapp"
-              iconSize={20}
-              iconColor={COLORES_APP.primario}
-            />
-
-            <Button
-              titulo="Bloquear"
-              onPress={() => bloquearUsuario(Number(route.params.id))}
-              backgroundColor="transparent"
-              borderColor={COLORES_APP.primario}
-              borderWidth={1}
-              textColor={COLORES_APP.primario}
-              textSize={FUENTES.normal}
-              padding={12}
-              borderRadius={DIMENSIONES.borderRadius}
-              width="25%"
-            />
-          </View>
-
-          {/* Datos adicionales */}
-          <View style={EstilosPerfilProveedor.datosExtras}>
             <View style={EstilosPerfilProveedor.datoItem}>
-              <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.cantServiciosContratados ?? 0}</Text>
-              <Text style={EstilosPerfilProveedor.datoLabel}>Contrató</Text>
+              <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
+              <Text style={EstilosPerfilProveedor.datoLabel}>Puntaje</Text>
             </View>
-            <View style={EstilosPerfilProveedor.datoItem}>
-              <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.cantServiciosTrabajados ?? 0}</Text>
-              <Text style={EstilosPerfilProveedor.datoLabel}>Trabajó</Text>
-            </View>
-
-            {/* Puntaje con botón para abrir las reseñas */}
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Resenias", { idUsuario: reseniasUserId });
-              }}
-            >
-              <View style={EstilosPerfilProveedor.datoItem}>
-                <Text style={EstilosPerfilProveedor.datoNumero}>{(usuario as any)?.puntaje ?? 0}</Text>
-                <Text style={EstilosPerfilProveedor.datoLabel}>Puntaje</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+        </View>
 
         {/* Datos del servicio */}
-            <Text style={EstilosPerfilProveedor.tituloDatosPersonales}>DATOS DEL SERVICIO</Text>
-            <View style={EstilosPerfilProveedor.datosPersonales}>
-              <Text style={EstilosPerfilProveedor.infoUsuario}>
-                Nombre del servicio: {DataServicio?.nombreServicio}
+        <Text style={[EstilosPerfilProveedor.tituloDatosPersonales, { fontWeight: 'bold' }]}>DATOS DEL SERVICIO</Text>
+        <View style={EstilosPerfilProveedor.datosPersonales}>
+          <View style={EstilosPerfilProveedor.infoBox}>
+            <Text style={EstilosPerfilProveedor.infoUsuario}>
+              <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+                Nombre del servicio:
+              </Text>{" "}
+              <Text >
+                {DataServicio?.nombreServicio}
               </Text>
-              <Text style={EstilosPerfilProveedor.infoUsuario}>
-                Descripción: {DataServicio?.descripcion}
-              </Text>
-
-              <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
+            </Text>
+          </View>
+          <View style={EstilosPerfilProveedor.infoBox}>
+            <Text style={EstilosPerfilProveedor.infoUsuario}>
+              <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+                Descripción:
+              </Text>{" "}
+              <Text>
+               {DataServicio?.descripcion}
+               </Text>
+            </Text>
+          </View>
+          <View style={EstilosPerfilProveedor.infoBox}>
+            <Text style={[EstilosPerfilProveedor.infoUsuario, { fontWeight: 'bold', marginTop: 8 }]}>
+              <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
                 Horarios:
+              </Text>{" "}
+            </Text>
+            {DataServicio?.dias?.map((dia, index) => (
+              <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
+                {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
               </Text>
-              {DataServicio?.dias?.map((dia, index) => (
-                <Text key={index} style={EstilosPerfilProveedor.infoUsuario}>
-                  {dia.dia}: {dia.desdeHora} - {dia.hastaHora}
-                </Text>
-              ))}
-            </View>
-        </ScrollView>
-        {/* Barra de navegación inferior */}
-        <NavBarInferior
-          activeScreen="PerfilProveedor" // O el screen activo correspondiente
-          onNavigate={handleNavigation}
-        />
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+      {/* Barra de navegación inferior */}
+      <NavBarInferior
+        activeScreen="PerfilProveedor" // O el screen activo correspondiente
+        onNavigate={handleNavigation}
+      />
+    </SafeAreaView>
   );
 };
 

@@ -1,6 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle, ImageStyle } from 'react-native';
 import EstilosCompartidos, { COLORES_APP } from '../../../componentes/estilosCompartidosPerfilesUsuarios';
 import Colors from '../../../assets/Colors';
+
+type NamedStyles = {
+  [key: string]: ViewStyle | TextStyle | ImageStyle;
+};
 
 // Estilos específicos para PerfilUsuario que no están en los compartidos
 const estilosEspecificos = StyleSheet.create({
@@ -14,14 +18,12 @@ const estilosEspecificos = StyleSheet.create({
     fontSize: 16,
     color: Colors.grisTexto,
   },
-  // Este archivo solo usa los estilos compartidos, 
-  // no tiene estilos específicos únicos
 });
 
 // Combinar estilos compartidos con específicos
-const EstilosPerfilUsuario = StyleSheet.create({
+const EstilosPerfilUsuario: NamedStyles = {
   ...EstilosCompartidos,
   ...estilosEspecificos,
-});
+};
 
 export default EstilosPerfilUsuario;

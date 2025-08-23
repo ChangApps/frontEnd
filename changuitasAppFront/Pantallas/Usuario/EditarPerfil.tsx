@@ -25,6 +25,7 @@ import Colors from '../../assets/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const EditarPerfil = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -199,29 +200,30 @@ const EditarPerfil = () => {
 };
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
     <View style={{flex:1}}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
         >
         <SafeAreaView style={EstilosEditarPerfil.safeContainer}>
+          <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
+          <BarraPestanasPerfil />
+          {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+          {mostrarDesplegable && (
+            <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+              <View style={EstiloOverlay.overlay} />
+            </TouchableWithoutFeedback>
+          )}
+
+          <MenuDesplegable
+            visible={mostrarDesplegable}
+            usuario={state.usuario}
+            onLogout={logout}
+            onRedirectAdmin={redirectAdmin}
+          />
+
+
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={EstilosEditarPerfil.scrollContainer}>
-            {/* Header con Perfil*/}
-            <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
-            <MenuDesplegable visible={mostrarDesplegable} usuario={state.usuario} onLogout={logout} onRedirectAdmin={redirectAdmin} />
-            <BarraPestanasPerfil />
-
-            {/* Menú Desplegable */}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
-
             {/* Sección para cambiar la foto */}
             <View style={EstilosEditarPerfil.seccionFoto}>
               <TouchableOpacity onPress={handleImagePress}>
@@ -475,16 +477,14 @@ const EditarPerfil = () => {
             setVisible={setVisible}
             message={message}
           />
-        </SafeAreaView>
-        </KeyboardAvoidingView>
-      
-        {/* Barra de navegación inferior */}
+       {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="EditarPerfil" // O el screen activo correspondiente
           onNavigate={handleNavigation}
         />
+        </SafeAreaView>
+        </KeyboardAvoidingView>
       </View>
-    </TouchableWithoutFeedback>
   );
 };
 

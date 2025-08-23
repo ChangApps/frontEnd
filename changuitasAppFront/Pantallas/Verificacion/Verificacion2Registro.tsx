@@ -82,8 +82,6 @@ const Verificacion2Registro = () => {
     } catch (error) {
       console.error("Error en la creación del usuario:", error);
       setErrorMessage("Error en la creación del usuario.");
-    } finally {
-      setCargando(false);
     }
   }
 
@@ -143,16 +141,29 @@ const Verificacion2Registro = () => {
         return;
       }
 
-      await AsyncStorage.setItem("@auth", JSON.stringify({ token: data.access }));
+       await AsyncStorage.setItem('@auth', JSON.stringify({
+        token: data.access,
+        usuario: {
+          id: data.id,
+          is_staff: data.is_staff,
+        }
+      }));
       await AsyncStorage.setItem("accessToken", data.access);
       await AsyncStorage.setItem("refreshToken", data.refresh);
       await AsyncStorage.setItem("userId", data.id.toString());
 
-      setState({ token: data.access });
-      navigation.navigate("Home");
+          setState({
+              token: data.access,
+              usuario: {
+                id: data.id,
+                is_staff: data.is_staff,
+              }
+            });
     } catch (error) {
       console.error("Error en login:", error);
       setErrorMessage("Error al iniciar sesión.");
+    } finally {
+      setCargando(false);
     }
   };
   

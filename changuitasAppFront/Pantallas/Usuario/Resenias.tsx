@@ -28,6 +28,7 @@ import Colors from "../../assets/Colors";
 import { redirectAdmin } from "../../utils/utils";
 import MenuDesplegable from "../../componentes/MenuDesplegable";
 import EstilosUsuariosBloqueados from "./estilos/EstilosUsuariosBloqueados";
+import EstiloOverlay from "../../componentes/estiloOverlayMenuDesplegable";
 
 const Resenias = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -39,7 +40,7 @@ const Resenias = () => {
   const [solicitudes, setSolicitudes] = useState([]); //Estado para guardar el arreglo del historial
   const [state, setState] = useContext(AuthContext);
   const [hayResenas, setHayResenas] = useState(true);
-  
+
   const logout = async () => {
     try {
       setState({ token: "" });
@@ -83,7 +84,7 @@ const Resenias = () => {
       if (responseSolicitudUsuario.status === 404) {
         setHayResenas(false);
         setMessage("No hay reseñas disponibles");
-        return; 
+        return;
       }
 
       if (!responseSolicitudUsuario.ok) {
@@ -98,8 +99,8 @@ const Resenias = () => {
       if (solicitudFiltrada.length > 0) {
         setSolicitudes(solicitudFiltrada);
       } else {
-       setHayResenas(false);
-       setMessage("No hay reseñas disponibles");
+        setHayResenas(false);
+        setMessage("No hay reseñas disponibles");
       }
     } catch (error) {
       console.error("Error al obtener las resenias");
@@ -152,7 +153,7 @@ const Resenias = () => {
         navigation.navigate("AgregarServicio1");
         break;
       case "Notifications":
-        navigation.navigate('Notificaciones');
+        navigation.navigate("Notificaciones");
         break;
       case "PerfilUsuario":
         navigation.navigate("PerfilUsuario");
@@ -161,63 +162,68 @@ const Resenias = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
-      <SafeAreaView style={EstilosResenias.safeContainer}>
-        <View style={EstilosResenias.container}>
-          {/* NavBar Superior */}
-          <NavBarSuperior
-            titulo="Reseñas"
-            showBackButton={true}
-            onBackPress={() => {
-              navigation.goBack();
-            }}
-            rightButtonType="menu"
-            onRightPress={() => {
-              toggleDesplegable();
-            }}
-          />
-
-          {/* Menú Desplegable */}
-          <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
-          />
-
-      {loading ? (
-        <PantallaCarga frase="Cargando reseñas..." />
-      ) : !hayResenas ? (
-        <View style={EstilosResenias.noResultsContainer}>
-              <Image
-                        source={require('./estilos/no-results.png')}
-                        style={EstilosUsuariosBloqueados.noResultsImage}
-                        resizeMode="contain"
-                      />
-                <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={solicitudes}
-                renderItem={renderResenia}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            )}
-        </View>
-
-        <CustomSnackbar
-          visible={visible}
-          setVisible={setVisible}
-          message={message}
+    <SafeAreaView style={EstilosResenias.safeContainer}>
+      <View style={EstilosResenias.container}>
+        {/* NavBar Superior */}
+        <NavBarSuperior
+          titulo="Reseñas"
+          showBackButton={true}
+          onBackPress={() => {
+            navigation.goBack();
+          }}
+          rightButtonType="menu"
+          onRightPress={() => {
+            toggleDesplegable();
+          }}
         />
 
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback
+            onPress={() => setMostrarDesplegable(false)}
+          >
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
+        <MenuDesplegable
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
+        />
+
+          {loading ? (
+            <PantallaCarga frase="Cargando reseñas..." />
+          ) : !hayResenas ? (
+            <View style={EstilosResenias.noResultsContainer}>
+              <Image
+                source={require("./estilos/no-results.png")}
+                style={EstilosUsuariosBloqueados.noResultsImage}
+                resizeMode="contain"
+              />
+              <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={solicitudes}
+              renderItem={renderResenia}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          )}
+
+          <CustomSnackbar
+            visible={visible}
+            setVisible={setVisible}
+            message={message}
+          />
         {/* Barra de navegación inferior */}
         <NavBarInferior
           activeScreen="Resenias" // O el screen activo correspondiente
           onNavigate={handleNavigation}
         />
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </View>
+    </SafeAreaView>
   );
 };
 export default Resenias;

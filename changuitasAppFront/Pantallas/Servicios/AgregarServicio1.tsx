@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navegacion/AppNavigator';
@@ -9,16 +9,50 @@ import { NavBarSuperior } from '../../componentes/NavBarSuperior';
 import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
+import API_URL from '../../utils/API_URL';
+import PantallaCarga from '../../componentes/PantallaCarga';
+
+interface Categoria {
+  id: number;
+  nombre: string;
+  categoria_padre: number | null;
+}
 
 const AgregarServicio1 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [visible, setVisible] = useState(false);  // Estado para manejar la visibilidad del Snackbar
-  const [message, setMessage] = useState('');  // Estado para almacenar el mensaje de error
-  const handleSelectService = (service: string) => {
-    // Seleccionar un solo servicio, desmarcando el anterior
-    setSelectedService(service === selectedService ? null : service);
-  };
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [selectedService, setSelectedService] = useState<{ nombre: string; parentId: number | null } | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Cargar categorías desde el backend
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_URL}/categorias/`);
+        const data: Categoria[] = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        setMessage('Error al obtener las categorias');
+        setVisible(true);
+      }finally{
+        setLoading(false);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
+
+    const handleSelectService = (nombre: string, parentId: number | null) => {
+      if (selectedService?.nombre === nombre && selectedService?.parentId === parentId) {
+        setSelectedService(null); // si hace tap de nuevo, lo deselecciona
+      } else {
+        setSelectedService({ nombre, parentId });
+      }
+    };
 
   const handleNext = () => {
     if (!selectedService) {
@@ -26,28 +60,40 @@ const AgregarServicio1 = () => {
       setVisible(true);
       return;
     }
-    navigation.navigate('AgregarServicio2', { selectedServices: [selectedService] });
+    navigation.navigate("AgregarServicio2", {
+      selectedServices: [selectedService] 
+    });
   };
 
   const handleNavigation = (screen: string) => {
     switch (screen) {
-      case 'Home':
-        navigation.navigate('Home');
+      case "Home":
+        navigation.navigate("Home");
         break;
-      case 'Historial1':
-        navigation.navigate('Historial1');
+      case "Historial1":
+        navigation.navigate("Historial1");
         break;
-      case 'Add':
-        navigation.navigate('AgregarServicio1');
+      case "Add":
+        navigation.navigate("AgregarServicio1");
         break;
-      case 'Notifications':
-        navigation.navigate('Notificaciones');
+      case "Notifications":
+        navigation.navigate("Notificaciones");
         break;
-      case 'PerfilUsuario':
-        navigation.navigate('PerfilUsuario');
+      case "PerfilUsuario":
+        navigation.navigate("PerfilUsuario");
         break;
     }
   };
+
+  // Agrupar categorías por padre
+  const categoriasPadre = categorias.filter((c) => c.categoria_padre === null);
+  const getSubcategorias = (parentId: number) =>
+    categorias.filter((c) => c.categoria_padre === parentId);
+
+  if (loading) {
+    return <PantallaCarga frase="Cargando categorias..." />;
+  }
+
 
   return (
     <SafeAreaView style={EstilosAgregarServicio1.safeContainer}>
@@ -58,6 +104,7 @@ const AgregarServicio1 = () => {
         onBackPress={() => navigation.goBack()}
         rightButtonType="none"
       />
+
       <ScrollView contentContainerStyle={EstilosAgregarServicio1.scrollContainer}>
         <View style={EstilosAgregarServicio1.pasosWrapper}>
           <View style={EstilosAgregarServicio1.pasoActivo}>
@@ -68,16 +115,36 @@ const AgregarServicio1 = () => {
           </View>
         </View>
 
-        {renderCategory("BELLEZA", ["Depilación", "Maquillaje", "Manicura", "Peluquería", "Podología"], selectedService, handleSelectService)}
-        {renderCategory("MASCOTAS", ["Paseo de mascotas", "Cuidado en el hogar", "Guardería"], selectedService, handleSelectService)}
-        {renderCategory("JARDINERÍA", ["Corte de pasto", "Arreglo jardín", "Limpieza jardín"], selectedService, handleSelectService)}
-        {renderCategory("LIMPIEZA", ["Limpieza de hogar", "Limpieza vehículo"], selectedService, handleSelectService)}
-        {renderCategory("HOGAR", ["Gasista", "Electricista", "Plomero", "Carpintería", "Pintor", "Albañil", "Zinguería", "Gomería", "Electrodomésticos", "Calderista"], selectedService, handleSelectService)}
-        {renderCategory("CUIDADO DE PERSONAS", ["Niñera/o", "Cuidado de adultos mayores"], selectedService, handleSelectService)}
-        {renderCategory("EDUCACIÓN", ["Clases particulares", "Clases de música", "Clases de idiomas"], selectedService, handleSelectService)}
-        {renderCategory("MUDANZA", ["Fletes", "Movimiento de muebles"], selectedService, handleSelectService)}
-        {renderCategory("SERVICIOS DE INVIERNO", ["Limpieza de nieve", "Sal en las veredas"], selectedService, handleSelectService)}
-        {renderCategory("CONTROL DE PLAGAS", ["Fumigación", "Control de plagas"], selectedService, handleSelectService)}
+        {categoriasPadre.map((catPadre) => (
+          <View key={catPadre.id} style={EstilosAgregarServicio1.categoriaContenedor}>
+            <Text style={EstilosAgregarServicio1.categoriaTitulo}>{catPadre.nombre}</Text>
+            <View style={EstilosAgregarServicio1.chipsContenedor}>
+              {getSubcategorias(catPadre.id).map((subcat) => (
+                <TouchableOpacity
+                  key={subcat.id}
+                  style={[
+                    EstilosAgregarServicio1.chip,
+                    selectedService?.nombre === subcat.nombre &&
+                      selectedService?.parentId === catPadre.id &&
+                      EstilosAgregarServicio1.chipSeleccionado,
+                  ]}
+                  onPress={() => handleSelectService(subcat.nombre, catPadre.id)}
+                >
+                  <Text
+                    style={[
+                      EstilosAgregarServicio1.chipTexto,
+                      selectedService?.nombre === subcat.nombre &&
+                        selectedService?.parentId === catPadre.id &&
+                        EstilosAgregarServicio1.chipTextoSeleccionado,
+                    ]}
+                  >
+                    {subcat.nombre}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ))}
 
         {/* Botones de acción */}
         <View style={EstilosAgregarServicio1.botonesContenedor}>
@@ -89,10 +156,9 @@ const AgregarServicio1 = () => {
             padding={14}
             borderRadius={25}
           />
-          
           <Button
             titulo="Cancelar"
-            onPress={() => navigation.navigate('MisServicios')}
+            onPress={() => navigation.navigate("MisServicios")}
             backgroundColor="transparent"
             textColor={Colors.naranja}
             textSize={18}
@@ -102,46 +168,10 @@ const AgregarServicio1 = () => {
         </View>
       </ScrollView>
 
-      <NavBarInferior
-        activeScreen="AgregarServicio1" // O el screen activo correspondiente
-        onNavigate={handleNavigation}
-      />
-        <CustomSnackbar visible={visible} setVisible={setVisible} message={message}/>
+      <NavBarInferior activeScreen="AgregarServicio1" onNavigate={handleNavigation} />
+      <CustomSnackbar visible={visible} setVisible={setVisible} message={message} />
     </SafeAreaView>
   );
 };
-
-// Función para renderizar categorías
-const renderCategory = (
-  title: string,
-  options: string[],
-  selectedService: string | null,
-  handleSelectService: (service: string) => void
-) => (
-  <View key={title} style={EstilosAgregarServicio1.categoriaContenedor}>
-    <Text style={EstilosAgregarServicio1.categoriaTitulo}>{title}</Text>
-    <View style={EstilosAgregarServicio1.chipsContenedor}>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option}
-          style={[
-            EstilosAgregarServicio1.chip,
-            selectedService === option && EstilosAgregarServicio1.chipSeleccionado,
-          ]}
-          onPress={() => handleSelectService(option)}
-        >
-          <Text
-            style={[
-              EstilosAgregarServicio1.chipTexto,
-              selectedService === option && EstilosAgregarServicio1.chipTextoSeleccionado,
-            ]}
-          >
-            {option}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  </View>
-);
 
 export default AgregarServicio1;

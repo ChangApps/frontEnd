@@ -15,6 +15,7 @@ import { NavBarInferior } from '../../componentes/NavBarInferior';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectAdmin } from '../../utils/utils';
 import PantallaCarga from '../../componentes/PantallaCarga';
+import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
 
 const Historial2 = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -245,9 +246,6 @@ const Historial2 = () => {
     });
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      if (mostrarDesplegable) setMostrarDesplegable(false); // ocultar el menú
-    }}>
       <SafeAreaView style={EstilosHistorial2.safeContainer}>
         {/* NavBar Superior */}
         <NavBarSuperior
@@ -258,7 +256,13 @@ const Historial2 = () => {
           onRightPress={() => { toggleDesplegable(); }}
         />
 
-        {/* Menú Desplegable */}
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
         <MenuDesplegable
           visible={mostrarDesplegable}
           usuario={state.usuario}
@@ -297,7 +301,6 @@ const Historial2 = () => {
           onNavigate={handleNavigation}
         />
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 export default Historial2;

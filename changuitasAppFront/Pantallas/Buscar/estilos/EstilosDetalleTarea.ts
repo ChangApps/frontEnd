@@ -1,5 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle, ImageStyle, Image } from 'react-native';
 import EstilosCompartidos, { COLORES_APP, DIMENSIONES, FUENTES } from '../../../componentes/estilosCompartidosPerfilesUsuarios';
+import EstilosInicioDeSesion from '../../Registro-Login/estilos/EstilosInicioDeSesion';
+
+type NamedStyles = {
+  [key: string]: ViewStyle | TextStyle | ImageStyle | ImageStyle;
+};
 
 // Estilos específicos para DetalleTarea que no están en los compartidos
 const estilosEspecificos = StyleSheet.create({
@@ -9,7 +14,7 @@ const estilosEspecificos = StyleSheet.create({
     top: 80,
     right: 20,
     width: 150,
-    backgroundColor: COLORES_APP.blanco,
+    backgroundColor: COLORES_APP.blancoTexto,
     borderRadius: DIMENSIONES.borderRadiusModal,
     paddingVertical: 10,
     shadowColor: COLORES_APP.sombra,
@@ -31,9 +36,9 @@ const estilosEspecificos = StyleSheet.create({
 });
 
 // Combinar estilos compartidos con específicos
-const EstilosDetalleTarea = StyleSheet.create({
+const EstilosDetalleTarea: NamedStyles = {
   ...EstilosCompartidos,
   ...estilosEspecificos,
-});
+};
 
 export default EstilosDetalleTarea;

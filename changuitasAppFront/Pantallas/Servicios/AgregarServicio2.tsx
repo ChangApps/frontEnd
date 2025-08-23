@@ -45,7 +45,8 @@ const AgregarServicio2 = () => {
     if (route.params?.selectedServices) {
       console.log('Servicios seleccionados:', route.params.selectedServices);
     } else {
-      console.error('No se encontraron servicios seleccionados.');
+      setMessage('No se encontraron servicios seleccionados.');
+      setVisible(true);
     }
   }, [route.params]);
 
@@ -86,15 +87,12 @@ const AgregarServicio2 = () => {
         };
       });
 
-    // Aquí ya no necesitas duplicar el campo 'horas'
     const datosSeleccionados = {
-      nombreServicio: route.params.selectedServices[0], // Incluye el nombre del servicio
+      nombreServicio: route.params.selectedServices[0].nombre, // Incluye el nombre del servicio
       descripcion,
       dias: diasSeleccionadosFiltrados, // Solo los días seleccionados
     };
 
-    // Navegar a AgregarServicio3 y pasar los datos filtrados
-    //navigation.navigate('AgregarServicio3', { datosSeleccionados });
     manejarGuardarServicio(datosSeleccionados);
   };
 
@@ -133,13 +131,14 @@ const AgregarServicio2 = () => {
 
     const userId = await AsyncStorage.getItem('userId');
 
-    // Este es el objeto correcto que espera el backend
     const cuerpo = {
       nombreServicio: datosSeleccionados.nombreServicio,
       descripcion: datosSeleccionados.descripcion,
-      dias: dias
+      dias: dias,
+      categoria_ids: route.params.selectedServices
+      .map(s => s.parentId)
+      .filter(id => id !== null) as number[], // solo ids válidos
     };
-
     console.log('Cuerpo que se enviará al backend:', JSON.stringify(cuerpo));
 
     try {

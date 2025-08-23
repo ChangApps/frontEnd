@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import Colors from '../../assets/Colors';
 
 interface Props {
   servicio: string;
@@ -33,14 +34,68 @@ const DatosTareaCompactos: React.FC<Props> = ({ servicio, fecha, fechaValoracion
 
   return (
     <View>
-      <Text style={estilos.tituloDatosPersonales}>DATOS DE LA TAREA</Text>
+      <Text style={[estilos.tituloDatosPersonales, { fontWeight: 'bold' }]}>DATOS DE LA TAREA</Text>
       <View style={estilos.datosPersonales}>
-        <Text style={estilos.infoUsuario}>Servicio: {servicio}</Text>
-        <Text style={estilos.infoUsuario}>Fecha: {fechaFormateada}</Text>
-        <Text style={estilos.infoUsuario}>Puntaje: {puntaje}</Text>
-        <Text style={estilos.infoUsuario}>Fecha valoracion: {fechaValoracion}</Text>
-        <Text style={estilos.infoUsuario}>Estado: {estado}</Text>
-        <Text style={estilos.infoUsuario}>Comentario: {comentario}</Text>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Servicio:
+            </Text>{" "}
+            <Text >
+              {servicio}
+            </Text>
+          </Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Fecha:
+            </Text>{" "}
+            <Text >
+              {fechaFormateada}
+            </Text>
+          </Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Puntaje:
+            </Text>{" "}
+            <Text >
+              {puntaje}
+            </Text>
+          </Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Fecha valoracion:
+            </Text>{" "}
+            <Text >
+              {fechaValoracion}
+            </Text>
+          </Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Estado:
+            </Text>{" "}
+            <Text >
+              {estado}
+            </Text>
+          </Text>
+        </View>
+        <View style={estilos.infoBox}>
+          <Text style={estilos.infoUsuario}>
+            <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+              Comentario:
+            </Text>{" "}
+            <Text >
+              {comentario}
+            </Text>
+          </Text>
+        </View>
       </View>
     </View>
   );

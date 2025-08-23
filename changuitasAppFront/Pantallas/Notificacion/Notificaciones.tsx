@@ -15,6 +15,7 @@ import { cerrarSesion } from '../../autenticacion/authService';
 import { AuthContext } from "../../autenticacion/auth";
 import { redirectAdmin } from '../../utils/utils'
 import MenuDesplegable from "../../componentes/MenuDesplegable";
+import EstiloOverlay from "../../componentes/estiloOverlayMenuDesplegable";
 
 export interface Notificacion {
   id: number;
@@ -111,7 +112,6 @@ const Notificaciones = () => {
   );
 
   return (
-    <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
         <SafeAreaView style={styles.container}>
         <NavBarSuperior
             titulo="Notificaciones"
@@ -120,11 +120,18 @@ const Notificaciones = () => {
             rightButtonType="menu"
             onRightPress={toggleDesplegable}
         />
+        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+        {mostrarDesplegable && (
+          <TouchableWithoutFeedback onPress={() => setMostrarDesplegable(false)}>
+            <View style={EstiloOverlay.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+
         <MenuDesplegable
-            visible={mostrarDesplegable}
-            usuario={state.usuario}
-            onLogout={logout}
-            onRedirectAdmin={redirectAdmin}
+          visible={mostrarDesplegable}
+          usuario={state.usuario}
+          onLogout={logout}
+          onRedirectAdmin={redirectAdmin}
         />
       {cargandoContenido ? (
               <PantallaCarga />
@@ -157,7 +164,6 @@ const Notificaciones = () => {
             message={message}
         />
         </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 };
 
