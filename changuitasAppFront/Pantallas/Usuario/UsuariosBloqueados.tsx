@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import  {redirectAdmin} from '../../utils/utils';
 import CustomSnackbar from '../../componentes/CustomSnackbar';
 import EstiloOverlay from '../../componentes/estiloOverlayMenuDesplegable';
+import PantallaCarga from '../../componentes/PantallaCarga';
 
 
 const UsuariosBloqueados = () => {
@@ -32,17 +33,12 @@ const UsuariosBloqueados = () => {
     setMostrarDesplegable(!mostrarDesplegable);
   };
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
   const logout = async () => {
     try {
       setState({ token: "" });
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log('Sesión cerrada correctamente'); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.error('Error en el cierre de sesión:', error);
       setMessage('Error al cerrar sesión');
       setVisible(true);
     } 
@@ -76,7 +72,6 @@ const UsuariosBloqueados = () => {
         setVisible(true);
       }
     } catch (error) {
-      console.error("Error al desbloquear usuario:", error);
       setMessage("Error, No se pudo desbloquear al usuario.");
       setVisible(true);
     }
@@ -84,6 +79,7 @@ const UsuariosBloqueados = () => {
 
   const verUsuariosBloqueados = async () => {
     try {
+      setLoading(true);
       const accessToken = await AsyncStorage.getItem('accessToken');
       const response = await fetch(`${API_URL}/bloqueados/`, {
         method: 'GET',
@@ -105,7 +101,8 @@ const UsuariosBloqueados = () => {
       })));
 
     } catch (error) {
-      console.error("Error al obtener usuarios bloqueados:", error);
+      setMessage('Error no se pudieron obtener los usuarios bloqueados');
+      setVisible(true);
     } finally {
       setLoading(false);
     }
@@ -134,7 +131,10 @@ const UsuariosBloqueados = () => {
         break;
     }
   };
-
+   
+    if (loading) {
+    return <PantallaCarga frase="Cargando bloqueados..." />;
+  }
 
   return (
       <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
