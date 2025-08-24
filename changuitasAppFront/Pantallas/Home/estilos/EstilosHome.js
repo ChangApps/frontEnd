@@ -93,6 +93,7 @@ const EstilosHome = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 12,
     width: '48%',
+    height:80,
   },
   textoCategoria: {
     color: Colors.blancoTexto,

@@ -158,7 +158,7 @@ const AgregarServicio1 = () => {
           />
           <Button
             titulo="Cancelar"
-            onPress={() => navigation.navigate("MisServicios")}
+            onPress={() => navigation.navigate("MisServicios", { message: "" })}
             backgroundColor="transparent"
             textColor={Colors.naranja}
             textSize={18}
