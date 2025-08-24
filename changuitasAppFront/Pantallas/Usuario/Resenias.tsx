@@ -193,36 +193,37 @@ const Resenias = () => {
           onRedirectAdmin={redirectAdmin}
         />
 
-          {loading ? (
-            <PantallaCarga frase="Cargando reseñas..." />
-          ) : !hayResenas ? (
-            <View style={EstilosResenias.noResultsContainer}>
-              <Image
-                source={require("./estilos/no-results.png")}
-                style={EstilosUsuariosBloqueados.noResultsImage}
-                resizeMode="contain"
-              />
-              <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
-            </View>
-          ) : (
-            <FlatList
-              data={solicitudes}
-              renderItem={renderResenia}
-              keyExtractor={(item, index) => index.toString()}
+        {loading ? (
+          <PantallaCarga frase="Cargando reseñas..." />
+        ) : !hayResenas ? (
+          <View style={EstilosResenias.noResultsContainer}>
+            <Image
+              source={require("./estilos/no-results.png")}
+              style={EstilosUsuariosBloqueados.noResultsImage}
+              resizeMode="contain"
             />
-          )}
-
-          <CustomSnackbar
-            visible={visible}
-            setVisible={setVisible}
-            message={message}
+            <Text style={EstilosResenias.mensajeVacio}>{message}</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={solicitudes}
+            renderItem={renderResenia}
+            keyExtractor={(item, index) => index.toString()}
           />
-        {/* Barra de navegación inferior */}
-        <NavBarInferior
-          activeScreen="Resenias" // O el screen activo correspondiente
-          onNavigate={handleNavigation}
+        )}
+
+        <CustomSnackbar
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
         />
+
       </View>
+      {/* Barra de navegación inferior */}
+      <NavBarInferior
+        activeScreen="Resenias" // O el screen activo correspondiente
+        onNavigate={handleNavigation}
+      />
     </SafeAreaView>
   );
 };
