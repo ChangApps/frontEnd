@@ -49,7 +49,7 @@ const EstilosResenias = StyleSheet.create({
     },
     fecha: {
         fontSize: 14,
-        color: Colors.grisTexto,
+        color: Colors.blancoTexto,
         marginBottom: 5,
     },
     rating: {

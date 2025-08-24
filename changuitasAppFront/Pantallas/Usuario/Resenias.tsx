@@ -113,21 +113,41 @@ const Resenias = () => {
     <View style={EstilosResenias.reseniaItem}>
       <View style={EstilosResenias.headerResenia}>
         <Text style={EstilosResenias.categoria}>
-          Nombre del servicio: {item.nombreServicio}
+          <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+            Nombre del servicio:
+          </Text>{" "}
+          <Text >
+            {item.nombreServicio}
+          </Text>
         </Text>
         <Text style={EstilosResenias.categoria}>
-          Calificado por: {item.cliente_nombre}
+          <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+            Calificado por:
+          </Text>{" "}
+          <Text >
+            {item.cliente_nombre}
+          </Text>
         </Text>
         <Text style={EstilosResenias.categoria}>
-          Comentario: {item.comentario ? item.comentario : "Sin comentarios"}
+          <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+            Comentario:
+          </Text>{" "}
+          <Text >
+            {item.comentario ? item.comentario : "Sin comentarios"}
+          </Text>
         </Text>
         <Text style={EstilosResenias.fecha}>
-          Fecha de Valoración:{" "}
-          {item.fechaValoracion ? item.fechaValoracion : "No disponible"}
+          <Text style={{ fontWeight: 'bold', color: Colors.naranja }}>
+            Fecha de Valoración:{" "}
+          </Text>{" "}
+          <Text >
+            {item.fechaValoracion ? item.fechaValoracion : "No disponible"}
+          </Text>
         </Text>
       </View>
       <View style={EstilosResenias.rating}>
-        <Text style={EstilosResenias.valoracion}>Valoración: </Text>
+        <Text style={EstilosResenias.valoracion}>
+          Valoración: </Text>
         {/* Dibuja las estrellas basadas en la valoración */}
         {[...Array(5)].map((_, i) => (
           <Ionicons
