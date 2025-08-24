@@ -1,7 +1,7 @@
 import Main from './Main';
 import Colors from './assets/Colors';
 import React, { useEffect } from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 
 export default function App() {
@@ -12,6 +12,10 @@ export default function App() {
 
   return (
     <View style={styles.fondo}>
+      <StatusBar 
+        barStyle="light-content"   // iconos claros (wifi, batería, hora)
+        backgroundColor={Colors.fondo} // fondo de la barra
+      />
       <Main/>
     </View>
   );
