@@ -77,7 +77,8 @@ const ResultadosBusqueda = () => {
         try {
           await obtenerUsuariosBloqueados();
         } catch (error) {
-          console.error("Error al cargar usuarios bloqueados:", error);
+          setMessage("Error al cargar usuarios bloqueados");
+          setVisible(true);
         } finally {
           setLoading(false); //fin de carga
         }
@@ -207,8 +208,7 @@ const ResultadosBusqueda = () => {
                     <TouchableOpacity
                       onPress={() => handleProveedorPress(item)}
                     >
-                      <View
-                        key={index}
+                       <View key={item.id || index}
                         style={EstilosResultadosBusqueda.resultItem}
                       >
                         <TouchableOpacity
@@ -230,7 +230,10 @@ const ResultadosBusqueda = () => {
 
                           {item.servicios && item.servicios.length > 0 ? (
                             item.servicios.map((servicio: any, idx: number) => (
-                              <View key={idx} style={{ marginTop: 6 }}>
+                               <View
+                                  key={servicio.id || servicio.nombreServicio}  
+                                  style={{ marginTop: 6 }}
+                                >
                                 <Text
                                   style={{
                                     color: Colors.naranja,
@@ -310,10 +313,10 @@ const ResultadosBusqueda = () => {
                           {item.dias &&
                             item.dias.length > 0 &&
                             item.dias.map((horario: any, idx: number) => (
-                              <Text
-                                key={idx}
-                                style={{ color: "#aaaaaa", fontSize: 12 }}
-                              >
+                                <Text
+                                      key={horario.id || horario.dia + horario.desdeHora}  
+                                      style={{ color: "#aaaaaa", fontSize: 12 }}
+                                    >
                                 {horario.dia} de {horario.desdeHora} a{" "}
                                 {horario.hastaHora}
                               </Text>
