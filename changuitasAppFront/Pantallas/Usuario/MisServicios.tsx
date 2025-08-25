@@ -31,6 +31,7 @@ import { redirectAdmin } from "../../utils/utils";
 import { Servicio } from "../../types/interfaces";
 import EstiloOverlay from "../../componentes/estiloOverlayMenuDesplegable";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import CustomModal from "../../componentes/CustomModal";
 
 const MisServicios = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -42,6 +43,9 @@ const MisServicios = () => {
   const [idServicioSeleccionado, setIdServicioSeleccionado] = useState(null);
   const [visible, setVisible] = useState(false); // Estado para manejar la visibilidad del Snackbar
   const [message, setMessage] = useState(""); // Estado para almacenar el mensaje de error
+  const [modalVisible, setModalVisible] = useState(false);
+  const [servicioAEliminar, setServicioAEliminar] = useState<Servicio | null>(null);
+
 
   const toggleDesplegable = () => {
     setMostrarDesplegable(!mostrarDesplegable);
@@ -53,7 +57,6 @@ const MisServicios = () => {
       await cerrarSesion(); // Simula el proceso de cierre de sesión
       console.log("Sesión cerrada correctamente"); // Log al finalizar el cierre de sesión
     } catch (error) {
-      console.error("Error en el cierre de sesión:", error);
       setMessage("Error al cerrar sesion");
       setVisible(true);
     }
@@ -85,11 +88,12 @@ const MisServicios = () => {
         // Reinicia la variable de id a null después de borrar el servicio
         setIdServicioSeleccionado(null);
       } else {
-        setMessage("Error al eliminar servicio");
+        setMessage("No se pudo eliminar el servicio");
         setVisible(true);
       }
     } catch (error) {
-      console.error("Error eliminando el servicio:", error);
+        setMessage("Error al eliminar servicio");
+        setVisible(true);
     }
   };
 
@@ -120,7 +124,8 @@ const MisServicios = () => {
       const data: Servicio[] = await response.json();
       setServices(data);
     } catch (error) {
-      console.error("Error al cargar los servicios del usuario:", error);
+      setMessage("Error al cargar los servicios del usuario");
+      setVisible(true);
     } finally {
       setLoading(false);
     }
@@ -172,7 +177,10 @@ const MisServicios = () => {
         {/* Botón para eliminar el servicio */}
         <TouchableOpacity
           style={EstilosMisServicios.botonEliminar}
-          onPress={() => EliminarServicio(item.id)}
+          onPress={() => {
+            setServicioAEliminar(item);
+            setModalVisible(true);
+          }}
         >
           <Ionicons name="trash-outline" size={24} color="red" />
         </TouchableOpacity>
@@ -240,7 +248,7 @@ const MisServicios = () => {
       <SafeAreaView style={EstilosMisServicios.safeContainer}>
         <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
         <BarraPestanasPerfil />
-        {/* Overlay transparente cuando el menú está abierto para que al tocar la pantalla se cierre el menú */}
+          {/* Overlay */}
         {mostrarDesplegable && (
           <TouchableWithoutFeedback
             onPress={() => setMostrarDesplegable(false)}
@@ -255,6 +263,8 @@ const MisServicios = () => {
           onLogout={logout}
           onRedirectAdmin={redirectAdmin}
         />
+
+        {/* Botón agregar servicio */}
         <View style={{ paddingTop: 20 }}>
           <TouchableOpacity
             style={EstilosMisServicios.botonAgregarServicio}
@@ -265,6 +275,7 @@ const MisServicios = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Lista de servicios */}
         <FlatList
           data={serviciosOrdenados}
           keyExtractor={(item) => item.id.toString()}
@@ -280,17 +291,61 @@ const MisServicios = () => {
           }
           showsVerticalScrollIndicator={true}
         />
+
         <NavBarInferior
           activeScreen="MisServicios"
           onNavigate={handleNavigation}
         />
       </SafeAreaView>
 
+      {/* Snackbar */}
       <CustomSnackbar
         visible={visible}
         setVisible={setVisible}
         message={message}
       />
+
+      {/* Modal */}
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      >
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 20,
+            borderRadius: 10,
+            width: "80%",
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>
+            ¿Estás seguro?
+          </Text>
+          <Text style={{ marginBottom: 20 }}>
+            Esta acción eliminará el servicio "
+            {servicioAEliminar?.nombreServicio}" permanentemente.
+          </Text>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <TouchableOpacity
+              style={{ marginRight: 20 }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ color: "black" }}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (servicioAEliminar) {
+                  EliminarServicio(servicioAEliminar.id);
+                }
+                setModalVisible(false);
+                setServicioAEliminar(null);
+              }}
+            >
+              <Text style={{ color: "red", fontWeight: "bold" }}>Eliminar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </CustomModal>
     </View>
   );
 };
