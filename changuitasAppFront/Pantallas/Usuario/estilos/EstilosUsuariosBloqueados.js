@@ -82,6 +82,7 @@ const EstilosUsuariosBloqueados = StyleSheet.create({
   alignItems: 'center',
   backgroundColor: Colors.grisBoxes,
   padding: 15,
+  marginHorizontal:15,
   marginVertical: 5,
   borderRadius: 8,
   elevation: 2,
@@ -104,7 +105,7 @@ const EstilosUsuariosBloqueados = StyleSheet.create({
   botonDesbloquear: {
     backgroundColor: Colors.naranja,
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     borderRadius: 5,
   },
   botonTexto: {

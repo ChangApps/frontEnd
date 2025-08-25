@@ -15,7 +15,7 @@ const EstilosHistorial1 = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     marginLeft:5,
-    marginRight:5,
+    marginRight:20,
   },
   image: {
     width: 50,
