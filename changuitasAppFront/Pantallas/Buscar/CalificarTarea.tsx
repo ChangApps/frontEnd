@@ -86,7 +86,10 @@ const CalificarTarea = () => {
       setMessage("¡Changuita calificada exitosamente!");
       setVisible(true);
       setTimeout(() => {
-        navigation.navigate("Home");
+        navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
       }, 2000); // 2 segundos para que se vea el mensaje
     } catch (error) {
       setCargando(false);
@@ -123,24 +126,27 @@ const CalificarTarea = () => {
   };
 
   const handleNavigation = (screen: string) => {
-    switch (screen) {
-      case "Home":
-        navigation.navigate("Home");
-        break;
-      case "Historial1":
-        navigation.navigate("Historial1");
-        break;
-      case "Add":
-        navigation.navigate("AgregarServicio1");
-        break;
-      case "Notifications":
-        navigation.navigate("Notificaciones");
-        break;
-      case "PerfilUsuario":
-        navigation.navigate("PerfilUsuario");
-        break;
-    }
-  };
+  switch (screen) {
+    case 'Home':
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+      break;
+    case 'Historial1':
+      navigation.navigate('Historial1');
+      break;
+    case 'Add':
+      navigation.navigate('AgregarServicio1');
+      break;
+    case 'Notifications':
+      navigation.navigate('Notificaciones');
+      break;
+    case 'PerfilUsuario':
+      navigation.navigate('PerfilUsuario');
+      break;
+  }
+};
 
   // Función para alternar el menú desplegable
   const toggleDesplegable = () => {
