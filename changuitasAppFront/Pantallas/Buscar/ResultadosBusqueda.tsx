@@ -86,7 +86,10 @@ useFocusEffect(
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
-        navigation.navigate('Home');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
         break;
       case 'Historial1':
         navigation.navigate('Historial1');

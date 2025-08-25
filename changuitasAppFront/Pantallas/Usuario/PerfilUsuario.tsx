@@ -118,24 +118,27 @@ const PerfilUsuario: React.FC = () => {
   };
 
   const handleNavigation = (screen: string) => {
-    switch (screen) {
-      case "Home":
-        navigation.navigate("Home");
-        break;
-      case "Historial1":
-        navigation.navigate("Historial1");
-        break;
-      case "Add":
-        navigation.navigate("AgregarServicio1");
-        break;
-      case "Notifications":
-        navigation.navigate("Notificaciones");
-        break;
-      case "PerfilUsuario":
-        navigation.navigate("PerfilUsuario");
-        break;
-    }
-  };
+  switch (screen) {
+    case 'Home':
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+      break;
+    case 'Historial1':
+      navigation.navigate('Historial1');
+      break;
+    case 'Add':
+      navigation.navigate('AgregarServicio1');
+      break;
+    case 'Notifications':
+      navigation.navigate('Notificaciones');
+      break;
+    case 'PerfilUsuario':
+      navigation.navigate('PerfilUsuario');
+      break;
+  }
+};
 
   return (
     <SafeAreaView style={EstilosPerfilUsuario.safeContainer}>

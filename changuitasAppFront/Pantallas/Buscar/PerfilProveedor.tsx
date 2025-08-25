@@ -332,7 +332,10 @@ const PerfilProveedor = () => {
       if (response.ok) {
         setMessage("Usuario bloqueado correctamente.");
         setVisible(true);
-        navigation.navigate('Home');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
       } else {
         setMessage("No se pudo bloquear al usuario.");
         setVisible(true);
@@ -347,7 +350,10 @@ const PerfilProveedor = () => {
   const handleNavigation = (screen: string) => {
     switch (screen) {
       case 'Home':
-        navigation.navigate('Home');
+        navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
         break;
       case 'Historial1':
         navigation.navigate('Historial1');
