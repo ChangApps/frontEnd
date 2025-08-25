@@ -65,56 +65,66 @@ const ResultadoList = ({ historial, usuarios, navigation, claveUsuario, mensajeV
         }[item.estado] || item.estado;
 
         return (
-          <View style={EstilosHistorial1.resultItem}>
-            <Image
-              style={EstilosHistorial1.image}
-              source={{ uri: usuario?.fotoPerfil || 'https://via.placeholder.com/100' }}
-            />
-            <View style={EstilosHistorial1.resultDetails}>
-              <View style={EstilosHistorial1.nombreConEstadoContainer}>
-                <Text style={EstilosHistorial1.name}>
-                  {`${usuario?.first_name || 'Nombre'} ${usuario?.last_name || ''}`}
-                </Text>
-                {esEstadoCritico ? (
-                  <View style={EstilosHistorial1.estadoCriticoContainer}>
-                    <Text style={EstilosHistorial1.estadoCriticoText}>{estadoLegible}</Text>
-                  </View>
-                ) : (
-                  <View style={EstilosHistorial1.estadoNormalContainer}>
-                    <Text style={EstilosHistorial1.estadoNormalText}>{estadoLegible}</Text>
-                  </View>
-                )}
-              </View>
-
-              <Text style={EstilosHistorial1.fecha}>
-                Fecha: {formatearFecha(item.fechaSolicitud)}
-              </Text>
-
-              {item.estado === 'F' && (
-                <View style={EstilosHistorial1.ratingStars}>
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Ionicons
-                      key={i}
-                      name="star"
-                      size={16}
-                      color={i < puntaje ? "#FC6A30" : "#CCCCCC"}
-                    />
-                  ))}
-                </View>
-              )}
-
-            </View>
-
+          <View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('DetalleTarea', {
-                  id: usuario?.id?.toString() || 'No disponible',
-                  idSolicitud: item.id.toString()
+                navigation.navigate("DetalleTarea", {
+                  id: usuario?.id?.toString() || "No disponible",
+                  idSolicitud: item.id.toString(),
                 });
               }}
               style={EstilosHistorial1.arrowButton}
             >
-              <Ionicons name="chevron-forward" size={20} color="white" />
+              <View style={EstilosHistorial1.resultItem}>
+                <Image
+                  style={EstilosHistorial1.image}
+                  source={{
+                    uri:
+                      usuario?.fotoPerfil || "https://via.placeholder.com/100",
+                  }}
+                />
+                <View style={EstilosHistorial1.resultDetails}>
+                  <View style={EstilosHistorial1.nombreConEstadoContainer}>
+                    <Text style={EstilosHistorial1.name}>
+                      {`${usuario?.first_name || "Nombre"} ${
+                        usuario?.last_name || ""
+                      }`}
+                    </Text>
+
+                    <Text style={EstilosHistorial1.fecha}>
+                      Fecha: {formatearFecha(item.fechaSolicitud)}
+                    </Text>
+                    {item.estado === "F" && (
+                      <View style={EstilosHistorial1.ratingStars}>
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <Ionicons
+                            key={i}
+                            name="star"
+                            size={16}
+                            color={i < puntaje ? "#FC6A30" : "#CCCCCC"}
+                          />
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                  
+                  <View style={{justifyContent: "center"}}>
+                    {esEstadoCritico ? (
+                      <View style={EstilosHistorial1.estadoCriticoContainer}>
+                        <Text style={EstilosHistorial1.estadoCriticoText}>
+                          {estadoLegible}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={EstilosHistorial1.estadoNormalContainer}>
+                        <Text style={EstilosHistorial1.estadoNormalText}>
+                          {estadoLegible}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              </View>
             </TouchableOpacity>
           </View>
         );

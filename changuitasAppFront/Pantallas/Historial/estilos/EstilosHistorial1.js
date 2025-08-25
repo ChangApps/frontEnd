@@ -8,6 +8,7 @@ const EstilosHistorial1 = StyleSheet.create({
   },
   resultItem: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: Colors.azulClaroBoxes,
     padding: 15,
@@ -25,10 +26,12 @@ const EstilosHistorial1 = StyleSheet.create({
   resultDetails: {
     flex: 1,
     marginLeft: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
   nombreConEstadoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     flexWrap: 'nowrap', // para que no haga wrap en cel
   },
   name: {
@@ -50,7 +53,7 @@ const EstilosHistorial1 = StyleSheet.create({
     fontWeight: 'bold',
   },
     estadoNormalContainer: {
-    backgroundColor: 'gray', // rojo claro
+    backgroundColor: 'gray',
     paddingHorizontal: 6,
     paddingVertical: 4,
     borderRadius: 5,

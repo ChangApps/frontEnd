@@ -158,7 +158,7 @@ const Notificaciones = () => {
               />
             )}
         <NavBarInferior
-            activeScreen="Notificaciones"
+            activeScreen="Notifications"
             onNavigate={handleNavigation}
         />
         <CustomSnackbar

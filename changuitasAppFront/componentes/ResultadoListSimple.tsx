@@ -100,26 +100,7 @@ const ResultadoListSimple = ({
           if (!usuario) return null; // si no se encuentra el usuario, no renderiza nada
 
           return (
-            <View style={estiloCard}>
-              <Image
-                style={estiloAvatar}
-                source={{ uri: usuario.fotoPerfil || 'https://via.placeholder.com/40' }}
-              />
-
-              <Text
-                style={
-                  estiloNombre || {
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    textAlign: 'center',
-                    marginBottom: 4,
-                  }
-                }
-              >
-                {`${usuario.first_name} ${usuario.last_name}`}
-              </Text>
-
+            <View>
               <TouchableOpacity
                 onPress={() => {
                   if (item.servicios.length > 1) {
@@ -131,7 +112,7 @@ const ResultadoListSimple = ({
                   } else {
                     // si tiene solo un servicio, navega directo al perfil
                     if (onPerfilPress) onPerfilPress();
-                    navigation.navigate('PerfilProveedor', {
+                    navigation.navigate("PerfilProveedor", {
                       id: usuario.id.toString(),
                       servicio: item.servicios[0].id,
                     });
@@ -139,11 +120,36 @@ const ResultadoListSimple = ({
                 }}
                 style={{ paddingLeft: 10 }}
               >
-                <Ionicons name="chevron-forward" size={20} color="white" />
+                <View style={estiloCard}>
+                  <Image
+                    style={estiloAvatar}
+                    source={{
+                      uri:
+                        usuario.fotoPerfil || "https://via.placeholder.com/40",
+                    }}
+                  />
+
+                  <Text
+                    style={
+                      estiloNombre || {
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        textAlign: "center",
+                        marginBottom: 4,
+                      }
+                    }
+                  >
+                    {`${usuario.first_name}\n${usuario.last_name}`}
+                  </Text>
+
+                  <Ionicons name="chevron-forward" size={20} color="white" />
+                </View>
               </TouchableOpacity>
             </View>
           );
         }}
+        ListFooterComponent={<View style={{ width: 20 }} />}
       />
 
       {/* modal para seleccionar uno de los múltiples servicios del proveedor */}

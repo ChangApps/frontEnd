@@ -15,40 +15,36 @@ const BarraPestanasPerfil = () => {
     setPestanaActiva(rutaActual);
   }, [route.name]);
 
+  const pestanas = [
+    { label: 'Perfil', route: 'PerfilUsuario' },
+    { label: 'Editar', route: 'EditarPerfil' },
+    { label: 'Servicios', route: 'MisServicios' },
+    { label: 'Bloqueados', route: 'UsuariosBloqueados' },
+  ];
+
   return (
     <View style={EstilosPerfilUsuario.barraPestanas}>
-      <TouchableOpacity
-        style={pestanaActiva === 'PerfilUsuario' ? EstilosPerfilUsuario.pestanaActiva : EstilosPerfilUsuario.pestanaInactiva}
-        onPress={() => navigation.navigate('PerfilUsuario')}
-      >
-        <Text style={pestanaActiva === 'PerfilUsuario' ? EstilosPerfilUsuario.textoPestanaActiva : EstilosPerfilUsuario.textoPestanaInactiva}>
-          Perfil
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={pestanaActiva === 'EditarPerfil' ? EstilosPerfilUsuario.pestanaActiva : EstilosPerfilUsuario.pestanaInactiva}
-        onPress={() => navigation.navigate('EditarPerfil')}
-      >
-        <Text style={pestanaActiva === 'EditarPerfil' ? EstilosPerfilUsuario.textoPestanaActiva : EstilosPerfilUsuario.textoPestanaInactiva}>
-          Editar
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={pestanaActiva === 'MisServicios' ? EstilosPerfilUsuario.pestanaActiva : EstilosPerfilUsuario.pestanaInactiva}
-        onPress={() => navigation.navigate('MisServicios')}
-      >
-        <Text style={pestanaActiva === 'MisServicios' ? EstilosPerfilUsuario.textoPestanaActiva : EstilosPerfilUsuario.textoPestanaInactiva}>
-          Mis servicios
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={pestanaActiva === 'UsuariosBloqueados' ? EstilosPerfilUsuario.pestanaActiva : EstilosPerfilUsuario.pestanaInactiva}
-        onPress={() => navigation.navigate('UsuariosBloqueados')}
-      >
-        <Text style={pestanaActiva === 'UsuariosBloqueados' ? EstilosPerfilUsuario.textoPestanaActiva : EstilosPerfilUsuario.textoPestanaInactiva}>
-          Bloqueados
-        </Text>
-      </TouchableOpacity>
+      {pestanas.map((pestana) => {
+        const activa = pestanaActiva === pestana.route;
+        return (
+          <TouchableOpacity
+            key={pestana.route}
+            style={[
+              EstilosPerfilUsuario.pestana,
+              { flex: 1 },
+              activa ? EstilosPerfilUsuario.pestanaActiva : EstilosPerfilUsuario.pestanaInactiva,
+            ]}
+            onPress={() => {
+              setPestanaActiva(pestana.route);
+              navigation.navigate(pestana.route as never);
+            }}
+          >
+            <Text style={activa ? EstilosPerfilUsuario.textoPestanaActiva : EstilosPerfilUsuario.textoPestanaInactiva}>
+              {pestana.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };

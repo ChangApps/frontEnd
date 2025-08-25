@@ -62,9 +62,10 @@ const EstilosHome = StyleSheet.create({
     backgroundColor: Colors.azulBoxes,
     padding: 12,
     borderRadius: 10,
-    marginLeft: 20,
+    marginLeft: 10,
     width: 200,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   avatarPlaceholder: {
@@ -100,6 +101,8 @@ const EstilosHome = StyleSheet.create({
     marginLeft: 8,
     fontSize: 14,
     fontWeight: '500',
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
   contenidoPrincipal: {
     // si se necesita más contenido despues

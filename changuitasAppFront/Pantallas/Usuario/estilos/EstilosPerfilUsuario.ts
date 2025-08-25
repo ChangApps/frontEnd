@@ -18,6 +18,13 @@ const estilosEspecificos = StyleSheet.create({
     fontSize: 16,
     color: Colors.grisTexto,
   },
+  pestana: {
+    paddingHorizontal: 0,
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
 });
 
 // Combinar estilos compartidos con específicos

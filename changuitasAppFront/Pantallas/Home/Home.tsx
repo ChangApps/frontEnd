@@ -297,6 +297,7 @@ useFocusEffect(
               )}
 
               <Text style={EstilosHome.subtituloSeccion}>Categorías</Text>
+              
             </>
           }
           data={categorias}
@@ -351,6 +352,8 @@ useFocusEffect(
           }}
           contentContainerStyle={{
             flexGrow: 1,
+            // paddingRight: 20,
+            // paddingLeft: 10,
             ...EstilosHome.scrollContenido,
           }}
         />

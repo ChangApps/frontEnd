@@ -111,17 +111,13 @@ const EstilosCompartidos = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: COLORES_APP.grisClaro,
-    marginBottom: 20,
+    // paddingHorizontal: 8,
   },
   pestanaActiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     borderBottomWidth: 2,
     borderBottomColor: COLORES_APP.primario,
   },
   pestanaInactiva: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
   },
   textoPestanaActiva: {
     fontSize: FUENTES.normal,
