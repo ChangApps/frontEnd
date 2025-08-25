@@ -201,20 +201,14 @@ const ResultadosBusqueda = () => {
             </Text>
           </View>
         ) : (
-          <ScrollView>
+         <ScrollView>
             {busquedaGeneral
               ? proveedoresFiltrados.map((item: any, index: number) => (
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => handleProveedorPress(item)}
-                    >
-                       <View key={item.id || index}
-                        style={EstilosResultadosBusqueda.resultItem}
-                      >
+                  <View key={item.id || `proveedor-${index}`}>
+                    <TouchableOpacity onPress={() => handleProveedorPress(item)}>
+                      <View style={EstilosResultadosBusqueda.resultItem}>
                         <TouchableOpacity
-                          onPress={() =>
-                            handleImagePress(obtenerFotoPerfil(item))
-                          }
+                          onPress={() => handleImagePress(obtenerFotoPerfil(item))}
                         >
                           <Image
                             style={EstilosResultadosBusqueda.image}
@@ -230,10 +224,10 @@ const ResultadosBusqueda = () => {
 
                           {item.servicios && item.servicios.length > 0 ? (
                             item.servicios.map((servicio: any, idx: number) => (
-                               <View
-                                  key={servicio.id || servicio.nombreServicio}  
-                                  style={{ marginTop: 6 }}
-                                >
+                              <View
+                                key={servicio.id || `servicio-${idx}`}
+                                style={{ marginTop: 6 }}
+                              >
                                 <Text
                                   style={{
                                     color: Colors.naranja,
@@ -244,20 +238,21 @@ const ResultadosBusqueda = () => {
                                 </Text>
                                 {servicio.dias &&
                                   servicio.dias.length > 0 &&
-                                  servicio.dias.map(
-                                    (horario: any, idx2: number) => (
-                                      <Text
-                                        key={idx2}
-                                        style={{
-                                          color: "#aaaaaa",
-                                          fontSize: 12,
-                                        }}
-                                      >
-                                        {horario.dia} de {horario.desdeHora} a{" "}
-                                        {horario.hastaHora}
-                                      </Text>
-                                    )
-                                  )}
+                                  servicio.dias.map((horario: any, idx2: number) => (
+                                    <Text
+                                      key={
+                                        horario.id ||
+                                        `horario-${servicio.id || idx}-${idx2}`
+                                      }
+                                      style={{
+                                        color: "#aaaaaa",
+                                        fontSize: 12,
+                                      }}
+                                    >
+                                      {horario.dia} de {horario.desdeHora} a{" "}
+                                      {horario.hastaHora}
+                                    </Text>
+                                  ))}
                               </View>
                             ))
                           ) : (
@@ -266,29 +261,17 @@ const ResultadosBusqueda = () => {
                             </Text>
                           )}
                         </View>
-
-                        <Ionicons
-                          name="chevron-forward"
-                          size={20}
-                          color="#fff"
-                        />
+                        <Ionicons name="chevron-forward" size={20} color="#fff" />
                       </View>
                     </TouchableOpacity>
                   </View>
                 ))
               : proveedoresFiltrados.map((item: any, index: number) => (
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => handleProveedorPress(item)}
-                    >
-                      <View
-                        key={index}
-                        style={EstilosResultadosBusqueda.resultItem}
-                      >
+                  <View key={item.id || `proveedor-simple-${index}`}>
+                    <TouchableOpacity onPress={() => handleProveedorPress(item)}>
+                      <View style={EstilosResultadosBusqueda.resultItem}>
                         <TouchableOpacity
-                          onPress={() =>
-                            handleImagePress(obtenerFotoPerfil(item))
-                          }
+                          onPress={() => handleImagePress(obtenerFotoPerfil(item))}
                         >
                           <Image
                             style={EstilosResultadosBusqueda.image}
@@ -313,21 +296,18 @@ const ResultadosBusqueda = () => {
                           {item.dias &&
                             item.dias.length > 0 &&
                             item.dias.map((horario: any, idx: number) => (
-                                <Text
-                                      key={horario.id || horario.dia + horario.desdeHora}  
-                                      style={{ color: "#aaaaaa", fontSize: 12 }}
-                                    >
-                                {horario.dia} de {horario.desdeHora} a{" "}
-                                {horario.hastaHora}
+                              <Text
+                                key={
+                                  horario.id || `horario-simple-${item.id || index}-${idx}`
+                                }
+                                style={{ color: "#aaaaaa", fontSize: 12 }}
+                              >
+                                {horario.dia} de {horario.desdeHora} a {horario.hastaHora}
                               </Text>
                             ))}
                         </View>
 
-                        <Ionicons
-                          name="chevron-forward"
-                          size={20}
-                          color="#fff"
-                        />
+                        <Ionicons name="chevron-forward" size={20} color="#fff" />
                       </View>
                     </TouchableOpacity>
                   </View>
