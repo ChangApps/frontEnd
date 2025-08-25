@@ -88,7 +88,8 @@ const MisServicios = () => {
         // Reinicia la variable de id a null después de borrar el servicio
         setIdServicioSeleccionado(null);
       } else {
-        setMessage("No se pudo eliminar el servicio");
+        const data = await response.json(); //mensaje del backend
+        setMessage(data.error || "Ocurrió un error"); // usa data.error si existe
         setVisible(true);
       }
     } catch (error) {
