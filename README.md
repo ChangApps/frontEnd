@@ -1,37 +1,29 @@
 # frontEnd
 
-Nesecario para que funcione la pagina web (si no lo tiene): npx expo install react-dom react-native-web @expo/metro-runtime
+Requerimientos técnicos para la instalación
+A continuación se detallan los requisitos técnicos y los pasos necesarios para instalar y ejecutar el sistema desarrollados ,solo frontend.
+    Requerimientos previos
+        ○ Sistema operativo: Windows o Linux.
+        ○ Conexión a internet para descargar las dependencias del proyecto.
+        ○ Git instalado para clonar los repositorios: https://git-scm.com/downloads
+        ○ Node.js: Versión 18 LTS o superior (descarga en https://nodejs.org/es/).
+        ○ npm (incluido con Node.js).
+        ○ Expo CLI (se instalará automáticamente con las dependencias).
+        ○ Expo go (disponible en la play store )
 
-Para la navegacion del app navigator: npm install @react-navigation/native
-npm install @react-navigation/stack
 
-linear gradient es para  los estilos:expo install expo-linear-gradient
+1. Clonar el repositorio del frontend:
+       git clone https://github.com/ChangApps/frontEnd
+        Una vez clonado, abrir una terminal en la carpeta del proyecto y ejecutar:
+                                                                                  cd frontend
+                                                                                  cd changuitasAppFront
 
-npx expo install react-native-safe-area-context
+2.Instalacion de dependencias 
+    en la terminal ejecutar:  npm install  y esperar a quey esperar a que finalice la instalación de todas las librerías necesarias.
 
-#Para mensaje de error
-npm install react-native-paper
-
-#Para hacer peticiones alternativa al fetch
-npm install axios
-
-#Para tomar y seleccionar imagenes de telefono
- npm install expo-image-picker
-
-#Para el storage
- npm install @react-native-async-storage/async-storage
-
- #Para desplegable en buscar servicio
-npm install @react-native-picker/picker
-
-#Para recortar la imagen en web
- npm install react-image-crop
-
- #Para pasar a sdk 53
- expo update
-#Dependencias
- npm install react-native-gesture-handler
- npm install form-data
-
-#Para cambiar el color de barra de navegacion
- npx expo install expo-navigation-bar
+3.Ejecutar el proyecto:
+                         npm start
+  Al ejecutar el comando, se mostrarán opciones:
+                                                Si presionas la tecla w, se abrirá el proyecto en el navegador web.
+                                                También puedes escanear el código QR con la aplicación Expo Go para ejecutarlo en un dispositivo móvil.
+  para detener la ejecucion CRTL+C.
