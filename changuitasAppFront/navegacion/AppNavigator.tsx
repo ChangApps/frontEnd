@@ -33,8 +33,6 @@ import EditarPerfil from '../Pantallas/Usuario/EditarPerfil';
 import AgregarServicio1 from '../Pantallas/Servicios/AgregarServicio1';
 import AgregarServicio2 from '../Pantallas/Servicios/AgregarServicio2';
 
-import BuscarServicio1 from '../Pantallas/Buscar/BuscarServicio1';
-import BuscarServicio2 from '../Pantallas/Buscar/BuscarServicio2';
 import ResultadosBusqueda from '../Pantallas/Buscar/ResultadosBusqueda';
 import PerfilProveedor from '../Pantallas/Buscar/PerfilProveedor';
 import DetalleTarea from '../Pantallas/Buscar/DetalleTarea';
@@ -65,8 +63,6 @@ export type RootStackParamList = {
     selectedServices: { nombre: string; parentId: number | null }[];
     servicio?:any;
   };
-  BuscarServicio1:undefined;
-  BuscarServicio2: { selectedService: string[] };
   ResultadosBusqueda: { 
     proveedores: any[]; 
     error?: string; // Para el mensaje de error
@@ -134,8 +130,6 @@ export default function AppNavigator() {
         EditarPerfil: 'editar-perfil/', 
         AgregarServicio1: 'agregar-servicio-1/',
         AgregarServicio2: 'agregar-servicio-2/',
-        BuscarServicio1: 'buscar-servicio-1/',
-        BuscarServicio2: 'buscar-servicio-2/',  
         ResultadosBusqueda: 'resultados-busqueda/',
         PerfilProveedor: 'perfil-proveedor/', 
         DetalleTarea: 'detalle-tarea/', 
@@ -207,16 +201,6 @@ export default function AppNavigator() {
           <Stack.Screen
             name="AgregarServicio2"
             component={AgregarServicio2}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BuscarServicio1"
-            component={BuscarServicio1}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="BuscarServicio2"
-            component={BuscarServicio2}
             options={{ headerShown: false }}
           />
           <Stack.Screen
