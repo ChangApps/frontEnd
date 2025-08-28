@@ -150,11 +150,17 @@ const UsuariosBloqueados = () => {
 
   return (
     <SafeAreaView style={EstilosUsuariosBloqueados.safeContainer}>
+      <MenuDesplegable
+              visible={mostrarDesplegable}
+              usuario={state.usuario}
+              onLogout={logout}
+              onRedirectAdmin={redirectAdmin}
+            />
       <FlatList
         data={usuariosBloqueados}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={EstilosUsuariosBloqueados.scrollContainer}
-        // Encabezados y menú
+        // Encabezados
         ListHeaderComponent={
           <>
             <EncabezadoPerfil onToggleMenu={toggleDesplegable} />
@@ -166,12 +172,7 @@ const UsuariosBloqueados = () => {
                 <View style={EstiloOverlay.overlay} />
               </TouchableWithoutFeedback>
             )}
-            <MenuDesplegable
-              visible={mostrarDesplegable}
-              usuario={state.usuario}
-              onLogout={logout}
-              onRedirectAdmin={redirectAdmin}
-            />
+            
             <View style={{ paddingTop: 20 }}/>
           </>
         }
