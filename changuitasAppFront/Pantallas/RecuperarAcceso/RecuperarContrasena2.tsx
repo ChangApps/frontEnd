@@ -104,6 +104,7 @@ const RecuperarContrasena2 = () => {
               onBackPress={() => navigation.goBack()}
               rightButtonType="none"
               paddingHorizontal={5}
+              titleSize={22}
             />
 
             <PasoTituloIcono
