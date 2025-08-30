@@ -96,6 +96,12 @@ const Resenias = () => {
         (item: any) => item.estado === "F" || item.estado === "Finalizado"
       );
 
+      solicitudFiltrada.sort((a: any, b: any) => {
+      const fechaA = new Date(a.fechaValoracion || 0).getTime();
+      const fechaB = new Date(b.fechaValoracion || 0).getTime();
+      return fechaB - fechaA; // descendente
+    });
+    
       if (solicitudFiltrada.length > 0) {
         setSolicitudes(solicitudFiltrada);
       } else {
