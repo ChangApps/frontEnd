@@ -14,13 +14,15 @@ import { useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView, Platform} from 'react-native';
 import PantallaCarga from "../../componentes/PantallaCarga";
+import CustomSnackbar from "../../componentes/CustomSnackbar";
 
 const Registro = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [mostrarContraseña, setMostrarContraseña] = useState(false);
   const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
   const [cargando, setCargando] = useState(false);
-
+    const [visible, setVisible] = useState(false);
+    const [mensaje, setMensaje] = useState("");
 
   // Estados para cada campo
   const [username, setUsername] = useState("");
@@ -59,10 +61,32 @@ const Registro = () => {
   // Función para manejar el registro del usuario
   const handleRegistro = async () => {
 
-  if (camposObligatoriosVacios()) {
-    setErrorMessage('Por favor, completa los campos antes de registrarte.');
-    return;
-  }
+    setErrorMessage('');
+
+    if (camposObligatoriosVacios()) {
+      setErrorMessage('Por favor, completa los campos antes de registrarte.');
+      return;
+    }
+
+      if (!email.trim()) {
+        setErrorMessage('El correo no puede estar vacío.');
+        return;
+      }
+
+      if (!firstName.trim()) {
+        setErrorMessage('El nombre no puede estar vacío.');
+        return;
+      }
+        if (!lastName.trim()) {
+          setErrorMessage('El apellido no puede estar vacío.');
+          return;
+        }
+
+        if (!documento.trim()) {
+          setErrorMessage('El documento no puede estar vacío.');
+          return;
+        }
+
 
       // validar que el nombre y apellido no contengan números
       const regexNumeros = /\d/; // cualquier dígito del 0 al 9,si tiene un 10 por ejemplo tambien lo toma
@@ -166,6 +190,8 @@ const Registro = () => {
           "Password fields didn’t match.": "Las contraseñas no coinciden.",
           "user with this documento already exists.": "Ya existe un usuario con este documento.",
           "Enter a valid email address.": "Introduce una dirección de correo electrónico válida.",
+          "user with this telefono already exists.": 
+          "Ya existe un usuario con este teléfono.", 
         };
 
 
@@ -204,15 +230,15 @@ const Registro = () => {
         errorMessage = translateErrors(errorData).trim();
 
         throw new Error(errorMessage);
+        return; //solo por si las dudas
       }
 
       // Si la respuesta es exitosa
-      const data = await response.json();
       navigation.navigate('Verificacion1Mail', { datosUsuario: usuario });
 
     } catch (error: any) {
+      console.log("Estoy en el catch");
       const errorMessage = error.message || 'No se pudieron validar los datos.';
-      console.error('Error detallado:', error);
       setErrorMessage(errorMessage); // Actualiza el estado con el mensaje
     } finally {
       setCargando(false);
@@ -377,6 +403,8 @@ const Registro = () => {
             </View>
           </View>
         </ScrollView>
+
+         <CustomSnackbar visible={visible} setVisible={setVisible} message={mensaje} />
       </SafeAreaView>
       </KeyboardAvoidingView>
     </LinearGradient>
