@@ -146,14 +146,14 @@ const Verificacion1Mail = () => {
               padding={15}
               borderRadius={25}
             />
+            
+            <CustomSnackbar
+              visible={visible}
+              setVisible={setVisible}
+              message={message}
+            />
 
-          </View>
-
-          <CustomSnackbar
-            visible={visible}
-            setVisible={setVisible}
-            message={message}
-          />
+          </View> 
         </View>
       </LinearGradient>
     </SafeAreaView>

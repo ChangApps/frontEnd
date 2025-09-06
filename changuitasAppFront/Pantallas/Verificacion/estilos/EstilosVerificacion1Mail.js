@@ -23,6 +23,7 @@ const EstilosVerificacion1Mail = StyleSheet.create({
   },
   contenidoResponsivo: {
     width: '100%',
+    flex:1,
   },
   contenidoWeb: {
     maxWidth: 700,
