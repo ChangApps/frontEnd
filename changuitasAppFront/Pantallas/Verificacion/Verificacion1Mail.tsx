@@ -112,6 +112,7 @@ const Verificacion1Mail = () => {
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion1Mail.degradado}>
         <View style={EstilosVerificacion1Mail.contenedor}>
           <View style={[EstilosVerificacion1Mail.contenidoResponsivo, width > 600 && EstilosVerificacion1Mail.contenidoWeb]}>
+            <View style={{ marginBottom: 20 }}>
             <NavBarSuperior
               titulo="Verificación"
               showBackButton={true}
@@ -119,6 +120,7 @@ const Verificacion1Mail = () => {
               rightButtonType="none"
               paddingHorizontal={5}
             />
+            </View>
 
             <PasoTituloIcono
               iconName="mail-outline"

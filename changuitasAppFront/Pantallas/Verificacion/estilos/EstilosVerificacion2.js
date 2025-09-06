@@ -9,7 +9,6 @@ const EstilosVerificacion2 = StyleSheet.create({
   contenedor: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 50,
     alignItems: 'flex-start',
   },
   degradado: {

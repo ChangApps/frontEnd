@@ -178,13 +178,14 @@ const { width } = useWindowDimensions();
       <LinearGradient colors={[Colors.degradeTop, Colors.degradeBottom]} style={EstilosVerificacion2.degradado}>
       <View style={EstilosVerificacion2.contenedor}>
       <View style={[EstilosVerificacion2.contenidoResponsivo, width > 600 && EstilosVerificacion2.contenidoWeb]}>
-      <NavBarSuperior
-                        titulo="Verificación"
-                        showBackButton={true}
-                        onBackPress={() => navigation.goBack()}
-                        rightButtonType="none"
-                      />
-                      
+        <View style={{ marginBottom: 20 }}>
+          <NavBarSuperior
+            titulo="Verificación"
+            showBackButton={true}
+            onBackPress={() => navigation.goBack()}
+            rightButtonType="none"
+          />
+        </View>    
       <PasoTituloIcono
           iconName="mail-outline"
           texto="PASO 2:"
@@ -280,7 +281,6 @@ const { width } = useWindowDimensions();
             setVisible={setVisible}
             message={message}
           />
-
     </SafeAreaView>
   );
 };
