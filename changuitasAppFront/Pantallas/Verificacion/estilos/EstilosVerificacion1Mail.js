@@ -9,7 +9,6 @@ const EstilosVerificacion1Mail = StyleSheet.create({
   contenedor: {
     flex: 1,
     paddingHorizontal: 25,
-    paddingTop: 50,
     alignItems: 'flex-start',
   },
   degradado: {
