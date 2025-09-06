@@ -271,16 +271,16 @@ const { width } = useWindowDimensions();
           padding={15}
           borderRadius={25}
         />
-      </View>
-      </View>
-      </LinearGradient>
-
-      {/* CustomSnackbar */}
+        {/* CustomSnackbar */}
           <CustomSnackbar
             visible={visible}
             setVisible={setVisible}
             message={message}
           />
+      </View>
+      </View>
+      </LinearGradient>
+
     </SafeAreaView>
   );
 };
