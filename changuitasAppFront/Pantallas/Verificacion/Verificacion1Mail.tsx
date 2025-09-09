@@ -45,6 +45,7 @@ const Verificacion1Mail = () => {
 
   const enviarCodigo = async () => {
     try {
+      setCargando(true); 
       const response = await fetch(`${API_URL}/enviar-email/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,16 +56,17 @@ const Verificacion1Mail = () => {
         setMessage("El código a sido enviado al correo.");
         setVisible(true);
       } else {
-        setMessage("Error al enviar el código");
+        setMessage("Error al enviar el código.");
         setVisible(true);
       }
     } catch (error) {
-      setMessage("Error, Problema de conexión con el servidor");
-      setVisible(true);
       console.error("Error al enviar el código:", error);
+      setMessage("Error, problema de conexión con el servidor.");
+      setVisible(true)
+    } finally {
+      setCargando(false); 
     }
   };
-
 
   const validarCodigo = async () => {
     const codigoInt = parseInt(codigo, 10);
