@@ -207,7 +207,7 @@ const ModalBuscar = ({ visible, onClose, categoriaId, onAplicarFiltros }: Props)
                 onClose();     
               }}
             >
-              <Text style={EstilosModalBuscar.textoAplicar}>Aplicar Filtrado</Text>
+              <Text style={EstilosModalBuscar.textoAplicar}>Aplicar Filtros</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

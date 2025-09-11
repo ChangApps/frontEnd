@@ -292,8 +292,8 @@ const PerfilProveedor = () => {
     let whatsappLink = "";
 
     if (Platform.OS === "web") {
-      whatsappLink = `https://web.whatsapp.com/send?phone=${phoneNumber}`;
-    } else {
+    //   whatsappLink = `https://web.whatsapp.com/send?phone=${phoneNumber}`;
+    // } else {
       whatsappLink = `https://wa.me/${phoneNumber}`;
     }
 
